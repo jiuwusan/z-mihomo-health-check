@@ -4,8 +4,8 @@
 
 ## 自动化检查
 
-- `go test -count=3 ./...`：34 个测试连续运行三轮通过。
-- `go test -cover ./...`：通过，语句覆盖率 77.2%。
+- `go test -count=3 ./...`：35 个测试连续运行三轮通过。
+- `go test -cover ./...`：通过，语句覆盖率 77.4%。
 - `go vet ./...`：通过。
 - `node --check web/app.js`：通过。
 - `node --test web_test.cjs`：通过，验证旧状态响应不会覆盖较新的状态和历史。
@@ -13,6 +13,8 @@
 - `docker-compose.yml` 通过 YAML 解析与官方 Compose JSON Schema（draft 2020-12）校验。
 - 独立服务部署通过约定检查：镜像/容器命名、外部 wk、45 秒停止宽限、自动重启、10MB × 3 日志轮转、命名卷和端口归属，仅包含健康检查服务。
 - `.github/workflows/docker-publish.yml` 通过 `actionlint` 检查；本地再次运行 Go 全套测试、`go vet`、Web 回归与语法检查通过。
+- 新安装的面板默认连接 `http://mihomo:9090`，与独立容器通过 wk 网络访问服务的部署方式一致；已保存的回环/自定义 API 地址通过回归测试确认保留。
+- 空数据目录的浏览器复验确认输入值与占位地址一致，自动探查与历史持久化默认均关闭，页面无脚本错误。
 
 测试使用真实 HTTP 请求访问本机模拟 Clash API，覆盖认证、中文/emoji 分组名编码、连续失败阈值与成功清零、原始顺序选择、缺项/零值不可用、切换失败后继续尝试、重定向不携带凭据、取消旧任务、避免探查重入、配置持久化及错误输入、secret 保留/清除/脱敏、草稿连接测试不修改配置、可信 Host 与跨来源请求校验。
 
@@ -52,16 +54,24 @@
 
 历史持久化默认关闭及运行时开关另经独立源码审查，未发现重要缺陷。持久化测试显式开启选项，默认关闭的测试独立验证零历史读写；配置参数本身仍保存。
 
-独立项目与 Compose 部署经源码审查，修复了文档推荐的 `config.yaml` 未被 Git 忽略的问题；`config.yaml`、`config.yml` 和本地订阅均已验证匹配忽略规则。没有遗留的重要问题。新镜像名称仅为构建/部署约定，本次未执行发布。
+独立项目与 Compose 部署经源码审查，修复了文档推荐的 `config.yaml` 未被 Git 忽略的问题；`config.yaml`、`config.yml` 和本地订阅均已验证匹配忽略规则。镜像已通过 Actions 构建并推送 Docker Hub，Compose 仅使用镜像，不包含本地 build。
 
-GitHub Actions 自动发布工作流经独立只读审查，确认主分支/PR/手动触发、Secret 回退、测试依赖、双架构与镜像标签规则一致，未发现重要问题。CI 将在 Ubuntu 上额外执行 `go test -race`；本机没有将这一检查报告为已完成。
+GitHub Actions 自动发布工作流经独立只读审查，确认主分支/PR/手动触发、Secret 回退、测试依赖、双架构与镜像标签规则一致，未发现重要问题。Ubuntu CI 的 Go race/vet、Web 检查和双架构镜像发布已验证成功。
+
+镜像部署同步复审已检查源码、面板、Compose、Dockerfile、Actions 和文档；修正发布状态、首次 API 地址、可配置间隔的频率说明及维护命令分组后，独立审查未发现重要遗漏。
+
+## 发布验证基准
+
+2026-11-01 复验时，提交 `17a1925c45db80026744aca61005ba919629811a` 的 [Actions 运行](https://github.com/jiuwusan/z-mihomo-health-check/actions/runs/41227528174) 已完成且成功，测试、Docker Hub 登录、构建与推送步骤全部通过。
+
+Docker Hub 的 `jiuwusan/z-mihomo-health-check:latest` 清单可访问，索引摘要为 `sha256:9411d02f7a33803e80a2985e7dc52d0264bece34055d2d5d772b45fb540be61b`；linux/amd64 和 linux/arm64 两个镜像配置的源码 revision 均与上述提交一致。此记录是复验时的发布快照，后续提交与 latest 以对应 Actions 运行和 Registry 清单为准。
 
 ## 环境限制
 
-- 本机未安装 Docker，未执行 `docker compose up`、镜像构建或容器卷权限实跑；Schema 校验不能替代实际容器运行验证。
-- 本机 Go 环境禁用 CGO，且未找到 C 编译器，因此未完成 `go test -race`。常规测试及重复运行通过，不等于竞态检测已通过。
+- 本机未安装 Docker，未执行 `docker compose up` 或容器卷权限实跑；镜像构建与推送已由 GitHub Actions 验证，目标主机容器运行仍需部署验证。
+- 本机 Go 环境禁用 CGO，且未找到 C 编译器，本机未运行 `go test -race`；该检查已在 GitHub Actions 的 Ubuntu runner 上通过。
 - 未连接真实订阅节点或用户的线上 Clash API；真实节点、站点兼容性及目标设备网络需在部署环境验证。
 - 浏览器测试使用模拟数据，未在检查过程中发起真实代理切换。
-- 已添加 GitHub Actions 发布文件及 Docker Hub 配置说明；实际构建与发布结果以 GitHub Actions 的运行记录为准。需要配置 Docker Hub Secrets 后通过主分支推送或手动触发验证发布。
+- GitHub 仓库与 Docker Hub Secrets 已具备有效发布能力；实际后续构建与发布结果以相应 GitHub Actions 运行记录为准。
 
 官方资料：[Mihomo API](https://wiki.metacubex.one/api/)、[单出口 delay 实现](https://github.com/MetaCubeX/mihomo/blob/Meta/hub/route/proxies.go)、[Compose Schema](https://github.com/compose-spec/compose-spec/blob/main/schema/compose-spec.json)。

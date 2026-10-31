@@ -22,7 +22,7 @@ type Config struct {
 }
 
 func DefaultConfig() Config {
-	return Config{APIURL: "http://127.0.0.1:9090", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4}
+	return Config{APIURL: "http://mihomo:9090", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4}
 }
 func (c Config) Validate() error {
 	u, err := url.Parse(c.APIURL)

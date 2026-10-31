@@ -261,3 +261,40 @@ func TestHistoryPersistenceOptionRoundTripsThroughAPI(t *testing.T) {
 		}
 	}
 }
+
+func TestInitialPanelUsesNetworkServiceAndPreservesSavedAPIAddress(t *testing.T) {
+	for _, tc := range []struct{ name, saved, want string }{
+		{"fresh installation", "", "http://mihomo:9090"},
+		{"saved loopback", "http://127.0.0.1:9090", "http://127.0.0.1:9090"},
+		{"saved custom service", "https://proxy.example.net/clash", "https://proxy.example.net/clash"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			file := filepath.Join(t.TempDir(), "config.json")
+			if tc.saved != "" {
+				cfg := DefaultConfig()
+				cfg.APIURL = tc.saved
+				if err := SaveConfig(file, cfg); err != nil {
+					t.Fatal(err)
+				}
+			}
+			cfg, err := LoadConfig(file)
+			if err != nil {
+				t.Fatal(err)
+			}
+			c := NewController(nil)
+			defer c.Stop()
+			c.Configure(cfg)
+			w := httptest.NewRecorder()
+			NewServer(c, file).ServeHTTP(w, httptest.NewRequest("GET", "http://localhost/api/config", nil))
+			var data struct {
+				APIURL string `json:"api_url"`
+			}
+			if err = json.Unmarshal(w.Body.Bytes(), &data); err != nil {
+				t.Fatal(err)
+			}
+			if w.Code != 200 || data.APIURL != tc.want {
+				t.Fatalf("panel API address = %q, want %q", data.APIURL, tc.want)
+			}
+		})
+	}
+}

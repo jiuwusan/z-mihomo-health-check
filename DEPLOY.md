@@ -35,7 +35,7 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 
 | 面板配置 | 值 |
 | --- | --- |
-| Clash API 地址 | 默认独立部署示例：`http://mihomo:9090` |
+| Clash API 地址 | 首次安装默认 `http://mihomo:9090`，按已有服务实际地址修改 |
 | API Secret | Mihomo 配置中的 `secret`，不是节点密码 |
 | 目标分组 | 测试连接后选择 `🚀 节点选择` |
 | 探查间隔 | 默认 5 秒 |
@@ -89,7 +89,7 @@ go vet ./...
 go run .
 ```
 
-本地默认面板 `http://127.0.0.1:8080`，数据目录 `./data`。环境变量 `LISTEN_ADDR` 修改监听地址，`DATA_DIR` 修改持久化目录。
+本地默认面板 `http://127.0.0.1:8080`，数据目录 `./data`。环境变量 `LISTEN_ADDR` 修改监听地址，`DATA_DIR` 修改持久化目录。首次安装的 API 地址默认示例为 `http://mihomo:9090`；在本机开发时按实际地址填写，例如本机 Mihomo 使用 `http://127.0.0.1:9090`。已保存的地址不会因默认值变化而覆盖。
 
 ```sh
 go build -o mihomo-health .
@@ -100,10 +100,22 @@ go build -o mihomo-health .
 
 ## 4. 维护
 
+更新服务：
+
 ```sh
-docker compose logs --tail=100 z-mihomo-health-check
 docker compose pull
 docker compose up -d
+```
+
+查看运行日志：
+
+```sh
+docker compose logs --tail=100 z-mihomo-health-check
+```
+
+停止服务并保留数据卷：
+
+```sh
 docker compose down
 ```
 
