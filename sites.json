@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "site-001",
+    "name": "Google",
+    "category": "云服务与网络",
+    "url": "https://www.google.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-002",
+    "name": "Cloudflare",
+    "category": "云服务与网络",
+    "url": "https://www.cloudflare.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-003",
+    "name": "Microsoft",
+    "category": "云服务与网络",
+    "url": "https://www.microsoft.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-004",
+    "name": "Apple",
+    "category": "云服务与网络",
+    "url": "https://www.apple.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-005",
+    "name": "Amazon Web Services",
+    "category": "云服务与网络",
+    "url": "https://aws.amazon.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-006",
+    "name": "Fastly",
+    "category": "云服务与网络",
+    "url": "https://www.fastly.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-007",
+    "name": "DigitalOcean",
+    "category": "云服务与网络",
+    "url": "https://www.digitalocean.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-008",
+    "name": "Linode",
+    "category": "云服务与网络",
+    "url": "https://www.linode.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-009",
+    "name": "Hetzner",
+    "category": "云服务与网络",
+    "url": "https://www.hetzner.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-010",
+    "name": "OVHcloud",
+    "category": "云服务与网络",
+    "url": "https://www.ovhcloud.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-011",
+    "name": "Scaleway",
+    "category": "云服务与网络",
+    "url": "https://www.scaleway.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-012",
+    "name": "Vercel",
+    "category": "云服务与网络",
+    "url": "https://vercel.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-013",
+    "name": "Netlify",
+    "category": "云服务与网络",
+    "url": "https://www.netlify.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-014",
+    "name": "Render",
+    "category": "云服务与网络",
+    "url": "https://render.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-015",
+    "name": "Fly.io",
+    "category": "云服务与网络",
+    "url": "https://fly.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-016",
+    "name": "Heroku",
+    "category": "云服务与网络",
+    "url": "https://www.heroku.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-017",
+    "name": "Tailscale",
+    "category": "云服务与网络",
+    "url": "https://tailscale.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-018",
+    "name": "GitHub",
+    "category": "开发平台与工具",
+    "url": "https://github.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-019",
+    "name": "GitLab",
+    "category": "开发平台与工具",
+    "url": "https://about.gitlab.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-020",
+    "name": "Codeberg",
+    "category": "开发平台与工具",
+    "url": "https://codeberg.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-021",
+    "name": "SourceHut",
+    "category": "开发平台与工具",
+    "url": "https://sourcehut.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-022",
+    "name": "Bitbucket",
+    "category": "开发平台与工具",
+    "url": "https://bitbucket.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-023",
+    "name": "SourceForge",
+    "category": "开发平台与工具",
+    "url": "https://sourceforge.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-024",
+    "name": "Docker",
+    "category": "开发平台与工具",
+    "url": "https://www.docker.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-025",
+    "name": "JetBrains",
+    "category": "开发平台与工具",
+    "url": "https://www.jetbrains.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-026",
+    "name": "Visual Studio Code",
+    "category": "开发平台与工具",
+    "url": "https://code.visualstudio.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-027",
+    "name": "Postman",
+    "category": "开发平台与工具",
+    "url": "https://www.postman.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-028",
+    "name": "Insomnia",
+    "category": "开发平台与工具",
+    "url": "https://insomnia.rest/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-029",
+    "name": "Sentry",
+    "category": "开发平台与工具",
+    "url": "https://sentry.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-030",
+    "name": "Grafana",
+    "category": "开发平台与工具",
+    "url": "https://grafana.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-031",
+    "name": "Prometheus",
+    "category": "开发平台与工具",
+    "url": "https://prometheus.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-032",
+    "name": "OpenTelemetry",
+    "category": "开发平台与工具",
+    "url": "https://opentelemetry.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-033",
+    "name": "Ansible",
+    "category": "开发平台与工具",
+    "url": "https://www.ansible.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-034",
+    "name": "Puppet",
+    "category": "开发平台与工具",
+    "url": "https://www.puppet.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-035",
+    "name": "Python",
+    "category": "编程语言与包管理",
+    "url": "https://www.python.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-036",
+    "name": "Go",
+    "category": "编程语言与包管理",
+    "url": "https://go.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-037",
+    "name": "Node.js",
+    "category": "编程语言与包管理",
+    "url": "https://nodejs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-038",
+    "name": "Ruby",
+    "category": "编程语言与包管理",
+    "url": "https://www.ruby-lang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-039",
+    "name": "PHP",
+    "category": "编程语言与包管理",
+    "url": "https://www.php.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-040",
+    "name": "Perl",
+    "category": "编程语言与包管理",
+    "url": "https://www.perl.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-041",
+    "name": "Lua",
+    "category": "编程语言与包管理",
+    "url": "https://www.lua.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-042",
+    "name": "Julia",
+    "category": "编程语言与包管理",
+    "url": "https://julialang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-043",
+    "name": "Haskell",
+    "category": "编程语言与包管理",
+    "url": "https://www.haskell.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-044",
+    "name": "OCaml",
+    "category": "编程语言与包管理",
+    "url": "https://ocaml.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-045",
+    "name": "Elixir",
+    "category": "编程语言与包管理",
+    "url": "https://elixir-lang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-046",
+    "name": "Erlang",
+    "category": "编程语言与包管理",
+    "url": "https://www.erlang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-047",
+    "name": "Scala",
+    "category": "编程语言与包管理",
+    "url": "https://www.scala-lang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-048",
+    "name": "Kotlin",
+    "category": "编程语言与包管理",
+    "url": "https://kotlinlang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-049",
+    "name": "Swift",
+    "category": "编程语言与包管理",
+    "url": "https://www.swift.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-050",
+    "name": "Dart",
+    "category": "编程语言与包管理",
+    "url": "https://dart.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-051",
+    "name": "Zig",
+    "category": "编程语言与包管理",
+    "url": "https://ziglang.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-052",
+    "name": "React",
+    "category": "框架与数据库",
+    "url": "https://react.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-053",
+    "name": "Vue",
+    "category": "框架与数据库",
+    "url": "https://vuejs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-054",
+    "name": "Angular",
+    "category": "框架与数据库",
+    "url": "https://angular.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-055",
+    "name": "Svelte",
+    "category": "框架与数据库",
+    "url": "https://svelte.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-056",
+    "name": "Next.js",
+    "category": "框架与数据库",
+    "url": "https://nextjs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-057",
+    "name": "Astro",
+    "category": "框架与数据库",
+    "url": "https://astro.build/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-058",
+    "name": "Vite",
+    "category": "框架与数据库",
+    "url": "https://vite.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-059",
+    "name": "Webpack",
+    "category": "框架与数据库",
+    "url": "https://webpack.js.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-060",
+    "name": "Rollup",
+    "category": "框架与数据库",
+    "url": "https://rollupjs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-061",
+    "name": "ESLint",
+    "category": "框架与数据库",
+    "url": "https://eslint.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-062",
+    "name": "Prettier",
+    "category": "框架与数据库",
+    "url": "https://prettier.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-063",
+    "name": "Django",
+    "category": "框架与数据库",
+    "url": "https://www.djangoproject.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-064",
+    "name": "Flask",
+    "category": "框架与数据库",
+    "url": "https://flask.palletsprojects.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-065",
+    "name": "FastAPI",
+    "category": "框架与数据库",
+    "url": "https://fastapi.tiangolo.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-066",
+    "name": "Ruby on Rails",
+    "category": "框架与数据库",
+    "url": "https://rubyonrails.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-067",
+    "name": "Laravel",
+    "category": "框架与数据库",
+    "url": "https://laravel.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-068",
+    "name": "Spring",
+    "category": "框架与数据库",
+    "url": "https://spring.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-069",
+    "name": "Linux Kernel",
+    "category": "Linux与开源软件",
+    "url": "https://www.kernel.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-070",
+    "name": "Ubuntu",
+    "category": "Linux与开源软件",
+    "url": "https://ubuntu.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-071",
+    "name": "Fedora",
+    "category": "Linux与开源软件",
+    "url": "https://fedoraproject.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-072",
+    "name": "Arch Linux",
+    "category": "Linux与开源软件",
+    "url": "https://archlinux.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-073",
+    "name": "openSUSE",
+    "category": "Linux与开源软件",
+    "url": "https://www.opensuse.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-074",
+    "name": "Alpine Linux",
+    "category": "Linux与开源软件",
+    "url": "https://alpinelinux.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-075",
+    "name": "NixOS",
+    "category": "Linux与开源软件",
+    "url": "https://nixos.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-076",
+    "name": "Gentoo",
+    "category": "Linux与开源软件",
+    "url": "https://www.gentoo.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-077",
+    "name": "FreeBSD",
+    "category": "Linux与开源软件",
+    "url": "https://www.freebsd.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-078",
+    "name": "OpenBSD",
+    "category": "Linux与开源软件",
+    "url": "https://www.openbsd.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-079",
+    "name": "NetBSD",
+    "category": "Linux与开源软件",
+    "url": "https://www.netbsd.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-080",
+    "name": "GNU",
+    "category": "Linux与开源软件",
+    "url": "https://www.gnu.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-081",
+    "name": "GNOME",
+    "category": "Linux与开源软件",
+    "url": "https://www.gnome.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-082",
+    "name": "KDE",
+    "category": "Linux与开源软件",
+    "url": "https://kde.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-083",
+    "name": "Xfce",
+    "category": "Linux与开源软件",
+    "url": "https://xfce.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-084",
+    "name": "LibreOffice",
+    "category": "Linux与开源软件",
+    "url": "https://www.libreoffice.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-085",
+    "name": "Blender",
+    "category": "Linux与开源软件",
+    "url": "https://www.blender.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-086",
+    "name": "W3C",
+    "category": "标准与公益组织",
+    "url": "https://www.w3.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-087",
+    "name": "IETF",
+    "category": "标准与公益组织",
+    "url": "https://www.ietf.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-088",
+    "name": "RFC Editor",
+    "category": "标准与公益组织",
+    "url": "https://www.rfc-editor.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-089",
+    "name": "IANA",
+    "category": "标准与公益组织",
+    "url": "https://www.iana.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-090",
+    "name": "RIPE NCC",
+    "category": "标准与公益组织",
+    "url": "https://www.ripe.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-091",
+    "name": "ARIN",
+    "category": "标准与公益组织",
+    "url": "https://www.arin.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-092",
+    "name": "APNIC",
+    "category": "标准与公益组织",
+    "url": "https://www.apnic.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-093",
+    "name": "LACNIC",
+    "category": "标准与公益组织",
+    "url": "https://www.lacnic.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-094",
+    "name": "AFRINIC",
+    "category": "标准与公益组织",
+    "url": "https://afrinic.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-095",
+    "name": "Electronic Frontier Foundation",
+    "category": "标准与公益组织",
+    "url": "https://www.eff.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-096",
+    "name": "Free Software Foundation",
+    "category": "标准与公益组织",
+    "url": "https://www.fsf.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-097",
+    "name": "Apache Software Foundation",
+    "category": "标准与公益组织",
+    "url": "https://www.apache.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-098",
+    "name": "Linux Foundation",
+    "category": "标准与公益组织",
+    "url": "https://www.linuxfoundation.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-099",
+    "name": "CNCF",
+    "category": "标准与公益组织",
+    "url": "https://www.cncf.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-100",
+    "name": "Open Source Initiative",
+    "category": "标准与公益组织",
+    "url": "https://opensource.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-101",
+    "name": "Creative Commons",
+    "category": "标准与公益组织",
+    "url": "https://creativecommons.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-102",
+    "name": "Wikimedia Foundation",
+    "category": "标准与公益组织",
+    "url": "https://wikimediafoundation.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-103",
+    "name": "MIT",
+    "category": "高校与教育",
+    "url": "https://www.mit.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-104",
+    "name": "Harvard",
+    "category": "高校与教育",
+    "url": "https://www.harvard.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-105",
+    "name": "Caltech",
+    "category": "高校与教育",
+    "url": "https://www.caltech.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-106",
+    "name": "Yale",
+    "category": "高校与教育",
+    "url": "https://www.yale.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-107",
+    "name": "Cornell",
+    "category": "高校与教育",
+    "url": "https://www.cornell.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-108",
+    "name": "Carnegie Mellon",
+    "category": "高校与教育",
+    "url": "https://www.cmu.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-109",
+    "name": "UC Berkeley",
+    "category": "高校与教育",
+    "url": "https://www.berkeley.edu/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-110",
+    "name": "Cambridge",
+    "category": "高校与教育",
+    "url": "https://www.cam.ac.uk/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-111",
+    "name": "University of Edinburgh",
+    "category": "高校与教育",
+    "url": "https://www.ed.ac.uk/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-112",
+    "name": "ETH Zurich",
+    "category": "高校与教育",
+    "url": "https://ethz.ch/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-113",
+    "name": "EPFL",
+    "category": "高校与教育",
+    "url": "https://www.epfl.ch/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-114",
+    "name": "Technical University of Munich",
+    "category": "高校与教育",
+    "url": "https://www.tum.de/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-115",
+    "name": "University of Toronto",
+    "category": "高校与教育",
+    "url": "https://www.utoronto.ca/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-116",
+    "name": "University of British Columbia",
+    "category": "高校与教育",
+    "url": "https://www.ubc.ca/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-117",
+    "name": "McGill",
+    "category": "高校与教育",
+    "url": "https://www.mcgill.ca/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-118",
+    "name": "University of Sydney",
+    "category": "高校与教育",
+    "url": "https://www.sydney.edu.au/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-119",
+    "name": "National University of Singapore",
+    "category": "高校与教育",
+    "url": "https://nus.edu.sg/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-120",
+    "name": "NASA",
+    "category": "科研与公共机构",
+    "url": "https://www.nasa.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-121",
+    "name": "ESA",
+    "category": "科研与公共机构",
+    "url": "https://www.esa.int/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-122",
+    "name": "CERN",
+    "category": "科研与公共机构",
+    "url": "https://home.cern/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-123",
+    "name": "Fermilab",
+    "category": "科研与公共机构",
+    "url": "https://www.fnal.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-124",
+    "name": "NOAA",
+    "category": "科研与公共机构",
+    "url": "https://www.noaa.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-125",
+    "name": "NIST",
+    "category": "科研与公共机构",
+    "url": "https://www.nist.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-126",
+    "name": "NSF",
+    "category": "科研与公共机构",
+    "url": "https://www.nsf.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-127",
+    "name": "PubMed",
+    "category": "科研与公共机构",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-128",
+    "name": "arXiv",
+    "category": "科研与公共机构",
+    "url": "https://arxiv.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-129",
+    "name": "Crossref",
+    "category": "科研与公共机构",
+    "url": "https://www.crossref.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-130",
+    "name": "ORCID",
+    "category": "科研与公共机构",
+    "url": "https://orcid.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-131",
+    "name": "Zenodo",
+    "category": "科研与公共机构",
+    "url": "https://zenodo.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-132",
+    "name": "PLOS",
+    "category": "科研与公共机构",
+    "url": "https://plos.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-133",
+    "name": "eLife",
+    "category": "科研与公共机构",
+    "url": "https://elifesciences.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-134",
+    "name": "Nature",
+    "category": "科研与公共机构",
+    "url": "https://www.nature.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-135",
+    "name": "CSIRO",
+    "category": "科研与公共机构",
+    "url": "https://www.csiro.au/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-136",
+    "name": "Wellcome",
+    "category": "科研与公共机构",
+    "url": "https://wellcome.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-137",
+    "name": "BBC",
+    "category": "新闻与文化",
+    "url": "https://www.bbc.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-138",
+    "name": "The Guardian",
+    "category": "新闻与文化",
+    "url": "https://www.theguardian.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-139",
+    "name": "France 24",
+    "category": "新闻与文化",
+    "url": "https://www.france24.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-140",
+    "name": "RFI",
+    "category": "新闻与文化",
+    "url": "https://www.rfi.fr/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-141",
+    "name": "NPR",
+    "category": "新闻与文化",
+    "url": "https://www.npr.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-142",
+    "name": "PBS",
+    "category": "新闻与文化",
+    "url": "https://www.pbs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-143",
+    "name": "CBC",
+    "category": "新闻与文化",
+    "url": "https://www.cbc.ca/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-144",
+    "name": "ABC Australia",
+    "category": "新闻与文化",
+    "url": "https://www.abc.net.au/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-145",
+    "name": "NHK World",
+    "category": "新闻与文化",
+    "url": "https://www3.nhk.or.jp/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-146",
+    "name": "Al Jazeera",
+    "category": "新闻与文化",
+    "url": "https://www.aljazeera.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-147",
+    "name": "SWI swissinfo",
+    "category": "新闻与文化",
+    "url": "https://www.swissinfo.ch/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-148",
+    "name": "The Conversation",
+    "category": "新闻与文化",
+    "url": "https://theconversation.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-149",
+    "name": "Louvre",
+    "category": "新闻与文化",
+    "url": "https://www.louvre.fr/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-150",
+    "name": "Rijksmuseum",
+    "category": "新闻与文化",
+    "url": "https://www.rijksmuseum.nl/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-151",
+    "name": "Tate",
+    "category": "新闻与文化",
+    "url": "https://www.tate.org.uk/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-152",
+    "name": "Library of Congress",
+    "category": "新闻与文化",
+    "url": "https://www.loc.gov/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-153",
+    "name": "Wikipedia",
+    "category": "公共服务与应用",
+    "url": "https://www.wikipedia.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-154",
+    "name": "DuckDuckGo",
+    "category": "公共服务与应用",
+    "url": "https://duckduckgo.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-155",
+    "name": "Brave Search",
+    "category": "公共服务与应用",
+    "url": "https://search.brave.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-156",
+    "name": "Proton",
+    "category": "公共服务与应用",
+    "url": "https://proton.me/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-157",
+    "name": "Signal",
+    "category": "公共服务与应用",
+    "url": "https://signal.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-158",
+    "name": "Telegram",
+    "category": "公共服务与应用",
+    "url": "https://telegram.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-159",
+    "name": "Discord",
+    "category": "公共服务与应用",
+    "url": "https://discord.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-160",
+    "name": "Slack",
+    "category": "公共服务与应用",
+    "url": "https://slack.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-161",
+    "name": "Zoom",
+    "category": "公共服务与应用",
+    "url": "https://www.zoom.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-162",
+    "name": "Notion",
+    "category": "公共服务与应用",
+    "url": "https://www.notion.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-163",
+    "name": "Obsidian",
+    "category": "公共服务与应用",
+    "url": "https://obsidian.md/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-164",
+    "name": "Joplin",
+    "category": "公共服务与应用",
+    "url": "https://joplinapp.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-165",
+    "name": "Bitwarden",
+    "category": "公共服务与应用",
+    "url": "https://bitwarden.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-166",
+    "name": "1Password",
+    "category": "公共服务与应用",
+    "url": "https://1password.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-167",
+    "name": "KeePass",
+    "category": "公共服务与应用",
+    "url": "https://keepass.info/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-168",
+    "name": "Syncthing",
+    "category": "公共服务与应用",
+    "url": "https://syncthing.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-169",
+    "name": "Read the Docs",
+    "category": "科学计算与文档",
+    "url": "https://about.readthedocs.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-170",
+    "name": "Sphinx",
+    "category": "科学计算与文档",
+    "url": "https://www.sphinx-doc.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-171",
+    "name": "MkDocs",
+    "category": "科学计算与文档",
+    "url": "https://www.mkdocs.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-172",
+    "name": "Docusaurus",
+    "category": "科学计算与文档",
+    "url": "https://docusaurus.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-173",
+    "name": "Jekyll",
+    "category": "科学计算与文档",
+    "url": "https://jekyllrb.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-174",
+    "name": "Eleventy",
+    "category": "科学计算与文档",
+    "url": "https://www.11ty.dev/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-175",
+    "name": "Pelican",
+    "category": "科学计算与文档",
+    "url": "https://getpelican.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-176",
+    "name": "Pandoc",
+    "category": "科学计算与文档",
+    "url": "https://pandoc.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-177",
+    "name": "Quarto",
+    "category": "科学计算与文档",
+    "url": "https://quarto.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-178",
+    "name": "Typst",
+    "category": "科学计算与文档",
+    "url": "https://typst.app/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-179",
+    "name": "LaTeX",
+    "category": "科学计算与文档",
+    "url": "https://www.latex-project.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-180",
+    "name": "TeX Users Group",
+    "category": "科学计算与文档",
+    "url": "https://tug.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-181",
+    "name": "CTAN",
+    "category": "科学计算与文档",
+    "url": "https://ctan.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-182",
+    "name": "MathJax",
+    "category": "科学计算与文档",
+    "url": "https://www.mathjax.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-183",
+    "name": "KaTeX",
+    "category": "科学计算与文档",
+    "url": "https://katex.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-184",
+    "name": "NumPy",
+    "category": "科学计算与文档",
+    "url": "https://numpy.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-185",
+    "name": "cURL",
+    "category": "网络工具与备份",
+    "url": "https://curl.se/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-186",
+    "name": "OpenSSL",
+    "category": "网络工具与备份",
+    "url": "https://openssl-library.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-187",
+    "name": "OpenSSH",
+    "category": "网络工具与备份",
+    "url": "https://www.openssh.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-188",
+    "name": "OpenVPN",
+    "category": "网络工具与备份",
+    "url": "https://openvpn.net/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-189",
+    "name": "strongSwan",
+    "category": "网络工具与备份",
+    "url": "https://www.strongswan.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-190",
+    "name": "Wireshark",
+    "category": "网络工具与备份",
+    "url": "https://www.wireshark.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-191",
+    "name": "Nmap",
+    "category": "网络工具与备份",
+    "url": "https://nmap.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-192",
+    "name": "HAProxy",
+    "category": "网络工具与备份",
+    "url": "https://www.haproxy.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-193",
+    "name": "Caddy",
+    "category": "网络工具与备份",
+    "url": "https://caddyserver.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-194",
+    "name": "Traefik",
+    "category": "网络工具与备份",
+    "url": "https://traefik.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-195",
+    "name": "Envoy",
+    "category": "网络工具与备份",
+    "url": "https://www.envoyproxy.io/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-196",
+    "name": "Squid",
+    "category": "网络工具与备份",
+    "url": "https://www.squid-cache.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-197",
+    "name": "Varnish",
+    "category": "网络工具与备份",
+    "url": "https://varnish-cache.org/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-198",
+    "name": "PowerDNS",
+    "category": "网络工具与备份",
+    "url": "https://www.powerdns.com/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-199",
+    "name": "NLnet Labs",
+    "category": "网络工具与备份",
+    "url": "https://www.nlnetlabs.nl/",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-200",
+    "name": "BIND / ISC",
+    "category": "网络工具与备份",
+    "url": "https://www.isc.org/",
+    "expectedStatus": "200-299"
+  }
+]

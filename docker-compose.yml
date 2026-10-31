@@ -1,0 +1,42 @@
+name: z-mihomo-health-check
+
+services:
+  z-mihomo-health-check:
+    image: jiuwusan/z-mihomo-health-check:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: z-mihomo-health-check
+    environment:
+      PANEL_ALLOWED_HOSTS: ${PANEL_ALLOWED_HOSTS:-}
+      TZ: Asia/Shanghai
+    restart: always
+    stop_grace_period: 45s
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    ports:
+      - '127.0.0.1:8080:8080'
+    volumes:
+      - health-data:/data
+    healthcheck:
+      test: ['CMD', '/mihomo-health', 'healthcheck']
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - wk
+
+networks:
+  wk:
+    external: true
+
+volumes:
+  health-data:
+    name: ${CONTROLLER_DATA_VOLUME:-z-mihomo-health-check-data}

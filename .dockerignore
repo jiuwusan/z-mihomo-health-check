@@ -1,0 +1,8 @@
+**
+!go.mod
+!*.go
+!sites.txt
+!web/
+!web/**
+!Dockerfile
+!LICENSE

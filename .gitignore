@@ -1,0 +1,13 @@
+/data/
+/.local/
+*.exe
+*.test
+/mihomo-health
+/mihomo-health-check
+/z-mihomo-health-check
+/.env
+# Subscription examples contain live credentials; keep them local.
+/config.yaml
+/config.yml
+/MY-*.yaml
+/Mihomo-*.yaml

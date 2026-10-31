@@ -1,0 +1,283 @@
+package main
+
+import (
+	"context"
+	"errors"
+	"math/rand/v2"
+	"sync"
+	"time"
+)
+
+type Event struct {
+	ID      uint64    `json:"id"`
+	Time    time.Time `json:"time"`
+	Level   string    `json:"level"`
+	Message string    `json:"message"`
+}
+type GroupResult struct {
+	Name      string `json:"name"`
+	Delay     int    `json:"delay_ms"`
+	Available bool   `json:"available"`
+}
+type Status struct {
+	Running       bool          `json:"running"`
+	Phase         string        `json:"phase"`
+	Message       string        `json:"message"`
+	Current       string        `json:"current"`
+	Failures      int           `json:"failures"`
+	LastSite      string        `json:"last_site"`
+	LastCheck     *time.Time    `json:"last_check"`
+	LastSwitch    *time.Time    `json:"last_switch"`
+	Delay         int           `json:"delay_ms"`
+	PoolSize      int           `json:"pool_size"`
+	Results       []GroupResult `json:"results"`
+	Events        []Event       `json:"events"`
+	EventCount    int           `json:"event_count"`
+	HistoryID     string        `json:"history_id"`
+	eventSequence uint64
+}
+type Controller struct {
+	mu     sync.Mutex
+	cycle  sync.Mutex
+	cfg    Config
+	rev    uint64
+	ctx    context.Context
+	cancel context.CancelFunc
+	wake   chan struct{}
+	sites  []string
+	state  Status
+}
+
+func NewController(sites []string) *Controller {
+	c := &Controller{sites: append([]string(nil), sites...), wake: make(chan struct{}, 1)}
+	c.Configure(DefaultConfig())
+	return c
+}
+func (c *Controller) Configure(cfg Config) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.cancel != nil {
+		c.cancel()
+	}
+	c.ctx, c.cancel = context.WithCancel(context.Background())
+	c.cfg = cfg
+	c.rev++
+	phase, msg := "stopped", "探查已停用"
+	if cfg.Enabled {
+		phase, msg = "waiting", "等待下一次探查"
+	}
+	pruneEvents(&c.state, time.Now())
+	historyID := c.state.HistoryID
+	if historyID == "" {
+		historyID = time.Now().UTC().Format(time.RFC3339Nano)
+	}
+	c.state = Status{Running: cfg.Enabled, Phase: phase, Message: msg, PoolSize: len(c.sites), Results: []GroupResult{}, Events: c.state.Events, EventCount: c.state.EventCount, HistoryID: historyID, eventSequence: c.state.eventSequence}
+	select {
+	case c.wake <- struct{}{}:
+	default:
+	}
+}
+func (c *Controller) Stop() {
+	c.mu.Lock()
+	cfg := c.cfg
+	c.mu.Unlock()
+	cfg.Enabled = false
+	c.Configure(cfg)
+}
+func (c *Controller) Status() Status {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	pruneEvents(&c.state, time.Now())
+	s := c.state
+	s.Results = append([]GroupResult{}, s.Results...)
+	s.Events = append([]Event{}, s.Events[:min(len(s.Events), eventPageSize)]...)
+	return s
+}
+func (c *Controller) Config() Config { c.mu.Lock(); defer c.mu.Unlock(); return c.cfg }
+func (c *Controller) update(rev uint64, fn func(*Status)) bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.rev != rev || c.ctx.Err() != nil {
+		return false
+	}
+	fn(&c.state)
+	return true
+}
+func addEvent(s *Status, level, message string) {
+	now := time.Now()
+	pruneEvents(s, now)
+	s.eventSequence++
+	s.Message = message
+	s.Events = append([]Event{{ID: s.eventSequence, Time: now, Level: level, Message: message}}, s.Events...)
+	s.EventCount = len(s.Events)
+}
+func (c *Controller) fail(rev uint64, err error) {
+	c.update(rev, func(s *Status) { s.Phase = "error"; addEvent(s, "error", err.Error()) })
+}
+func (c *Controller) Check(parent context.Context) {
+	if !c.cycle.TryLock() {
+		return
+	}
+	defer c.cycle.Unlock()
+	c.mu.Lock()
+	cfg, rev, base := c.cfg, c.rev, c.ctx
+	c.mu.Unlock()
+	if !cfg.Enabled || len(c.sites) == 0 {
+		return
+	}
+	ctx, cancel := context.WithCancel(base)
+	defer cancel()
+	stop := context.AfterFunc(parent, cancel)
+	defer stop()
+	if ctx.Err() != nil {
+		return
+	}
+	site := c.sites[rand.IntN(len(c.sites))]
+	client := NewMihomo(cfg)
+	if !c.update(rev, func(s *Status) {
+		now := time.Now()
+		s.LastCheck = &now
+		s.LastSite = site
+		s.Delay = 0
+		s.Phase = "checking"
+		s.Message = "正在测试当前出口"
+	}) {
+		return
+	}
+	group, err := client.Group(ctx)
+	if err != nil {
+		c.fail(rev, err)
+		return
+	}
+	c.update(rev, func(s *Status) { s.Current = group.Now })
+	delay, err := client.Probe(ctx, site)
+	if err == nil {
+		c.update(rev, func(s *Status) {
+			s.Failures = 0
+			s.Delay = delay
+			s.Phase = "healthy"
+			addEvent(s, "success", "当前出口探查成功")
+		})
+		return
+	}
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) || !apiErr.Node {
+		c.fail(rev, err)
+		return
+	}
+	trigger := false
+	if !c.update(rev, func(s *Status) {
+		s.Failures++
+		s.Phase = "warning"
+		addEvent(s, "warning", "当前出口探查失败")
+		trigger = s.Failures >= cfg.FailureThreshold
+	}) {
+		return
+	}
+	if !trigger {
+		return
+	}
+	if !c.update(rev, func(s *Status) {
+		s.Phase = "testing"
+		addEvent(s, "info", "达到失败阈值，正在执行整组 delay 测试")
+	}) {
+		return
+	}
+	delays, err := client.Delays(ctx, site)
+	if err != nil {
+		c.fail(rev, err)
+		return
+	}
+	// Re-read the active order after testing, in case the subscription was reloaded.
+	group, err = client.Group(ctx)
+	if err != nil {
+		c.fail(rev, err)
+		return
+	}
+	results := make([]GroupResult, 0, len(group.All))
+	for _, name := range group.All {
+		d, ok := delays[name]
+		results = append(results, GroupResult{Name: name, Delay: d, Available: ok && d > 0 && d <= 65535})
+	}
+	if !c.update(rev, func(s *Status) { s.Results = results; s.Current = group.Now }) {
+		return
+	}
+	for _, result := range results {
+		if !result.Available {
+			continue
+		}
+		if ctx.Err() != nil {
+			return
+		}
+		if group.Now == result.Name {
+			c.update(rev, func(s *Status) {
+				s.Failures = 0
+				s.Phase = "healthy"
+				addEvent(s, "success", "原始顺序中首个可用国家分组已在使用，保持当前选择")
+			})
+			return
+		}
+		if !c.update(rev, func(s *Status) { s.Phase = "switching"; s.Message = "正在按原始顺序选择国家分组" }) {
+			return
+		}
+		err = client.Select(ctx, result.Name)
+		// A lost HTTP response may still mean the switch was applied.
+		if err != nil {
+			observed, observeErr := client.Group(ctx)
+			if observeErr != nil {
+				c.fail(rev, observeErr)
+				return
+			}
+			if observed.Now != result.Name {
+				group = observed
+				c.update(rev, func(s *Status) {
+					s.Current = observed.Now
+					addEvent(s, "warning", "国家分组切换未成功，继续检查下一项")
+				})
+				continue
+			}
+		}
+		c.update(rev, func(s *Status) {
+			now := time.Now()
+			s.LastSwitch = &now
+			s.Current = result.Name
+			s.Failures = 0
+			s.Phase = "healthy"
+			addEvent(s, "success", "已按原始顺序切换到 "+result.Name)
+		})
+		return
+	}
+	c.update(rev, func(s *Status) {
+		s.Phase = "error"
+		addEvent(s, "error", "本轮没有可切换的国家分组，保留当前选择")
+	})
+}
+func (c *Controller) Run(ctx context.Context) {
+	for {
+		cfg := c.Config()
+		ticker := time.NewTicker(time.Duration(cfg.IntervalSeconds) * time.Second)
+		restart := false
+		for !restart {
+			select {
+			case <-ctx.Done():
+				ticker.Stop()
+				c.Stop()
+				return
+			case <-c.wake:
+				restart = true
+			case <-ticker.C:
+				c.Check(ctx)
+				// Drop ticks that elapsed during a slow probe/failover; never queue a burst.
+				draining := true
+				for draining {
+					select {
+					case <-ticker.C:
+					default:
+						draining = false
+					}
+				}
+			}
+		}
+		ticker.Stop()
+	}
+}
