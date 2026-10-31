@@ -8,12 +8,13 @@ Go 后端与 Web 面板，通过 Clash API 探查当前出口，连续失败达�
 # wk 已存在时跳过创建
 docker network create wk
 docker compose config --quiet
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
 默认 [docker-compose.yml](./docker-compose.yml) 只启动健康检查服务，加入已有 `wk` 网络，连接现有 Mihomo。打开 [http://127.0.0.1:8080](http://127.0.0.1:8080)，填写后端可访问的 API 地址（例如 `http://mihomo:9090`）、Secret、目标分组，测试连接后启用并保存。首次安装默认停用。
 
-Compose 参考 `z-media-workflow`：镜像 `jiuwusan/z-mihomo-health-check:latest`、同名容器、`restart: always`、45 秒停止宽限、持久化卷及 10MB × 3 日志轮转。支持本地构建，也提供 [GitHub Actions 自动发布工作流](./.github/workflows/docker-publish.yml)；完成下方设置并成功发布后，可直接拉取镜像部署。
+Compose 参考 `z-media-workflow`：镜像 `jiuwusan/z-mihomo-health-check:latest`、同名容器、`restart: always`、45 秒停止宽限、持久化卷及 10MB × 3 日志轮转。镜像由 [GitHub Actions](./.github/workflows/docker-publish.yml) 自动构建并推送 Docker Hub，Compose 仅使用已发布镜像，部署机器只需部署文件，无需源码或 Dockerfile。
 
 站点池见 [SITES.md](./SITES.md)，脚本可读取 [sites.txt](./sites.txt) 或 [sites.json](./sites.json)。本机探测记录见 [probe-results.json](./probe-results.json)。
 
@@ -130,9 +131,9 @@ go run .
 
 ```sh
 docker compose pull
-docker compose up -d --no-build
+docker compose up -d
 ```
 
-首次发布成功前继续使用 `docker compose up -d --build`。本次添加工作流文件与说明，尚未实际触发 GitHub Actions 或推送 Docker Hub。
+`latest` 镜像已通过 GitHub Actions 成功发布，支持 `linux/amd64`、`linux/arm64`。后续版本的构建与推送结果以 GitHub Actions 运行记录为准。Dockerfile 用于 CI 构建，部署 Compose 不包含 `build` 配置。
 
 许可证：[Apache-2.0](./LICENSE)，沿用原笔记仓库的许可证。

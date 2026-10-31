@@ -11,7 +11,8 @@
 docker network ls --filter name=wk
 docker network create wk
 docker compose config --quiet
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose ps
 docker compose logs -f --tail=100 z-mihomo-health-check
 ```
@@ -19,14 +20,14 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 默认配置沿用 `z-media-workflow` 的部署约定：
 
 - 服务和容器名：`z-mihomo-health-check`。
-- 镜像名：`jiuwusan/z-mihomo-health-check:latest`，同时提供本地 `build` 配置。
+- 镜像名：`jiuwusan/z-mihomo-health-check:latest`，由 GitHub Actions 构建并推送 Docker Hub。
 - 网络：已存在的外部 `wk` 网络。
 - 重启策略：`always`，停止宽限：45 秒，包含进程存活检查。
 - 日志：`json-file`，单文件最多 10MB，保留 3 个。
 - 数据：`z-mihomo-health-check-data` 命名卷挂载到 `/data`。
 - 面板：宿主机 `127.0.0.1:8080`，前端与 Go API 同源提供。
 
-默认部署无需订阅文件或 `.env`，连接参数通过面板保存。项目提供 [GitHub Actions 发布工作流](./.github/workflows/docker-publish.yml)，设置 Docker Hub Secrets 后推送 `master` 即可自动发布。首次发布成功前使用本地 `--build`；发布后执行 `docker compose pull`、`docker compose up -d --no-build` 更新。调整宿主机端口时直接编辑 YAML 中的 `ports`。工作流触发方式、Secret 命名和标签规则见 [README.md](./README.md#7-github-actions-发布镜像)。
+默认部署只需 `docker-compose.yml`，连接参数通过面板保存，无需订阅文件、源码、Dockerfile 或 `.env`。项目通过 [GitHub Actions](./.github/workflows/docker-publish.yml) 构建镜像，设置 Docker Hub Secrets 后推送 `master` 即可自动发布；部署机器执行 `docker compose pull`、`docker compose up -d` 拉取并更新。调整宿主机端口时直接编辑 YAML 中的 `ports`。工作流触发方式、Secret 命名和标签规则见 [README.md](./README.md#7-github-actions-发布镜像)。
 
 现有 Mihomo 必须接入 `wk`，且控制接口监听容器网络地址，例如 `0.0.0.0:9090`，并配置 secret。面板 API 地址填写例如 `http://mihomo:9090`；`mihomo` 应是该网络内可解析的容器服务名或网络别名。无需将控制接口映射到公网。
 
@@ -101,7 +102,8 @@ go build -o mihomo-health .
 
 ```sh
 docker compose logs --tail=100 z-mihomo-health-check
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose down
 ```
 

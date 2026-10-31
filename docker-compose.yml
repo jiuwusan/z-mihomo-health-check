@@ -3,9 +3,6 @@ name: z-mihomo-health-check
 services:
   z-mihomo-health-check:
     image: jiuwusan/z-mihomo-health-check:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: z-mihomo-health-check
     environment:
       PANEL_ALLOWED_HOSTS: ${PANEL_ALLOWED_HOSTS:-}
