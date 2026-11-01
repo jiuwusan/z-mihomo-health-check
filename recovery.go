@@ -10,19 +10,28 @@ import (
 )
 
 type RecoveryStatus struct {
-	Enabled         bool       `json:"enabled"`
-	Candidate       string     `json:"candidate"`
-	Successes       int        `json:"successes"`
-	Threshold       int        `json:"threshold"`
-	CooldownSeconds int        `json:"cooldown_seconds"`
-	LastCheck       *time.Time `json:"last_check"`
-	Message         string     `json:"message"`
+	Enabled            bool       `json:"enabled"`
+	Candidate          string     `json:"candidate"`
+	Successes          int        `json:"successes"`
+	Threshold          int        `json:"threshold"`
+	InitialWaitSeconds int        `json:"initial_wait_seconds"`
+	LastCheck          *time.Time `json:"last_check"`
+	Message            string     `json:"message"`
 }
 
 type recoveryState struct {
+	startedAt time.Time
+	checked   bool
 	nextCheck time.Time
 	current   string
 	order     []string
+}
+
+// Called only while holding c.mu.
+func (c *Controller) restartRecoveryWait(now time.Time) {
+	c.recovery.startedAt = now
+	c.recovery.checked = false
+	c.recovery.nextCheck = now.Add(time.Duration(c.cfg.RecoveryInitialDelaySeconds) * time.Second)
 }
 
 // Called only while holding c.mu (usually through update).
@@ -43,7 +52,7 @@ func (c *Controller) observeRecoveryGroup(rev uint64, group ProxyGroup) {
 		if c.recovery.current != "" && (c.recovery.current != group.Now || !slices.Equal(c.recovery.order, group.All)) {
 			c.resetRecovery("当前选择或分组顺序变化")
 			if c.recovery.current != group.Now {
-				c.switchedAt = time.Now()
+				c.restartRecoveryWait(time.Now())
 			}
 		}
 		c.recovery.current = group.Now
@@ -64,11 +73,17 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		return
 	}
 	due := false
+	var startedAt time.Time
 	c.update(rev, func(s *Status) {
+		if time.Now().Before(c.recovery.startedAt.Add(time.Duration(cfg.RecoveryInitialDelaySeconds) * time.Second)) {
+			return
+		}
 		if time.Now().Before(c.recovery.nextCheck) {
 			return
 		}
 		due = true
+		c.recovery.checked = true
+		startedAt = c.recovery.startedAt
 		now := time.Now()
 		s.Recovery.LastCheck = &now
 	})
@@ -77,7 +92,9 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 	}
 	// Even slow checks must wait a full interval before starting another round.
 	defer c.update(rev, func(s *Status) {
-		c.recovery.nextCheck = time.Now().Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
+		if c.recovery.startedAt.Equal(startedAt) {
+			c.recovery.nextCheck = time.Now().Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
+		}
 	})
 	index := slices.Index(group.All, group.Now)
 	if index <= 0 {
@@ -117,7 +134,7 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		}
 		s.Recovery.Successes = min(s.Recovery.Successes+1, cfg.RecoverySuccessThreshold)
 		s.Recovery.Message = fmt.Sprintf("%s 连续恢复成功 %d/%d 次", candidate, s.Recovery.Successes, cfg.RecoverySuccessThreshold)
-		ready = s.Recovery.Successes >= cfg.RecoverySuccessThreshold && !time.Now().Before(c.switchedAt.Add(time.Duration(cfg.RecoveryCooldownSeconds)*time.Second))
+		ready = s.Recovery.Successes >= cfg.RecoverySuccessThreshold
 	}) || !ready || ctx.Err() != nil {
 		return
 	}
@@ -154,7 +171,7 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 	}
 	c.update(rev, func(s *Status) {
 		now := time.Now()
-		c.switchedAt = now
+		c.restartRecoveryWait(now)
 		c.recovery.current = candidate
 		c.resetRecovery("回切成功，重新等待恢复检查")
 		s.Current = candidate

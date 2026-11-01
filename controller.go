@@ -38,17 +38,16 @@ type Status struct {
 	eventSequence uint64
 }
 type Controller struct {
-	mu         sync.Mutex
-	cycle      sync.Mutex
-	cfg        Config
-	rev        uint64
-	ctx        context.Context
-	cancel     context.CancelFunc
-	wake       chan struct{}
-	sites      []string
-	state      Status
-	recovery   recoveryState
-	switchedAt time.Time
+	mu       sync.Mutex
+	cycle    sync.Mutex
+	cfg      Config
+	rev      uint64
+	ctx      context.Context
+	cancel   context.CancelFunc
+	wake     chan struct{}
+	sites    []string
+	state    Status
+	recovery recoveryState
 }
 
 func NewController(sites []string) *Controller {
@@ -64,16 +63,19 @@ func (c *Controller) Configure(cfg Config) {
 	}
 	c.ctx, c.cancel = context.WithCancel(context.Background())
 	changedTarget := c.cfg.APIURL != cfg.APIURL || c.cfg.Secret != cfg.Secret || c.cfg.Group != cfg.Group
+	startRecovery := changedTarget || (!c.cfg.Enabled && cfg.Enabled) || (!c.cfg.RecoveryEnabled && cfg.RecoveryEnabled)
 	c.cfg = cfg
 	c.rev++
 	// Keep the observed baseline across saves so an unobserved manual switch
-	// cannot bypass cooldown. Progress is reset below with the public status.
+	// cannot bypass the initial wait. Progress is reset below with the public status.
 	if changedTarget {
 		c.recovery = recoveryState{}
 	}
 	c.recovery.nextCheck = time.Now().Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
-	if changedTarget || c.switchedAt.IsZero() {
-		c.switchedAt = time.Now()
+	if startRecovery || c.recovery.startedAt.IsZero() {
+		c.restartRecoveryWait(time.Now())
+	} else if !c.recovery.checked {
+		c.recovery.nextCheck = c.recovery.startedAt.Add(time.Duration(cfg.RecoveryInitialDelaySeconds) * time.Second)
 	}
 	phase, msg := "stopped", "探查已停用"
 	if cfg.Enabled {
@@ -105,9 +107,9 @@ func (c *Controller) Status() Status {
 	s.Recovery.Enabled = c.cfg.Enabled && c.cfg.RecoveryEnabled
 	s.Recovery.Threshold = c.cfg.RecoverySuccessThreshold
 	if s.Recovery.Enabled {
-		remaining := time.Until(c.switchedAt.Add(time.Duration(c.cfg.RecoveryCooldownSeconds) * time.Second))
-		if remaining > 0 {
-			s.Recovery.CooldownSeconds = int((remaining + time.Second - 1) / time.Second)
+		initialRemaining := time.Until(c.recovery.startedAt.Add(time.Duration(c.cfg.RecoveryInitialDelaySeconds) * time.Second))
+		if initialRemaining > 0 {
+			s.Recovery.InitialWaitSeconds = int((initialRemaining + time.Second - 1) / time.Second)
 		}
 	}
 	s.Results = append([]GroupResult{}, s.Results...)
@@ -267,9 +269,8 @@ func (c *Controller) Check(parent context.Context) {
 		}
 		c.update(rev, func(s *Status) {
 			now := time.Now()
-			c.switchedAt = now
+			c.restartRecoveryWait(now)
 			c.resetRecovery("故障切换后重新等待恢复检查")
-			c.recovery.nextCheck = now.Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
 			c.recovery.current = result.Name
 			s.LastSwitch = &now
 			s.Current = result.Name

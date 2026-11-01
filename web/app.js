@@ -27,8 +27,8 @@ function payload() {
     group:$('target-group').value, interval_seconds:Number($('interval').value),
     failure_threshold:Number($('threshold').value), timeout_seconds:Number($('timeout').value), enabled:$('enabled').checked,
     persist_history:$('persist-history').checked, recovery_enabled:$('recovery-enabled').checked,
-    recovery_interval_seconds:Number($('recovery-interval').value), recovery_success_threshold:Number($('recovery-threshold').value),
-    recovery_cooldown_seconds:Number($('recovery-cooldown').value)};
+    recovery_initial_delay_seconds:Number($('recovery-initial-delay').value),
+    recovery_interval_seconds:Number($('recovery-interval').value), recovery_success_threshold:Number($('recovery-threshold').value)};
 }
 function ensureGroup(name) {
   const select = $('target-group');
@@ -41,9 +41,9 @@ function applyConfig(cfg) {
   $('enabled').checked = cfg.enabled;
   $('persist-history').checked = Boolean(cfg.persist_history);
   $('recovery-enabled').checked = Boolean(cfg.recovery_enabled);
+  $('recovery-initial-delay').value = cfg.recovery_initial_delay_seconds;
   $('recovery-interval').value = cfg.recovery_interval_seconds;
   $('recovery-threshold').value = cfg.recovery_success_threshold;
-  $('recovery-cooldown').value = cfg.recovery_cooldown_seconds;
   $('secret').value = ''; $('secret').disabled = false; $('clear-secret').checked = false;
   $('secret-state').textContent = cfg.secret_set ? '已保存 · 不回显' : '未设置';
   $('failure-limit').textContent = ` / ${cfg.failure_threshold} 次`;
@@ -62,8 +62,11 @@ function renderStatus(status) {
   $('last-site').textContent = status.last_site || '—';
   $('activity-summary').textContent = status.last_switch ? `最近 1 小时记录 · 最近切换 ${clock(status.last_switch)}` : '仅保留最近 1 小时记录';
   const recovery = status.recovery || {};
+  const recoveryProgress = recovery.initial_wait_seconds > 0
+    ? `首次检查等待 ${recovery.initial_wait_seconds} 秒`
+    : recovery.candidate ? `候选 ${recovery.candidate} · 连续成功 ${recovery.successes}/${recovery.threshold} 次` : recovery.message || '等待恢复检查';
   $('recovery-status').textContent = recovery.enabled
-    ? `${recovery.candidate ? `候选 ${recovery.candidate} · 连续成功 ${recovery.successes}/${recovery.threshold} 次` : recovery.message || '等待恢复检查'}${recovery.cooldown_seconds > 0 ? ` · 冷却剩余 ${recovery.cooldown_seconds} 秒` : ' · 冷却已结束'}`
+    ? recoveryProgress
     : '自动恢复未运行';
   const results = status.results || [];
   const resultKey = JSON.stringify([results,status.current]);

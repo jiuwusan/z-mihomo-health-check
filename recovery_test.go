@@ -71,8 +71,8 @@ func recoveryFixture(t *testing.T) (*Controller, *recoveryAPI) {
 	cfg.Secret = "test-secret"
 	cfg.Enabled = true
 	cfg.RecoveryEnabled = true
+	cfg.RecoveryInitialDelaySeconds = 0
 	c := testController(t, cfg)
-	c.switchedAt = time.Now().Add(-time.Hour)
 	return c, f
 }
 
@@ -95,32 +95,21 @@ func TestRecoveryRequiresConsecutiveSuccessAndRevalidates(t *testing.T) {
 	}
 }
 
-func TestRecoveryIntervalCooldownAndDisabled(t *testing.T) {
+func TestRecoveryIntervalAndDisabled(t *testing.T) {
 	c, f := recoveryFixture(t)
 	c.Check(context.Background())
-	if len(f.probes) != 1 {
-		t.Fatal("recovery ran before interval")
-	}
-	c.switchedAt = time.Now()
-	for i := 0; i < 3; i++ {
-		recoveryCycle(c)
-	}
-	if len(f.selections) != 0 || c.Status().Recovery.CooldownSeconds < 295 {
-		t.Fatal("cooldown bypassed")
-	}
-	c.switchedAt = time.Now().Add(-time.Hour)
-	recoveryCycle(c)
-	if f.current != "US" {
-		t.Fatal("recovery did not resume after cooldown")
+	f.probes = nil
+	c.Check(context.Background())
+	if len(f.probes) != 1 || c.Status().Recovery.Successes != 1 {
+		t.Fatal("recovery ignored interval")
 	}
 	cfg := c.Config()
 	cfg.RecoveryEnabled = false
 	c.Configure(cfg)
-	f.current = "Japan"
 	f.probes = nil
 	recoveryCycle(c)
 	if len(f.probes) != 1 {
-		t.Fatal("disabled recovery generated requests")
+		t.Fatal("disabled recovery generated extra requests")
 	}
 }
 
@@ -196,7 +185,7 @@ func TestRecoveryFinalProbeFailureCancelsSwitch(t *testing.T) {
 func TestRecoveryConfigurationDefaultsAndPersistence(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "config.json")
 	cfg, err := LoadConfig(file)
-	if err != nil || cfg.RecoveryEnabled || cfg.RecoveryIntervalSeconds != 60 || cfg.RecoverySuccessThreshold != 3 || cfg.RecoveryCooldownSeconds != 300 {
+	if err != nil || cfg.RecoveryEnabled || cfg.RecoveryIntervalSeconds != 60 || cfg.RecoverySuccessThreshold != 3 {
 		t.Fatalf("invalid defaults: %+v %v", cfg, err)
 	}
 	cfg.RecoveryEnabled = true
@@ -207,7 +196,7 @@ func TestRecoveryConfigurationDefaultsAndPersistence(t *testing.T) {
 	if err != nil || got != cfg {
 		t.Fatal("recovery configuration lost")
 	}
-	for _, bad := range []Config{func() Config { v := cfg; v.RecoveryIntervalSeconds = 0; return v }(), func() Config { v := cfg; v.RecoverySuccessThreshold = 0; return v }(), func() Config { v := cfg; v.RecoveryCooldownSeconds = -1; return v }()} {
+	for _, bad := range []Config{func() Config { v := cfg; v.RecoveryIntervalSeconds = 0; return v }(), func() Config { v := cfg; v.RecoverySuccessThreshold = 0; return v }(), func() Config { v := cfg; v.RecoveryInitialDelaySeconds = -1; return v }()} {
 		if bad.Validate() == nil {
 			t.Fatal("invalid recovery setting accepted")
 		}
@@ -232,17 +221,17 @@ func TestRecoveryPrefersOriginalOrderAndResetsChangedCandidate(t *testing.T) {
 	}
 }
 
-func TestRecoveryCooldownDoesNotBlockFailover(t *testing.T) {
+func TestRecoveryInitialWaitDoesNotBlockFailover(t *testing.T) {
 	f, s := newFake(t)
 	cfg := testConfig(s.URL)
 	cfg.RecoveryEnabled = true
 	c := testController(t, cfg)
 	c.Check(context.Background())
 	if f.current != "US" || f.batches != 1 {
-		t.Fatal("recovery cooldown blocked failover")
+		t.Fatal("initial recovery wait blocked failover")
 	}
-	if c.Status().Recovery.CooldownSeconds < 295 {
-		t.Fatal("failover did not start recovery cooldown")
+	if c.Status().Recovery.InitialWaitSeconds < 295 {
+		t.Fatal("failover did not restart initial recovery wait")
 	}
 }
 
@@ -263,13 +252,13 @@ func TestRecoveryCancelledByConfigurationChange(t *testing.T) {
 	}
 }
 
-func TestRecoveryManualSwitchRestartsCooldown(t *testing.T) {
+func TestRecoveryManualSwitchResetsProgress(t *testing.T) {
 	c, f := recoveryFixture(t)
 	recoveryCycle(c)
 	f.current = "Singapore"
 	recoveryCycle(c)
-	if len(f.selections) != 0 || c.Status().Recovery.Successes != 1 || c.Status().Recovery.CooldownSeconds < 295 {
-		t.Fatal("manual selection did not restart validation and cooldown")
+	if len(f.selections) != 0 || c.Status().Recovery.Successes != 1 {
+		t.Fatal("manual selection did not restart validation")
 	}
 }
 
@@ -281,18 +270,19 @@ func TestRecoveryConfigSavePreservesManualSwitchDetection(t *testing.T) {
 	cfg.IntervalSeconds = 7
 	c.Configure(cfg)
 	recoveryCycle(c)
-	if c.Status().Recovery.Successes != 1 || c.Status().Recovery.CooldownSeconds < 295 || len(f.selections) != 0 {
-		t.Fatal("config save lost previous selection and bypassed manual-switch cooldown")
+	if c.Status().Recovery.Successes != 1 || len(f.selections) != 0 {
+		t.Fatal("config save lost previous selection and retained recovery progress")
 	}
 }
 
-func TestRecoveryChangedTargetRestartsCooldown(t *testing.T) {
+func TestRecoveryChangedTargetRestartsInitialWait(t *testing.T) {
 	c, _ := recoveryFixture(t)
 	cfg := c.Config()
+	cfg.RecoveryInitialDelaySeconds = 300
 	cfg.Group = "另一个分组"
 	c.Configure(cfg)
-	if c.Status().Recovery.CooldownSeconds < 295 {
-		t.Fatal("changed target inherited expired cooldown")
+	if c.Status().Recovery.InitialWaitSeconds < 295 {
+		t.Fatal("changed target did not restart initial wait")
 	}
 }
 
@@ -338,12 +328,12 @@ func TestRecoveryLegacyConfigAndPartialAPIUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg, err := LoadConfig(file)
-	if err != nil || cfg.RecoveryEnabled || cfg.RecoveryIntervalSeconds != 60 || cfg.RecoverySuccessThreshold != 3 || cfg.RecoveryCooldownSeconds != 300 {
+	if err != nil || cfg.RecoveryEnabled || cfg.RecoveryIntervalSeconds != 60 || cfg.RecoverySuccessThreshold != 3 {
 		t.Fatalf("legacy defaults lost: %+v %v", cfg, err)
 	}
 	c := testController(t, cfg)
 	handler := NewServer(c, file)
-	for _, body := range []string{`{"recovery_enabled":true,"recovery_interval_seconds":90,"recovery_success_threshold":4,"recovery_cooldown_seconds":600}`, `{"interval_seconds":7}`} {
+	for _, body := range []string{`{"recovery_enabled":true,"recovery_interval_seconds":90,"recovery_success_threshold":4}`, `{"interval_seconds":7}`} {
 		req := httptest.NewRequest("PUT", "http://localhost/api/config", strings.NewReader(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
@@ -351,8 +341,180 @@ func TestRecoveryLegacyConfigAndPartialAPIUpdate(t *testing.T) {
 		var got Config
 		json.Unmarshal(w.Body.Bytes(), &got)
 		saved, err := LoadConfig(file)
-		if w.Code != 200 || err != nil || !got.RecoveryEnabled || got.RecoveryIntervalSeconds != 90 || got.RecoverySuccessThreshold != 4 || got.RecoveryCooldownSeconds != 600 || saved.RecoveryCooldownSeconds != 600 {
+		if w.Code != 200 || err != nil || !got.RecoveryEnabled || got.RecoveryIntervalSeconds != 90 || got.RecoverySuccessThreshold != 4 || saved.RecoveryIntervalSeconds != 90 {
 			t.Fatalf("recovery fields lost: %d %s %v", w.Code, w.Body.String(), err)
 		}
+	}
+}
+
+func TestRecoveryInitialDelayBeforeFirstRoundOnly(t *testing.T) {
+	c, f := recoveryFixture(t)
+	cfg := c.Config()
+	cfg.RecoveryInitialDelaySeconds = 300
+	c.Configure(cfg)
+	recoveryCycle(c)
+	if len(f.probes) != 1 || c.Status().Recovery.InitialWaitSeconds < 295 {
+		t.Fatal("first recovery ignored initial delay")
+	}
+	startedAt := c.recovery.startedAt
+	cfg.IntervalSeconds = 7
+	c.Configure(cfg)
+	if !c.recovery.startedAt.Equal(startedAt) {
+		t.Fatal("ordinary config save restarted initial wait")
+	}
+	c.recovery.startedAt = time.Now().Add(-301 * time.Second)
+	recoveryCycle(c)
+	if c.Status().Recovery.Successes != 1 {
+		t.Fatal("first recovery did not run after initial delay")
+	}
+	c.Check(context.Background())
+	if c.Status().Recovery.Successes != 1 {
+		t.Fatal("subsequent round ignored recovery interval")
+	}
+	recoveryCycle(c)
+	if c.Status().Recovery.Successes != 2 {
+		t.Fatal("initial delay repeated between rounds")
+	}
+}
+
+func TestRecoveryFirstRoundDoesNotWaitForSubsequentInterval(t *testing.T) {
+	c, f := recoveryFixture(t)
+	cfg := c.Config()
+	cfg.RecoveryEnabled = false
+	c.Configure(cfg)
+	cfg.RecoveryEnabled = true
+	cfg.RecoveryInitialDelaySeconds = 0
+	cfg.RecoveryIntervalSeconds = 86400
+	c.Configure(cfg)
+	c.Check(context.Background())
+	if len(f.probes) != 2 || c.Status().Recovery.Successes != 1 {
+		t.Fatal("first round incorrectly waited for subsequent recovery interval")
+	}
+}
+
+func TestRecoverySaveBeforeFirstRoundPreservesInitialSchedule(t *testing.T) {
+	c, _ := recoveryFixture(t)
+	cfg := c.Config()
+	cfg.RecoveryInitialDelaySeconds = 300
+	cfg.RecoveryIntervalSeconds = 86400
+	c.Configure(cfg)
+	c.recovery.startedAt = time.Now().Add(-60 * time.Second)
+	cfg.PersistHistory = true
+	c.Configure(cfg)
+	if !c.recovery.nextCheck.Equal(c.recovery.startedAt.Add(300 * time.Second)) {
+		t.Fatal("ordinary save replaced first-round deadline with subsequent interval")
+	}
+	c.recovery.startedAt = time.Now().Add(-301 * time.Second)
+	c.Configure(cfg)
+	c.Check(context.Background())
+	if c.Status().Recovery.Successes != 1 {
+		t.Fatal("first round still postponed after initial wait elapsed")
+	}
+}
+
+func TestRecoverySuccessfulSwitchRestartsInitialDelay(t *testing.T) {
+	c, f := recoveryFixture(t)
+	cfg := c.Config()
+	cfg.RecoveryInitialDelaySeconds = 300
+	c.Configure(cfg)
+	c.recovery.startedAt = time.Now().Add(-time.Hour)
+	for i := 0; i < 3; i++ {
+		recoveryCycle(c)
+	}
+	if f.current != "US" || c.Status().Recovery.InitialWaitSeconds < 295 {
+		t.Fatal("successful recovery did not restart initial wait")
+	}
+}
+
+func TestRecoveryInitialDelayRestartsOnManualSwitchAndEnable(t *testing.T) {
+	c, f := recoveryFixture(t)
+	cfg := c.Config()
+	cfg.RecoveryInitialDelaySeconds = 300
+	c.Configure(cfg)
+	c.recovery.startedAt = time.Now().Add(-time.Hour)
+	recoveryCycle(c)
+	f.current = "Singapore"
+	f.probes = nil
+	recoveryCycle(c)
+	if len(f.probes) != 1 || c.Status().Recovery.Successes != 0 || c.Status().Recovery.InitialWaitSeconds < 295 {
+		t.Fatal("manual switch did not restart first-round delay")
+	}
+	cfg.Enabled = false
+	c.Configure(cfg)
+	c.recovery.startedAt = time.Now().Add(-time.Hour)
+	cfg.Enabled = true
+	c.Configure(cfg)
+	recoveryCycle(c)
+	if c.Status().Recovery.InitialWaitSeconds < 295 || c.Status().Recovery.Successes != 0 {
+		t.Fatal("enable did not restart initial delay")
+	}
+}
+
+func TestRecoveryInitialDelayDefaultPersistenceAndValidation(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "config.json")
+	if err := os.WriteFile(file, []byte(`{"api_url":"http://localhost:9090"}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	cfg, err := LoadConfig(file)
+	if err != nil || cfg.RecoveryInitialDelaySeconds != 300 {
+		t.Fatal("legacy config initial delay should default to 300")
+	}
+	c := testController(t, cfg)
+	handler := NewServer(c, file)
+	for _, body := range []string{`{"recovery_initial_delay_seconds":120}`, `{"interval_seconds":7}`} {
+		req := httptest.NewRequest("PUT", "http://localhost/api/config", strings.NewReader(body))
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		handler.ServeHTTP(w, req)
+		var got Config
+		json.Unmarshal(w.Body.Bytes(), &got)
+		saved, err := LoadConfig(file)
+		if w.Code != 200 || err != nil || got.RecoveryInitialDelaySeconds != 120 || saved.RecoveryInitialDelaySeconds != 120 {
+			t.Fatal("initial delay lost on partial save")
+		}
+	}
+	for _, n := range []int{-1, 86401} {
+		cfg.RecoveryInitialDelaySeconds = n
+		if cfg.Validate() == nil {
+			t.Fatal("invalid initial delay accepted")
+		}
+	}
+}
+
+func TestRecoveryNoLongerWaitsForLegacyCooldown(t *testing.T) {
+	c, f := recoveryFixture(t)
+	// A new switch must only be constrained by the configured initial delay,
+	// which this fixture explicitly sets to zero.
+	c.restartRecoveryWait(time.Now())
+	for i := 0; i < 3; i++ {
+		recoveryCycle(c)
+	}
+	if f.current != "US" || len(f.selections) != 1 {
+		t.Fatal("removed cooldown still blocks a validated recovery")
+	}
+}
+
+func TestLegacyCooldownIgnoredAndNotReturnedOrPersisted(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "config.json")
+	if err := os.WriteFile(file, []byte(`{"recovery_cooldown_seconds":86400}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	cfg, err := LoadConfig(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := testController(t, cfg)
+	handler := NewServer(c, file)
+	req := httptest.NewRequest("PUT", "http://localhost/api/config", strings.NewReader(`{"recovery_cooldown_seconds":600,"interval_seconds":7}`))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+	saved, err := os.ReadFile(file)
+	if w.Code != 200 || err != nil || strings.Contains(w.Body.String(), "recovery_cooldown_seconds") || strings.Contains(string(saved), "recovery_cooldown_seconds") {
+		t.Fatalf("legacy cooldown not removed: %d %s", w.Code, w.Body.String())
+	}
+	status, _ := json.Marshal(c.Status())
+	if strings.Contains(string(status), "cooldown_seconds") {
+		t.Fatal("removed cooldown still exposed in status")
 	}
 }
