@@ -25,7 +25,7 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 - 重启策略：`always`，停止宽限：45 秒，包含进程存活检查。
 - 日志：`json-file`，单文件最多 10MB，保留 3 个。
 - 数据：`z-mihomo-health-check-data` 命名卷挂载到 `/data`。
-- 面板：宿主机 `127.0.0.1:8080`，前端与 Go API 同源提供。
+- 面板：宿主机所有网卡的 `8080` 端口，前端与 Go API 同源提供。
 
 默认部署只需 `docker-compose.yml`，连接参数通过面板保存，无需订阅文件、源码、Dockerfile 或 `.env`。项目通过 [GitHub Actions](./.github/workflows/docker-publish.yml) 构建镜像，设置 Docker Hub Secrets 后推送 `master` 即可自动发布；部署机器执行 `docker compose pull`、`docker compose up -d` 拉取并更新。调整宿主机端口时直接编辑 YAML 中的 `ports`。工作流触发方式、Secret 命名和标签规则见 [README.md](./README.md#7-github-actions-发布镜像)。
 
@@ -45,13 +45,7 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 
 先点击“测试连接并加载分组”，确认可连接，再勾选“启用自动探查”并保存。新安装默认不启动探查。
 
-面板没有内置登录，默认仅在宿主机回环地址发布，并只接受 `localhost`、`127.0.0.1`、`::1` Host。远程服务器可通过 SSH 转发访问：
-
-```sh
-ssh -L 8080:127.0.0.1:8080 user@server
-```
-
-多人远程访问时，在前方配置带认证的 HTTPS 反向代理；在 `.env` 添加 `PANEL_ALLOWED_HOSTS=health.example.com`（多个主机名用逗号分隔，不带协议或端口），并让代理保留请求 Host。
+远程访问时打开 `http://服务器IP:8080`，也可使用指向服务器的域名，无需配置 Host 白名单。面板没有内置登录，适合在可信网络中使用；需要对外提供访问时可配置带认证的 HTTPS 反向代理。写入 API 仍校验 Origin 与请求 Host 一致，并要求 JSON 请求。
 
 ## 2. 探查和切换语义
 

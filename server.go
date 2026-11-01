@@ -7,10 +7,8 @@ import (
 	"io"
 	"io/fs"
 	"mime"
-	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -82,12 +80,6 @@ func readInput(w http.ResponseWriter, r *http.Request, c Config) (Config, error)
 }
 func NewServer(c *Controller, filename string) http.Handler {
 	s := &server{controller: c, filename: filename}
-	allowedHosts := map[string]bool{"localhost": true, "127.0.0.1": true, "::1": true}
-	for _, host := range strings.Split(os.Getenv("PANEL_ALLOWED_HOSTS"), ",") {
-		if host = strings.ToLower(strings.TrimSpace(host)); host != "" {
-			allowedHosts[host] = true
-		}
-	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]string{"status": "ok"}) })
 	mux.HandleFunc("GET /api/config", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, publicConfig(c.Config())) })
@@ -109,14 +101,6 @@ func NewServer(c *Controller, filename string) http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "no-referrer")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
-		host, _, err := net.SplitHostPort(r.Host)
-		if err != nil {
-			host = strings.Trim(r.Host, "[]")
-		}
-		if !allowedHosts[strings.ToLower(host)] {
-			writeError(w, 403, errors.New("面板访问域名未获允许，请配置 PANEL_ALLOWED_HOSTS"))
-			return
-		}
 		if r.Method != "GET" && r.Method != "HEAD" {
 			if origin := r.Header.Get("Origin"); origin != "" {
 				u, err := url.Parse(origin)

@@ -1,19 +1,13 @@
-name: z-mihomo-health-check
-
 services:
   z-mihomo-health-check:
     image: jiuwusan/z-mihomo-health-check:latest
     container_name: z-mihomo-health-check
     environment:
-      PANEL_ALLOWED_HOSTS: ${PANEL_ALLOWED_HOSTS:-}
       TZ: Asia/Shanghai
     restart: always
     stop_grace_period: 45s
-    read_only: true
-    cap_drop: [ALL]
-    security_opt: ["no-new-privileges:true"]
     ports:
-      - '127.0.0.1:8080:8080'
+      - '8080:8080'
     volumes:
       - health-data:/data
     healthcheck:

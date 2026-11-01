@@ -94,7 +94,7 @@ Compose 参考 `z-media-workflow`：镜像 `jiuwusan/z-mihomo-health-check:lates
 
 Go 程序嵌入站点池和前端资源，无第三方 Go 依赖。配置默认存入 `./data/config.json`，容器中存入 `/data/config.json`。配置保存后立即生效；已启用的配置在进程重启后恢复运行。历史默认只存内存；面板开启“持久化历史记录”（`persist_history`）后，每 5 分钟批量保存到同目录 `history.json`，未变化时跳过写入，正常停止时额外保存一次。Secret 文件未静态加密，请按凭据文件保管。
 
-首次安装的 API 地址使用 `wk` 网络中的服务名示例，已有配置文件中的地址原样保留；本机开发连接本机 Mihomo 时可填写 `http://127.0.0.1:9090`。面板默认限本机访问；反向代理主机名通过 `PANEL_ALLOWED_HOSTS` 显式允许，远程访问与数据卷说明见 [部署文档](./DEPLOY.md)。
+首次安装的 API 地址使用 `wk` 网络中的服务名示例，已有配置文件中的地址原样保留；本机开发连接本机 Mihomo 时可填写 `http://127.0.0.1:9090`。Compose 在宿主机所有网卡发布面板端口，可通过服务器 IP 或域名访问，无需配置 Host 白名单；远程访问与数据卷说明见 [部署文档](./DEPLOY.md)。
 
 ## 5. 验证与故障排查
 

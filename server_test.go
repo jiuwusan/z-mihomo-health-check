@@ -196,29 +196,26 @@ func TestTimeoutDoesNotExceedMihomoSigned16BitMilliseconds(t *testing.T) {
 	}
 }
 
-func TestServerRejectsMatchingButUntrustedHostAndOrigin(t *testing.T) {
-	c := testController(t, testConfig("http://localhost:9090"))
-	handler := NewServer(c, filepath.Join(t.TempDir(), "config.json"))
-	req := httptest.NewRequest("POST", "http://evil.example:8080/api/groups", strings.NewReader(`{"api_url":"http://127.0.0.1:1"}`))
-	req.Header.Set("Origin", "http://evil.example:8080")
-	req.Header.Set("Content-Type", "application/json")
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	if w.Code != 403 {
-		t.Fatalf("untrusted Host bypassed protection: %d", w.Code)
-	}
-}
-
-func TestExplicitPanelHostnameAllowsReverseProxy(t *testing.T) {
-	t.Setenv("PANEL_ALLOWED_HOSTS", "health.example.com")
+func TestPanelAcceptsRemoteHostsWithoutAllowlist(t *testing.T) {
 	c := NewController(nil)
 	defer c.Stop()
 	handler := NewServer(c, filepath.Join(t.TempDir(), "config.json"))
-	req := httptest.NewRequest("GET", "https://health.example.com/api/config", nil)
-	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	if w.Code != 200 {
-		t.Fatalf("explicit reverse-proxy hostname rejected: %d", w.Code)
+	for _, origin := range []string{"http://192.168.1.10:8080", "https://health.example.com", "http://[2001:db8::1]:8080"} {
+		for _, path := range []string{"/", "/api/config", "/healthz"} {
+			w := httptest.NewRecorder()
+			handler.ServeHTTP(w, httptest.NewRequest("GET", origin+path, nil))
+			if w.Code != 200 {
+				t.Fatalf("remote request %s%s rejected: %d", origin, path, w.Code)
+			}
+		}
+		req := httptest.NewRequest("PUT", origin+"/api/config", strings.NewReader(`{"interval_seconds":7}`))
+		req.Header.Set("Origin", origin)
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		handler.ServeHTTP(w, req)
+		if w.Code != 200 || c.Config().IntervalSeconds != 7 {
+			t.Fatalf("same-origin remote save rejected: %d %s", w.Code, w.Body.String())
+		}
 	}
 }
 
