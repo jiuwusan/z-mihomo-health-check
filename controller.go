@@ -20,32 +20,35 @@ type GroupResult struct {
 	Available bool   `json:"available"`
 }
 type Status struct {
-	Running       bool          `json:"running"`
-	Phase         string        `json:"phase"`
-	Message       string        `json:"message"`
-	Current       string        `json:"current"`
-	Failures      int           `json:"failures"`
-	LastSite      string        `json:"last_site"`
-	LastCheck     *time.Time    `json:"last_check"`
-	LastSwitch    *time.Time    `json:"last_switch"`
-	Delay         int           `json:"delay_ms"`
-	PoolSize      int           `json:"pool_size"`
-	Results       []GroupResult `json:"results"`
-	Events        []Event       `json:"events"`
-	EventCount    int           `json:"event_count"`
-	HistoryID     string        `json:"history_id"`
+	Running       bool           `json:"running"`
+	Phase         string         `json:"phase"`
+	Message       string         `json:"message"`
+	Current       string         `json:"current"`
+	Failures      int            `json:"failures"`
+	LastSite      string         `json:"last_site"`
+	LastCheck     *time.Time     `json:"last_check"`
+	LastSwitch    *time.Time     `json:"last_switch"`
+	Delay         int            `json:"delay_ms"`
+	PoolSize      int            `json:"pool_size"`
+	Results       []GroupResult  `json:"results"`
+	Events        []Event        `json:"events"`
+	EventCount    int            `json:"event_count"`
+	HistoryID     string         `json:"history_id"`
+	Recovery      RecoveryStatus `json:"recovery"`
 	eventSequence uint64
 }
 type Controller struct {
-	mu     sync.Mutex
-	cycle  sync.Mutex
-	cfg    Config
-	rev    uint64
-	ctx    context.Context
-	cancel context.CancelFunc
-	wake   chan struct{}
-	sites  []string
-	state  Status
+	mu         sync.Mutex
+	cycle      sync.Mutex
+	cfg        Config
+	rev        uint64
+	ctx        context.Context
+	cancel     context.CancelFunc
+	wake       chan struct{}
+	sites      []string
+	state      Status
+	recovery   recoveryState
+	switchedAt time.Time
 }
 
 func NewController(sites []string) *Controller {
@@ -60,8 +63,18 @@ func (c *Controller) Configure(cfg Config) {
 		c.cancel()
 	}
 	c.ctx, c.cancel = context.WithCancel(context.Background())
+	changedTarget := c.cfg.APIURL != cfg.APIURL || c.cfg.Secret != cfg.Secret || c.cfg.Group != cfg.Group
 	c.cfg = cfg
 	c.rev++
+	// Keep the observed baseline across saves so an unobserved manual switch
+	// cannot bypass cooldown. Progress is reset below with the public status.
+	if changedTarget {
+		c.recovery = recoveryState{}
+	}
+	c.recovery.nextCheck = time.Now().Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
+	if changedTarget || c.switchedAt.IsZero() {
+		c.switchedAt = time.Now()
+	}
 	phase, msg := "stopped", "探查已停用"
 	if cfg.Enabled {
 		phase, msg = "waiting", "等待下一次探查"
@@ -89,6 +102,14 @@ func (c *Controller) Status() Status {
 	defer c.mu.Unlock()
 	pruneEvents(&c.state, time.Now())
 	s := c.state
+	s.Recovery.Enabled = c.cfg.Enabled && c.cfg.RecoveryEnabled
+	s.Recovery.Threshold = c.cfg.RecoverySuccessThreshold
+	if s.Recovery.Enabled {
+		remaining := time.Until(c.switchedAt.Add(time.Duration(c.cfg.RecoveryCooldownSeconds) * time.Second))
+		if remaining > 0 {
+			s.Recovery.CooldownSeconds = int((remaining + time.Second - 1) / time.Second)
+		}
+	}
 	s.Results = append([]GroupResult{}, s.Results...)
 	s.Events = append([]Event{}, s.Events[:min(len(s.Events), eventPageSize)]...)
 	return s
@@ -112,7 +133,11 @@ func addEvent(s *Status, level, message string) {
 	s.EventCount = len(s.Events)
 }
 func (c *Controller) fail(rev uint64, err error) {
-	c.update(rev, func(s *Status) { s.Phase = "error"; addEvent(s, "error", err.Error()) })
+	c.update(rev, func(s *Status) {
+		c.resetRecovery("API 错误中断连续恢复验证")
+		s.Phase = "error"
+		addEvent(s, "error", err.Error())
+	})
 }
 func (c *Controller) Check(parent context.Context) {
 	if !c.cycle.TryLock() {
@@ -150,6 +175,7 @@ func (c *Controller) Check(parent context.Context) {
 		return
 	}
 	c.update(rev, func(s *Status) { s.Current = group.Now })
+	c.observeRecoveryGroup(rev, group)
 	delay, err := client.Probe(ctx, site)
 	if err == nil {
 		c.update(rev, func(s *Status) {
@@ -158,6 +184,7 @@ func (c *Controller) Check(parent context.Context) {
 			s.Phase = "healthy"
 			addEvent(s, "success", "当前出口探查成功")
 		})
+		c.checkRecovery(ctx, cfg, rev, client, group)
 		return
 	}
 	var apiErr *APIError
@@ -168,6 +195,7 @@ func (c *Controller) Check(parent context.Context) {
 	trigger := false
 	if !c.update(rev, func(s *Status) {
 		s.Failures++
+		c.resetRecovery("当前出口失败，暂停恢复检查")
 		s.Phase = "warning"
 		addEvent(s, "warning", "当前出口探查失败")
 		trigger = s.Failures >= cfg.FailureThreshold
@@ -239,6 +267,10 @@ func (c *Controller) Check(parent context.Context) {
 		}
 		c.update(rev, func(s *Status) {
 			now := time.Now()
+			c.switchedAt = now
+			c.resetRecovery("故障切换后重新等待恢复检查")
+			c.recovery.nextCheck = now.Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
+			c.recovery.current = result.Name
 			s.LastSwitch = &now
 			s.Current = result.Name
 			s.Failures = 0

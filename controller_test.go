@@ -84,7 +84,9 @@ func newFake(t *testing.T) (*fakeMihomo, *httptest.Server) {
 	return f, s
 }
 func testConfig(base string) Config {
-	return Config{APIURL: base, Secret: "test-secret", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4, Enabled: true}
+	c := DefaultConfig()
+	c.APIURL, c.Secret, c.Enabled = base, "test-secret", true
+	return c
 }
 func testController(t *testing.T, cfg Config) *Controller {
 	t.Helper()

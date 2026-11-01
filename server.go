@@ -24,19 +24,23 @@ type server struct {
 	save       sync.Mutex
 }
 type settingsInput struct {
-	APIURL           string  `json:"api_url"`
-	Secret           *string `json:"secret"`
-	ClearSecret      bool    `json:"clear_secret"`
-	Group            string  `json:"group"`
-	IntervalSeconds  int     `json:"interval_seconds"`
-	FailureThreshold int     `json:"failure_threshold"`
-	TimeoutSeconds   int     `json:"timeout_seconds"`
-	Enabled          bool    `json:"enabled"`
-	PersistHistory   bool    `json:"persist_history"`
+	RecoveryEnabled          bool    `json:"recovery_enabled"`
+	RecoveryIntervalSeconds  int     `json:"recovery_interval_seconds"`
+	RecoverySuccessThreshold int     `json:"recovery_success_threshold"`
+	RecoveryCooldownSeconds  int     `json:"recovery_cooldown_seconds"`
+	APIURL                   string  `json:"api_url"`
+	Secret                   *string `json:"secret"`
+	ClearSecret              bool    `json:"clear_secret"`
+	Group                    string  `json:"group"`
+	IntervalSeconds          int     `json:"interval_seconds"`
+	FailureThreshold         int     `json:"failure_threshold"`
+	TimeoutSeconds           int     `json:"timeout_seconds"`
+	Enabled                  bool    `json:"enabled"`
+	PersistHistory           bool    `json:"persist_history"`
 }
 
 func inputFrom(c Config) settingsInput {
-	return settingsInput{APIURL: c.APIURL, Group: c.Group, IntervalSeconds: c.IntervalSeconds, FailureThreshold: c.FailureThreshold, TimeoutSeconds: c.TimeoutSeconds, Enabled: c.Enabled, PersistHistory: c.PersistHistory}
+	return settingsInput{APIURL: c.APIURL, Group: c.Group, IntervalSeconds: c.IntervalSeconds, FailureThreshold: c.FailureThreshold, TimeoutSeconds: c.TimeoutSeconds, Enabled: c.Enabled, PersistHistory: c.PersistHistory, RecoveryEnabled: c.RecoveryEnabled, RecoveryIntervalSeconds: c.RecoveryIntervalSeconds, RecoverySuccessThreshold: c.RecoverySuccessThreshold, RecoveryCooldownSeconds: c.RecoveryCooldownSeconds}
 }
 func (in settingsInput) config(previous Config) Config {
 	secret := previous.Secret
@@ -46,10 +50,10 @@ func (in settingsInput) config(previous Config) Config {
 	if in.ClearSecret {
 		secret = ""
 	}
-	return Config{APIURL: strings.TrimRight(strings.TrimSpace(in.APIURL), "/"), Secret: secret, Group: strings.TrimSpace(in.Group), IntervalSeconds: in.IntervalSeconds, FailureThreshold: in.FailureThreshold, TimeoutSeconds: in.TimeoutSeconds, Enabled: in.Enabled, PersistHistory: in.PersistHistory}
+	return Config{APIURL: strings.TrimRight(strings.TrimSpace(in.APIURL), "/"), Secret: secret, Group: strings.TrimSpace(in.Group), IntervalSeconds: in.IntervalSeconds, FailureThreshold: in.FailureThreshold, TimeoutSeconds: in.TimeoutSeconds, Enabled: in.Enabled, PersistHistory: in.PersistHistory, RecoveryEnabled: in.RecoveryEnabled, RecoveryIntervalSeconds: in.RecoveryIntervalSeconds, RecoverySuccessThreshold: in.RecoverySuccessThreshold, RecoveryCooldownSeconds: in.RecoveryCooldownSeconds}
 }
 func publicConfig(c Config) map[string]any {
-	return map[string]any{"api_url": c.APIURL, "secret_set": c.Secret != "", "group": c.Group, "interval_seconds": c.IntervalSeconds, "failure_threshold": c.FailureThreshold, "timeout_seconds": c.TimeoutSeconds, "enabled": c.Enabled, "persist_history": c.PersistHistory}
+	return map[string]any{"api_url": c.APIURL, "secret_set": c.Secret != "", "group": c.Group, "interval_seconds": c.IntervalSeconds, "failure_threshold": c.FailureThreshold, "timeout_seconds": c.TimeoutSeconds, "enabled": c.Enabled, "persist_history": c.PersistHistory, "recovery_enabled": c.RecoveryEnabled, "recovery_interval_seconds": c.RecoveryIntervalSeconds, "recovery_success_threshold": c.RecoverySuccessThreshold, "recovery_cooldown_seconds": c.RecoveryCooldownSeconds}
 }
 func writeJSON(w http.ResponseWriter, code int, value any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")

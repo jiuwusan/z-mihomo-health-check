@@ -11,18 +11,22 @@ import (
 )
 
 type Config struct {
-	APIURL           string `json:"api_url"`
-	Secret           string `json:"secret"`
-	Group            string `json:"group"`
-	IntervalSeconds  int    `json:"interval_seconds"`
-	FailureThreshold int    `json:"failure_threshold"`
-	TimeoutSeconds   int    `json:"timeout_seconds"`
-	Enabled          bool   `json:"enabled"`
-	PersistHistory   bool   `json:"persist_history"`
+	APIURL                   string `json:"api_url"`
+	Secret                   string `json:"secret"`
+	Group                    string `json:"group"`
+	IntervalSeconds          int    `json:"interval_seconds"`
+	FailureThreshold         int    `json:"failure_threshold"`
+	TimeoutSeconds           int    `json:"timeout_seconds"`
+	Enabled                  bool   `json:"enabled"`
+	PersistHistory           bool   `json:"persist_history"`
+	RecoveryEnabled          bool   `json:"recovery_enabled"`
+	RecoveryIntervalSeconds  int    `json:"recovery_interval_seconds"`
+	RecoverySuccessThreshold int    `json:"recovery_success_threshold"`
+	RecoveryCooldownSeconds  int    `json:"recovery_cooldown_seconds"`
 }
 
 func DefaultConfig() Config {
-	return Config{APIURL: "http://mihomo:9090", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4}
+	return Config{APIURL: "http://mihomo:9090", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4, RecoveryIntervalSeconds: 60, RecoverySuccessThreshold: 3, RecoveryCooldownSeconds: 300}
 }
 func (c Config) Validate() error {
 	u, err := url.Parse(c.APIURL)
@@ -41,6 +45,15 @@ func (c Config) Validate() error {
 	}
 	if c.FailureThreshold < 1 || c.FailureThreshold > 100 {
 		return errors.New("连续失败次数范围为 1–100")
+	}
+	if c.RecoveryIntervalSeconds < 1 || c.RecoveryIntervalSeconds > 86400 {
+		return errors.New("恢复检查间隔范围为 1–86400 秒")
+	}
+	if c.RecoverySuccessThreshold < 1 || c.RecoverySuccessThreshold > 100 {
+		return errors.New("连续恢复成功次数范围为 1–100")
+	}
+	if c.RecoveryCooldownSeconds < 0 || c.RecoveryCooldownSeconds > 86400 {
+		return errors.New("回切冷却时间范围为 0–86400 秒")
 	}
 	if len(c.Secret) > 4096 || strings.IndexFunc(c.Secret, unicode.IsControl) >= 0 {
 		return errors.New("Secret 不能包含控制字符且不能超过 4096 字节")

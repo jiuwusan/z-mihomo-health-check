@@ -114,10 +114,13 @@ func (m *Mihomo) query(site string) url.Values {
 	return url.Values{"url": {site}, "timeout": {fmt.Sprint(m.cfg.TimeoutSeconds * 1000)}, "expected": {"200-299"}}
 }
 func (m *Mihomo) Probe(ctx context.Context, site string) (int, error) {
+	return m.ProbeGroup(ctx, m.cfg.Group, site)
+}
+func (m *Mihomo) ProbeGroup(ctx context.Context, name, site string) (int, error) {
 	var data struct {
 		Delay *int `json:"delay"`
 	}
-	err := m.request(ctx, "GET", "/proxies/"+url.PathEscape(m.cfg.Group)+"/delay", m.query(site), nil, &data)
+	err := m.request(ctx, "GET", "/proxies/"+url.PathEscape(name)+"/delay", m.query(site), nil, &data)
 	if err != nil {
 		var apiErr *APIError
 		if errors.As(err, &apiErr) && (apiErr.Code == 503 || apiErr.Code == 504) {
