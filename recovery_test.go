@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -322,14 +321,14 @@ func TestRecoverySwitchErrorConfirmsActualSelection(t *testing.T) {
 	}
 }
 
-func TestRecoveryLegacyConfigAndPartialAPIUpdate(t *testing.T) {
+func TestRecoverySettingsAndPartialAPIUpdate(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "config.json")
-	if err := os.WriteFile(file, []byte(`{"api_url":"http://localhost:9090"}`), 0600); err != nil {
+	if err := SaveConfig(file, DefaultConfig()); err != nil {
 		t.Fatal(err)
 	}
 	cfg, err := LoadConfig(file)
 	if err != nil || cfg.RecoveryEnabled || cfg.RecoveryIntervalSeconds != 60 || cfg.RecoverySuccessThreshold != 3 {
-		t.Fatalf("legacy defaults lost: %+v %v", cfg, err)
+		t.Fatalf("default settings lost: %+v %v", cfg, err)
 	}
 	c := testController(t, cfg)
 	handler := NewServer(c, file)
@@ -452,12 +451,12 @@ func TestRecoveryInitialDelayRestartsOnManualSwitchAndEnable(t *testing.T) {
 
 func TestRecoveryInitialDelayDefaultPersistenceAndValidation(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "config.json")
-	if err := os.WriteFile(file, []byte(`{"api_url":"http://localhost:9090"}`), 0600); err != nil {
+	if err := SaveConfig(file, DefaultConfig()); err != nil {
 		t.Fatal(err)
 	}
 	cfg, err := LoadConfig(file)
 	if err != nil || cfg.RecoveryInitialDelaySeconds != 300 {
-		t.Fatal("legacy config initial delay should default to 300")
+		t.Fatal("initial delay should default to 300")
 	}
 	c := testController(t, cfg)
 	handler := NewServer(c, file)
@@ -481,7 +480,7 @@ func TestRecoveryInitialDelayDefaultPersistenceAndValidation(t *testing.T) {
 	}
 }
 
-func TestRecoveryNoLongerWaitsForLegacyCooldown(t *testing.T) {
+func TestRecoveryInitialWaitAndSuccessThresholdAllowSwitch(t *testing.T) {
 	c, f := recoveryFixture(t)
 	// A new switch must only be constrained by the configured initial delay,
 	// which this fixture explicitly sets to zero.
@@ -490,31 +489,22 @@ func TestRecoveryNoLongerWaitsForLegacyCooldown(t *testing.T) {
 		recoveryCycle(c)
 	}
 	if f.current != "US" || len(f.selections) != 1 {
-		t.Fatal("removed cooldown still blocks a validated recovery")
+		t.Fatal("validated recovery did not switch")
 	}
 }
 
-func TestLegacyCooldownIgnoredAndNotReturnedOrPersisted(t *testing.T) {
+func TestRemovedCooldownFieldRejected(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "config.json")
-	if err := os.WriteFile(file, []byte(`{"recovery_cooldown_seconds":86400}`), 0600); err != nil {
-		t.Fatal(err)
-	}
-	cfg, err := LoadConfig(file)
-	if err != nil {
-		t.Fatal(err)
-	}
+	cfg := DefaultConfig()
 	c := testController(t, cfg)
-	handler := NewServer(c, file)
+	if err := SaveConfig(file, cfg); err != nil {
+		t.Fatal(err)
+	}
 	req := httptest.NewRequest("PUT", "http://localhost/api/config", strings.NewReader(`{"recovery_cooldown_seconds":600,"interval_seconds":7}`))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
-	handler.ServeHTTP(w, req)
-	saved, err := os.ReadFile(file)
-	if w.Code != 200 || err != nil || strings.Contains(w.Body.String(), "recovery_cooldown_seconds") || strings.Contains(string(saved), "recovery_cooldown_seconds") {
-		t.Fatalf("legacy cooldown not removed: %d %s", w.Code, w.Body.String())
-	}
-	status, _ := json.Marshal(c.Status())
-	if strings.Contains(string(status), "cooldown_seconds") {
-		t.Fatal("removed cooldown still exposed in status")
+	NewServer(c, file).ServeHTTP(w, req)
+	if w.Code != 400 || c.Config() != cfg {
+		t.Fatal("obsolete field still accepted")
 	}
 }

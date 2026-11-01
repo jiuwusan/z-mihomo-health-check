@@ -58,6 +58,10 @@ func NewController(sites []string) *Controller {
 func (c *Controller) Configure(cfg Config) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	c.configureLocked(cfg)
+}
+
+func (c *Controller) configureLocked(cfg Config) {
 	if c.cancel != nil {
 		c.cancel()
 	}
@@ -94,10 +98,10 @@ func (c *Controller) Configure(cfg Config) {
 }
 func (c *Controller) Stop() {
 	c.mu.Lock()
+	defer c.mu.Unlock()
 	cfg := c.cfg
-	c.mu.Unlock()
 	cfg.Enabled = false
-	c.Configure(cfg)
+	c.configureLocked(cfg)
 }
 func (c *Controller) Status() Status {
 	c.mu.Lock()

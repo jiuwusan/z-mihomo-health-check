@@ -29,17 +29,15 @@ type settingsInput struct {
 	RecoveryIntervalSeconds     int  `json:"recovery_interval_seconds"`
 	RecoverySuccessThreshold    int  `json:"recovery_success_threshold"`
 
-	// Accept the obsolete field from cached panels, but never apply or save it.
-	LegacyRecoveryCooldown json.RawMessage `json:"recovery_cooldown_seconds"`
-	APIURL                 string          `json:"api_url"`
-	Secret                 *string         `json:"secret"`
-	ClearSecret            bool            `json:"clear_secret"`
-	Group                  string          `json:"group"`
-	IntervalSeconds        int             `json:"interval_seconds"`
-	FailureThreshold       int             `json:"failure_threshold"`
-	TimeoutSeconds         int             `json:"timeout_seconds"`
-	Enabled                bool            `json:"enabled"`
-	PersistHistory         bool            `json:"persist_history"`
+	APIURL           string  `json:"api_url"`
+	Secret           *string `json:"secret"`
+	ClearSecret      bool    `json:"clear_secret"`
+	Group            string  `json:"group"`
+	IntervalSeconds  int     `json:"interval_seconds"`
+	FailureThreshold int     `json:"failure_threshold"`
+	TimeoutSeconds   int     `json:"timeout_seconds"`
+	Enabled          bool    `json:"enabled"`
+	PersistHistory   bool    `json:"persist_history"`
 }
 
 func inputFrom(c Config) settingsInput {
@@ -94,15 +92,23 @@ func NewServer(c *Controller, filename string) http.Handler {
 	mux.HandleFunc("GET /api/status", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, c.Status()) })
 	mux.HandleFunc("GET /api/events", s.events)
 	mux.HandleFunc("POST /api/groups", s.groups)
+	mux.Handle("/", panelAssets())
+	return panelMiddleware(mux)
+}
+
+func panelAssets() http.Handler {
 	assets, _ := fs.Sub(webFiles, "web")
 	files := http.FileServer(http.FS(assets))
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			http.NotFound(w, r)
 			return
 		}
 		files.ServeHTTP(w, r)
 	})
+}
+
+func panelMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -122,7 +128,7 @@ func NewServer(c *Controller, filename string) http.Handler {
 				return
 			}
 		}
-		mux.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
 }
 

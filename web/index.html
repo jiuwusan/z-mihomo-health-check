@@ -12,6 +12,11 @@
     <header class="topbar"><a class="brand" href="/"><span class="brand-icon">m<span>•</span></span><span>mihomo<span class="brand-light"> / health</span></span></a><span class="environment"><i></i> SELF-HOSTED</span></header>
     <main>
       <div class="page-heading"><div><p class="eyebrow">NETWORK OPERATIONS</p><h1>让每一次连接，保持在线<span>。</span></h1><p class="subtitle">随机探查出口状态，按你的分组顺序恢复连接。</p></div><div id="monitor-badge" class="badge">正在连接面板</div></div>
+      <section class="panel instance-panel" aria-label="Mihomo 实例管理">
+        <div class="instance-heading"><div><h2>Mihomo 实例</h2><p>每个实例独立探查、恢复与记录，切换面板不影响后台运行。</p></div><span id="instance-count" class="quiet">正在加载</span></div>
+        <div class="instance-controls"><div><label for="instance-select">当前实例</label><select id="instance-select" disabled><option>正在加载实例</option></select></div><div><label for="instance-name">实例名称</label><input id="instance-name" maxlength="80" placeholder="例如：家里、办公室" autocomplete="off"></div><div class="instance-actions"><button id="add-instance" class="secondary-button" type="button" disabled>新增实例</button><button id="rename-instance" class="secondary-button" type="button" disabled>重命名</button><button id="delete-instance" class="secondary-button danger-button" type="button" disabled>删除</button></div></div>
+        <p id="instance-message" class="form-message" role="status"></p>
+      </section>
       <section class="metrics" aria-label="运行概览">
         <article><span class="metric-label">当前国家分组</span><strong id="current-group">—</strong><span id="phase-text" class="metric-note">等待首次探查</span></article>
         <article><span class="metric-label">最近探查延迟</span><strong><span id="delay">—</span><small> ms</small></strong><span id="last-check" class="metric-note">尚未探查</span></article>
@@ -21,6 +26,7 @@
       <div class="workspace">
         <section class="panel settings"><div class="section-title"><span class="section-number">01</span><div><h2>探查配置</h2><p>保存后由后台持续运行，关闭页面不影响探查。</p></div></div>
           <form id="settings-form">
+            <fieldset id="instance-fields" disabled>
             <label for="api-url">Clash API 地址</label><input id="api-url" name="api_url" type="url" required spellcheck="false" placeholder="http://mihomo:9090"><p class="field-hint">填写控制器容器可以访问的地址。</p>
             <div class="label-row"><label for="secret">API Secret</label><span id="secret-state" class="quiet">未设置</span></div>
             <input id="secret" name="secret" type="password" autocomplete="new-password" placeholder="输入 Secret；留空保留已保存值"><label class="checkbox-row"><input id="clear-secret" type="checkbox">清除已保存的 Secret</label>
@@ -33,6 +39,7 @@
             <p class="field-hint">启动探查或换组后先等待首次最低间隔，后续轮次使用恢复探查间隔。连续成功达标后复验并回切；需同时启用自动探查。</p>
             <div class="enable-row"><div><label for="persist-history">持久化历史记录</label><p>默认关闭。开启后每 5 分钟保存，重启可恢复近 1 小时记录。</p></div><input id="persist-history" type="checkbox" role="switch" aria-label="持久化历史记录"></div>
             <button id="save-button" class="primary-button" type="submit" disabled>保存配置 <span>→</span></button><p id="save-message" class="form-message" role="status" aria-live="polite"></p>
+            </fieldset>
           </form>
         </section>
         <div class="right-column">

@@ -49,6 +49,25 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 
 先点击“测试连接并加载分组”，确认可连接，再勾选“启用自动探查”并保存。新安装默认不启动探查。
 
+### 管理多个独立 Mihomo
+
+仍只部署一个健康检查容器。面板顶部选择实例，修改实例名称后点击“新增实例”，再为新实例填写其 API 地址和 secret；所有地址都必须能从健康检查容器直接访问。不同实例可以使用不同目标分组、探查间隔、失败次数、超时和恢复参数，分别启停。新增实例默认关闭探查和历史持久化，保存为启用状态后在后台独立运行。
+
+每个实例的出口状态、失败计数、恢复候选及近一小时记录互不混用。页面切换实例不会停止后台任务；有未保存修改时会提示。单个 API 失联或请求缓慢不会阻塞其他实例探查。恢复和故障切换只影响所选实例的目标分组。实例越多，常规探查请求总量相应增加；默认每实例每分钟计划 12 次，另计恢复、整组测试及 Mihomo 自身健康检查。
+
+首次启动创建一个待配置的“默认实例”，在面板重新录入 API 地址和 secret。所有实例统一采用下列目录结构，无需增加 Compose 卷；旧版根目录的 `config.json` / `history.json` 不读取、不迁移，也不主动删除：
+
+```text
+/data/
+  instances.json                 # 实例 ID、名称和顺序
+  instances/{实例ID}/config.json  # 各实例配置
+  instances/{实例ID}/history.json # 各实例可选历史
+```
+
+每个实例的历史持久化开关独立，开启后仍每 5 分钟批量保存，查询只读内存。正常停止时先取消所有实例的探查及在途连接测试，再分别补写开启持久化的历史。备份应保存整个数据卷，配置文件包含各实例的 secret。注册表、配置或开启持久化的历史文件损坏时，启动会明确报错，避免静默覆盖。
+
+删除实例会停止任务并移出注册表，已保存文件保留备份且不再自动加载；不自动清理这些备份，未持久化的内存记录不保留。最后一个实例禁止删除，可关闭自动探查。新增或重命名时填写 1–80 个字符的唯一名称。
+
 远程访问时打开 `http://服务器IP:8080`，也可使用指向服务器的域名，无需配置 Host 白名单。面板没有内置登录，适合在可信网络中使用；需要对外提供访问时可配置带认证的 HTTPS 反向代理。写入 API 仍校验 Origin 与请求 Host 一致，并要求 JSON 请求。
 
 ## 2. 探查和切换语义
@@ -65,7 +84,7 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 
 ### 自动恢复到高优先级分组
 
-“自动恢复优先分组”默认关闭，API 配置字段为 `recovery_enabled`。配套参数为 `recovery_initial_delay_seconds`（首次最低间隔，默认 300，范围 0–86400 秒）、`recovery_interval_seconds`（默认 60）、`recovery_success_threshold`（默认 3）。旧配置缺少这些字段时继承默认值，无需手动迁移。旧的 `recovery_cooldown_seconds` 字段已停用：读取配置或接收旧版面板请求时忽略，不影响恢复判断，后续保存不再写入。
+“自动恢复优先分组”默认关闭，API 配置字段为 `recovery_enabled`。配套参数为 `recovery_initial_delay_seconds`（首次最低间隔，默认 300，范围 0–86400 秒）、`recovery_interval_seconds`（默认 60）、`recovery_success_threshold`（默认 3）。不提供旧配置迁移或已废弃字段兼容，API 请求中的未知字段会被拒绝。
 
 启动自动探查、开启自动恢复、切换 API/目标分组或检测到主分组切换后，先等待首次最低间隔，才允许首轮恢复检查；设为 0 可取消首次等待。普通配置保存不重新起算首次等待。首次等待不影响常规出口探查或故障切换。首轮由首次最低间隔控制，后续轮次由恢复探查间隔控制，两者可独立设置。
 
@@ -79,9 +98,9 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 
 运行历史保存最近 **1 小时**的事件，与当前探查配置独立。面板每页显示最多 100 条，可点击“查看更早”翻页或“返回最新”恢复实时记录；后端接口 `GET /api/events?before={记录ID}&limit=100` 使用游标分页，`limit` 支持 1–100，不返回超过 1 小时的记录。修改配置、停用探查均保留当前内存历史。
 
-面板提供“持久化历史记录”开关（API 字段 `persist_history`），**默认关闭**。关闭时只使用内存，启动不加载历史文件、运行及正常停止不写历史文件；重启后没有上一进程的内存记录。旧配置不包含该字段时同样按关闭处理。配置参数本身仍立即持久化，和历史记录开关独立。
+面板提供“持久化历史记录”开关（API 字段 `persist_history`），**默认关闭**。关闭时只使用内存，启动不加载历史文件、运行及正常停止不写历史文件；重启后没有上一进程的内存记录。配置参数本身仍立即持久化，和历史记录开关独立。
 
-开启后，后台每 **5 分钟**将当前内存历史批量保存到 `/data/history.json`（本地默认 `./data/history.json`），与配置共用已有数据卷，无需增加数据库。快照没有变化则跳过写入；写入失败会输出错误并在下一批次重试。查询只读取内存，不触发磁盘读写。配置保存的开启状态会保留，下次启动时恢复快照内仍有效的记录。
+开启后，后台每 **5 分钟**将当前内存历史批量保存到 `/data/instances/{实例ID}/history.json`（本地默认 `./data/instances/{实例ID}/history.json`），与配置共用已有数据卷，无需增加数据库。快照没有变化则跳过写入；写入失败会输出错误并在下一批次重试。查询只读取内存，不触发磁盘读写。配置保存的开启状态会保留，下次启动时恢复快照内仍有效的记录。
 
 运行中开启不会立即读写历史文件，也不会合并之前忽略的磁盘快照，而是在下一批次保存当前内存；即使内存为空也会首次写入有效快照。关闭时保留当前内存和已有磁盘文件，后续批次及停止补写均跳过；已开始的磁盘批次可能完成。重新开启后按当前内存继续保存；只有启动时已开启才恢复旧快照。关闭开关不会主动删除已有文件。
 
@@ -131,25 +150,8 @@ docker compose logs --tail=100 z-mihomo-health-check
 docker compose down
 ```
 
-`down` 保留数据卷；不要在希望保留配置和历史时添加 `-v`。备份时保管 `z-mihomo-health-check-data` 卷中的 `config.json` 和 `history.json`；前者包含 API Secret。
+`down` 保留数据卷；不要在希望保留配置和历史时添加 `-v`。备份时保存 `z-mihomo-health-check-data` 卷中的全部内容，包括 `instances.json` 及 `instances/` 下各实例的配置和历史；配置文件包含各实例的 API Secret。
 
 遇到 8080 端口占用时，修改 `docker-compose.yml` 中宿主机端口。请在已有 Mihomo 服务正常运行后，通过面板测试 API 连接。
-
-## 5. 从原笔记目录迁移
-
-代码和订阅本地示例已移至 `E:\personal\code\z-mihomo-health-check`，原 `z-notes/mihomo-health-check` 只保留迁移说明。Go 模块已独立命名为 `z-mihomo-health-check`，运行和构建不依赖原笔记仓库。
-
-若之前已部署过旧版容器，先正常停止旧服务并保留原数据卷，再用 `docker volume ls` 确认实际卷名。旧版可能使用 `mihomo-health_controller-data` 或 `mihomo-health-external_controller-data`。不要直接新建空卷后误以为旧配置或历史丢失。
-
-选择复用旧卷时，将所选 Compose 文件底部的 `health-data` 定义改为实际旧卷名并声明外部卷，例如：
-
-```yaml
-volumes:
-  health-data:
-    external: true
-    name: mihomo-health_controller-data
-```
-
-默认新卷名可通过 `.env` 的 `CONTROLLER_DATA_VOLUME` 调整。复用旧配置后检查面板中的 API 地址，改为健康检查容器通过 `wk` 网络能够访问的已有 Mihomo 服务地址，例如 `http://mihomo:9090`。
 
 官方参考：[Mihomo API](https://wiki.metacubex.one/api/)、[Compose 网络模式](https://docs.docker.com/reference/compose-file/services/#network_mode)。

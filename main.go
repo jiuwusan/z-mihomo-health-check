@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -44,11 +43,7 @@ func main() {
 		}
 		return
 	}
-	filename := filepath.Join(environment("DATA_DIR", "./data"), "config.json")
-	cfg, err := LoadConfig(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
+	dataDir := environment("DATA_DIR", "./data")
 	data, _ := poolFS.ReadFile("sites.txt")
 	sites := []string{}
 	seen := map[string]bool{}
@@ -65,32 +60,19 @@ func main() {
 	if len(sites) == 0 {
 		log.Fatal("站点池为空")
 	}
-	controller := NewController(sites)
-	controller.Configure(cfg)
-	history, err := OpenHistoryStore(controller, filepath.Join(filepath.Dir(filename), "history.json"))
+	manager, err := NewInstanceManager(dataDir, sites)
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-	controllerDone := make(chan struct{})
-	go func() { controller.Run(ctx); close(controllerDone) }()
-	historyCtx, historyCancel := context.WithCancel(context.Background())
-	ticker := time.NewTicker(historyFlushInterval)
-	defer ticker.Stop()
-	historyDone := make(chan error, 1)
-	go func() { historyDone <- history.Run(historyCtx, ticker.C) }()
-	srv := &http.Server{Addr: address, Handler: NewServer(controller, filename), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 * 1024}
+	manager.Start()
+	srv := &http.Server{Addr: address, Handler: NewInstancesServer(manager), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 * 1024}
 	shutdownDone := make(chan struct{})
 	go func() {
 		defer close(shutdownDone)
 		<-ctx.Done()
-		controller.Stop()
-		<-controllerDone
-		historyCancel()
-		if err := <-historyDone; err != nil {
-			log.Printf("停止时保存历史记录失败：%v", err)
-		}
+		manager.Close()
 		shutdownCtx, done := context.WithTimeout(context.Background(), 5*time.Second)
 		defer done()
 		srv.Shutdown(shutdownCtx)
