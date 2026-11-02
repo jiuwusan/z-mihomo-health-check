@@ -66,20 +66,20 @@ func (m *Mihomo) request(ctx context.Context, method, path string, q url.Values,
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}
-		return &APIError{Message: "无法连接 Clash API，请检查地址、网络、超时或 TLS 证书"}
+		return &APIError{Message: "无法连接 Mihomo API，请检查地址、网络、超时或 TLS 证书"}
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		msg := fmt.Sprintf("Clash API 返回 HTTP %d", resp.StatusCode)
+		msg := fmt.Sprintf("Mihomo API 返回 HTTP %d", resp.StatusCode)
 		if resp.StatusCode == 401 || resp.StatusCode == 403 {
-			msg = "Clash API 认证失败，请检查 Secret"
+			msg = "Mihomo API 认证失败，请检查 Secret"
 		}
 		return &APIError{Code: resp.StatusCode, Message: msg}
 	}
 	if out != nil {
 		data, err := io.ReadAll(io.LimitReader(resp.Body, 1024*1024+1))
 		if err != nil || len(data) > 1024*1024 || json.Unmarshal(data, out) != nil {
-			return errors.New("Clash API 返回了无效或过大的 JSON")
+			return errors.New("Mihomo API 返回了无效或过大的 JSON")
 		}
 	}
 	return nil
@@ -130,7 +130,7 @@ func (m *Mihomo) ProbeGroup(ctx context.Context, name, site string) (int, error)
 		return 0, err
 	}
 	if data.Delay == nil {
-		return 0, errors.New("Clash API 响应缺少 delay 字段")
+		return 0, errors.New("Mihomo API 响应缺少 delay 字段")
 	}
 	if *data.Delay <= 0 {
 		return 0, &APIError{Node: true, Message: "当前出口测试失败（delay 为 0）"}

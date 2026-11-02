@@ -180,5 +180,5 @@ func (s *server) groups(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sort.Slice(groups, func(i, j int) bool { return groups[i].Name < groups[j].Name })
-	writeJSON(w, 200, map[string]any{"groups": groups, "message": "Clash API 连接成功"})
+	writeJSON(w, 200, map[string]any{"groups": groups, "message": "Mihomo API 连接成功"})
 }

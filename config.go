@@ -31,7 +31,7 @@ func DefaultConfig() Config {
 func (c Config) Validate() error {
 	u, err := url.Parse(c.APIURL)
 	if err != nil || u.Hostname() == "" || (u.Scheme != "http" && u.Scheme != "https") || u.User != nil || u.RawQuery != "" || u.Fragment != "" {
-		return errors.New("Clash API 地址须为不带账户、查询参数和片段的 HTTP/HTTPS 地址")
+		return errors.New("Mihomo API 地址须为不带账户、查询参数和片段的 HTTP/HTTPS 地址")
 	}
 	if strings.TrimSpace(c.Group) == "" || len(c.Group) > 512 {
 		return errors.New("目标分组不能为空且不能超过 512 字节")
