@@ -133,7 +133,10 @@ function renderStatus(status) {
   $('current-group').textContent = status.current || '—'; $('delay').textContent = status.delay_ms > 0 ? status.delay_ms : '—';
   $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size;
   $('phase-text').textContent = status.message; $('last-check').textContent = status.last_check ? `最近探查 ${clock(status.last_check)}` : '尚未探查';
-  $('last-site').textContent = status.last_site || '—';
+  const lastSite = $('last-site');
+  lastSite.textContent = status.last_site || '尚未开始探查';
+  if (/^https?:\/\//i.test(status.last_site || '')) lastSite.href = status.last_site;
+  else lastSite.removeAttribute('href');
   $('activity-summary').textContent = status.last_switch ? `最近 1 小时记录 · 最近切换 ${clock(status.last_switch)}` : '仅保留最近 1 小时记录';
   const recovery = status.recovery || {};
   const recoveryProgress = recovery.initial_wait_seconds > 0

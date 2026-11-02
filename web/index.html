@@ -17,6 +17,7 @@
         <div class="instance-controls"><div><label for="instance-select">当前实例</label><select id="instance-select" disabled><option>正在加载实例</option></select></div><div><label for="instance-name">实例名称</label><input id="instance-name" maxlength="80" placeholder="例如：家里、办公室" autocomplete="off"></div><div class="instance-actions"><button id="add-instance" class="secondary-button" type="button" disabled>新增实例</button><button id="rename-instance" class="secondary-button" type="button" disabled>重命名</button><button id="delete-instance" class="secondary-button danger-button" type="button" disabled>删除</button></div></div>
         <p id="instance-message" class="form-message" role="status"></p>
       </section>
+      <div class="last-target probe-target" aria-label="最近一次探查的站点"><span>最近测试站点</span><a id="last-site" target="_blank" rel="noopener noreferrer">尚未开始探查</a></div>
       <section class="metrics" aria-label="运行概览">
         <article><span class="metric-label">当前国家分组</span><strong id="current-group">—</strong><span id="phase-text" class="metric-note">等待首次探查</span></article>
         <article><span class="metric-label">最近探查延迟</span><strong><span id="delay">—</span><small> ms</small></strong><span id="last-check" class="metric-note">尚未探查</span></article>
@@ -49,7 +50,7 @@
             <div class="recovery-status"><span>优先级恢复</span><p id="recovery-status" role="status">自动恢复未运行</p></div>
           </section>
           <section class="panel activity"><div class="activity-heading"><div class="section-title"><span class="section-number">03</span><div><h2>探查动态</h2><p id="activity-summary">仅保留最近 1 小时记录</p></div></div><span class="live-label"><i></i> LIVE</span></div>
-            <div class="last-target"><span>最近测试站点</span><span id="last-site">—</span></div><div id="event-list" class="event-list" aria-live="polite"><div class="empty-events">最近 1 小时暂无记录。</div></div>
+            <div id="event-list" class="event-list" aria-live="polite"><div class="empty-events">最近 1 小时暂无记录。</div></div>
             <div class="history-controls"><span id="history-summary">最近 1 小时 · 0 条</span><div><button id="latest-events" class="text-button" type="button" disabled>返回最新</button><button id="older-events" class="text-button" type="button" disabled>查看更早 ↓</button></div></div><p id="history-error" class="form-message" role="status"></p>
           </section>
         </div>

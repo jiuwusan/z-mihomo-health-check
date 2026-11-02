@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math/rand/v2"
 	"sync"
 	"time"
@@ -236,7 +237,7 @@ func (c *Controller) Check(parent context.Context) {
 		s.Failures++
 		c.resetRecovery("当前出口失败，暂停恢复检查")
 		s.Phase = "warning"
-		addEvent(s, "warning", "当前出口探查失败")
+		addEvent(s, "warning", fmt.Sprintf("当前出口探查失败：%s；探查前选中分组：%s；站点：%s；超时：%ds", err, group.Now, site, cfg.TimeoutSeconds))
 		trigger = s.Failures >= cfg.FailureThreshold
 	}) {
 		return

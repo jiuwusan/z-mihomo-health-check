@@ -112,6 +112,31 @@ func TestFailoverUsesOriginalOrderNotDelay(t *testing.T) {
 		}
 	}
 }
+
+func TestProbeFailureRecordsSiteSelectedGroupTimeoutAndAPICode(t *testing.T) {
+	for _, code := range []int{503, 504} {
+		t.Run(fmt.Sprint(code), func(t *testing.T) {
+			f, api := newFake(t)
+			f.probeStatus = code
+			cfg := testConfig(api.URL)
+			cfg.FailureThreshold = 3
+			c := testController(t, cfg)
+			c.Check(context.Background())
+			status := c.Status()
+			if status.Failures != 1 || len(status.Events) != 1 {
+				t.Fatal("unexpected failure state")
+			}
+			for _, detail := range []string{"当前出口探查失败", fmt.Sprint(code), "Japan", "https://test.example/", "4s"} {
+				if !strings.Contains(status.Events[0].Message, detail) {
+					t.Fatalf("missing %q in diagnostic: %s", detail, status.Events[0].Message)
+				}
+			}
+			if strings.Contains(status.Events[0].Message, cfg.Secret) || strings.Contains(status.Events[0].Message, cfg.APIURL) {
+				t.Fatal("diagnostic leaked controller connection details")
+			}
+		})
+	}
+}
 func TestThresholdAndSuccessReset(t *testing.T) {
 	f, s := newFake(t)
 	cfg := testConfig(s.URL)

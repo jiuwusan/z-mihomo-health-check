@@ -11,6 +11,7 @@ class Element {
   get options() {return this.children;}
   add(node) {this.children.push(node);}
   reportValidity() {return true;}
+  removeAttribute(name) {delete this[name];}
   append(...nodes) {this.children.push(...nodes);}
   replaceChildren(...nodes) {this.children = nodes;}
 }
@@ -93,6 +94,20 @@ test('recovery controls serialize configuration and display progress', () => {
   assert.match(get('recovery-status').textContent,/首次检查.*250/);
   context.renderStatus({phase:'stopped',results:[],recovery:{enabled:false}});
   assert.equal(get('recovery-status').textContent,'自动恢复未运行');
+});
+
+test('the latest probe URL is visible and only HTTP links are clickable', () => {
+  const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  context.renderStatus({phase:'warning',results:[],last_site:'https://www.example.com/probe'});
+  assert.equal(get('last-site').textContent,'https://www.example.com/probe');
+  assert.equal(get('last-site').href,'https://www.example.com/probe');
+  context.renderStatus({phase:'waiting',results:[],last_site:''});
+  assert.equal(get('last-site').textContent,'尚未开始探查');
+  assert.equal(get('last-site').href,undefined);
+  context.renderStatus({phase:'warning',results:[],last_site:'javascript:alert(1)'});
+  assert.equal(get('last-site').href,undefined);
 });
 
 test('late group, save and history responses cannot cross instance boundaries', async t => {
