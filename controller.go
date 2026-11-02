@@ -15,9 +15,10 @@ type Event struct {
 	Message string    `json:"message"`
 }
 type GroupResult struct {
-	Name      string `json:"name"`
-	Delay     int    `json:"delay_ms"`
-	Available bool   `json:"available"`
+	Name      string     `json:"name"`
+	Delay     int        `json:"delay_ms"`
+	Available bool       `json:"available"`
+	CheckedAt *time.Time `json:"checked_at,omitempty"`
 }
 type Status struct {
 	Running       bool           `json:"running"`
@@ -145,6 +146,38 @@ func (c *Controller) fail(rev uint64, err error) {
 		addEvent(s, "error", err.Error())
 	})
 }
+
+// Merge a recovery probe without changing untested results or their timestamps.
+// Control API failures do not establish whether the proxy itself is available.
+func (c *Controller) recordGroupProbe(rev uint64, order []string, name string, delay int, err error) {
+	if err != nil {
+		var apiErr *APIError
+		if !errors.As(err, &apiErr) || !apiErr.Node {
+			return
+		}
+		delay = 0
+	}
+	c.update(rev, func(s *Status) {
+		previous := make(map[string]GroupResult, len(s.Results))
+		for _, result := range s.Results {
+			previous[result.Name] = result
+		}
+		results := make([]GroupResult, 0, len(order))
+		now := time.Now()
+		for _, member := range order {
+			result, ok := previous[member]
+			if !ok {
+				result = GroupResult{Name: member}
+			}
+			if member == name {
+				result = GroupResult{Name: name, Delay: delay, Available: err == nil, CheckedAt: &now}
+			}
+			results = append(results, result)
+		}
+		s.Results = results
+	})
+}
+
 func (c *Controller) Check(parent context.Context) {
 	if !c.cycle.TryLock() {
 		return
@@ -229,9 +262,10 @@ func (c *Controller) Check(parent context.Context) {
 		return
 	}
 	results := make([]GroupResult, 0, len(group.All))
+	checkedAt := time.Now()
 	for _, name := range group.All {
 		d, ok := delays[name]
-		results = append(results, GroupResult{Name: name, Delay: d, Available: ok && d > 0 && d <= 65535})
+		results = append(results, GroupResult{Name: name, Delay: d, Available: ok && d > 0 && d <= 65535, CheckedAt: &checkedAt})
 	}
 	if !c.update(rev, func(s *Status) { s.Results = results; s.Current = group.Now }) {
 		return

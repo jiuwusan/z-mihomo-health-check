@@ -110,7 +110,8 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 	site := c.sites[rand.IntN(len(c.sites))]
 	candidate := ""
 	for _, name := range group.All[:index] {
-		_, err := client.ProbeGroup(ctx, name, site)
+		delay, err := client.ProbeGroup(ctx, name, site)
+		c.recordGroupProbe(rev, group.All, name, delay, err)
 		if err == nil {
 			candidate = name
 			break
@@ -139,7 +140,9 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		return
 	}
 	// Probe first, then read the selection/order as late as possible before PUT.
-	if _, err := client.ProbeGroup(ctx, candidate, site); err != nil {
+	delay, err := client.ProbeGroup(ctx, candidate, site)
+	c.recordGroupProbe(rev, group.All, candidate, delay, err)
+	if err != nil {
 		c.recoveryError(rev, err)
 		return
 	}

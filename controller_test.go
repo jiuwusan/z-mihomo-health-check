@@ -106,6 +106,11 @@ func TestFailoverUsesOriginalOrderNotDelay(t *testing.T) {
 	if status.Failures != 0 || status.Current != "US" {
 		t.Fatalf("bad state: %+v", status)
 	}
+	for _, result := range status.Results {
+		if result.CheckedAt == nil || result.CheckedAt.After(time.Now()) {
+			t.Fatalf("missing batch result time: %+v", result)
+		}
+	}
 }
 func TestThresholdAndSuccessReset(t *testing.T) {
 	f, s := newFake(t)

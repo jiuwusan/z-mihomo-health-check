@@ -147,13 +147,21 @@ function renderStatus(status) {
   if (resultKey !== resultSignature && results.length) {
     resultSignature = resultKey;
     $('priority-list').replaceChildren(...results.map((result,index) => {
-      const row = element('div',`priority-row${result.available ? ' available' : ''}`);
+      const tested = Boolean(result.checked_at);
+      const row = element('div',`priority-row${result.available ? ' available' : ''}${tested ? '' : ' untested'}`);
       row.append(element('span','rank',String(index + 1).padStart(2,'0')),element('span','country',result.name));
       if (result.name === status.current) row.append(element('span','selected-label','当前选择'));
-      row.append(element('span','availability',result.available ? `${result.delay_ms} ms` : '本轮不可用')); return row;
+      const availability = element('span','availability',result.available ? `${result.delay_ms} ms` : tested ? '最近探查失败' : '尚未探查');
+      if (tested) {
+        const timestamp = element('time','result-time',`检测于 ${clock(result.checked_at)}`);
+        timestamp.dateTime = result.checked_at;
+        timestamp.title = new Date(result.checked_at).toLocaleString('zh-CN', {hour12:false});
+        availability.append(timestamp);
+      }
+      row.append(availability); return row;
     }));
   } else if (!results.length && resultSignature) {
-    resultSignature = ''; const empty = element('div','empty-state'); empty.append(element('span','','↗'),element('p','','等待整组测试'),element('small','','达到连续失败阈值后，展示本轮国家分组结果。')); $('priority-list').replaceChildren(empty);
+    resultSignature = ''; const empty = element('div','empty-state'); empty.append(element('span','','↗'),element('p','','等待分组探查'),element('small','','整组测试或优先级恢复探查后，展示各分组最近结果。')); $('priority-list').replaceChildren(empty);
   }
 }
 function renderHistoryEvents() {

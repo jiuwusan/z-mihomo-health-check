@@ -43,8 +43,8 @@
           </form>
         </section>
         <div class="right-column">
-          <section class="panel priority"><div class="section-title"><span class="section-number">02</span><div><h2>国家分组优先级</h2><p>按主分组原始顺序选择，延迟仅用于判断可用性。</p></div></div>
-            <div id="priority-list" class="priority-list"><div class="empty-state"><span>↗</span><p>等待整组测试</p><small>达到连续失败阈值后，展示本轮国家分组结果。</small></div></div>
+          <section class="panel priority"><div class="section-title"><span class="section-number">02</span><div><h2>国家分组优先级</h2><p>按主分组原始顺序选择；展示最近一次整组或恢复探查结果。</p></div></div>
+            <div id="priority-list" class="priority-list"><div class="empty-state"><span>↗</span><p>等待分组探查</p><small>整组测试或优先级恢复探查后，展示各分组最近结果。</small></div></div>
             <div class="rule-note"><span>↳</span><p>优先顺序来自目标分组的 <code>all</code> 列表，<strong>不按延迟排序</strong>。所有分组不可用时保留当前选择。</p></div>
             <div class="recovery-status"><span>优先级恢复</span><p id="recovery-status" role="status">自动恢复未运行</p></div>
           </section>
