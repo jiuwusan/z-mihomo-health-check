@@ -151,7 +151,7 @@ func NewInstanceManager(root string, sites []string) (*InstanceManager, error) {
 			}
 			return nil, errors.New("实例列表包含无效或重复的 ID/名称")
 		}
-		in, openErr := m.open(info.ID)
+		in, openErr := m.open(info)
 		if openErr != nil {
 			for _, previous := range m.items {
 				previous.controller.Stop()
@@ -167,13 +167,15 @@ func NewInstanceManager(root string, sites []string) (*InstanceManager, error) {
 func (m *InstanceManager) directory(id string) string {
 	return filepath.Join(m.root, "instances", id)
 }
-func (m *InstanceManager) open(id string) (*managedInstance, error) {
+func (m *InstanceManager) open(info InstanceInfo) (*managedInstance, error) {
+	id := info.ID
 	file := filepath.Join(m.directory(id), "config.json")
 	cfg, err := LoadConfig(file)
 	if err != nil {
 		return nil, errors.New("实例 " + id + " 配置加载失败：" + err.Error())
 	}
 	c := NewController(m.sites)
+	c.SetInstanceName(info.Name)
 	c.Configure(cfg)
 	h, err := OpenHistoryStore(c, filepath.Join(m.directory(id), "history.json"))
 	if err != nil {
@@ -236,7 +238,7 @@ func (m *InstanceManager) Add(name string) (InstanceInfo, error) {
 	if err = SaveConfig(filepath.Join(m.directory(info.ID), "config.json"), DefaultConfig()); err != nil {
 		return InstanceInfo{}, instanceFailure(500, err.Error())
 	}
-	in, err := m.open(info.ID)
+	in, err := m.open(info)
 	if err != nil {
 		return InstanceInfo{}, err
 	}
@@ -261,7 +263,8 @@ func (m *InstanceManager) Rename(id, name string) error {
 	if err != nil {
 		return err
 	}
-	if _, ok := m.Get(id); !ok {
+	in, ok := m.Get(id)
+	if !ok {
 		return instanceFailure(404, "实例不存在")
 	}
 	items := m.List()
@@ -275,6 +278,7 @@ func (m *InstanceManager) Rename(id, name string) error {
 	}
 	m.mu.Lock()
 	m.order = items
+	in.controller.SetInstanceName(name)
 	m.mu.Unlock()
 	return nil
 }

@@ -182,6 +182,6 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		s.Failures = 0
 		addEvent(s, "success", "已自动恢复到高优先级分组 "+candidate)
 	}) {
-		c.notify(ctx, cfg, rev, "恢复到高优先级节点", group.Now, candidate)
+		c.notify(ctx, cfg, rev, notificationRecovery, group.Now, candidate)
 	}
 }

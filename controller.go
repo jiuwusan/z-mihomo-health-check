@@ -51,12 +51,18 @@ type Controller struct {
 	state          Status
 	recovery       recoveryState
 	allUnavailable bool
+	instanceName   string
 }
 
 func NewController(sites []string) *Controller {
-	c := &Controller{sites: append([]string(nil), sites...), wake: make(chan struct{}, 1)}
+	c := &Controller{sites: append([]string(nil), sites...), wake: make(chan struct{}, 1), instanceName: "默认实例"}
 	c.Configure(DefaultConfig())
 	return c
+}
+func (c *Controller) SetInstanceName(name string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.instanceName = name
 }
 func (c *Controller) Configure(cfg Config) {
 	c.mu.Lock()
@@ -329,7 +335,7 @@ func (c *Controller) Check(parent context.Context) {
 			s.Phase = "healthy"
 			addEvent(s, "success", "已按原始顺序切换到 "+result.Name)
 		}) {
-			c.notify(ctx, cfg, rev, "节点故障，切换到可用节点", group.Now, result.Name)
+			c.notify(ctx, cfg, rev, notificationFailover, group.Now, result.Name)
 		}
 		return
 	}
@@ -347,7 +353,7 @@ func (c *Controller) Check(parent context.Context) {
 		}
 	})
 	if notifyUnavailable {
-		c.notify(ctx, cfg, rev, "节点故障，所有节点均不可用", group.Now, group.Now)
+		c.notify(ctx, cfg, rev, notificationUnavailable, group.Now, group.Now)
 	}
 }
 func (c *Controller) Run(ctx context.Context) {
