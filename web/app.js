@@ -9,6 +9,9 @@ let managementBusy = false;
 let dirty = false;
 let eventSignature = '';
 let resultSignature = '';
+let groupResults = [];
+let currentGroup = '';
+let currentRow = null;
 let historyCursor = 0;
 let nextHistoryCursor = 0;
 let historyID = '';
@@ -33,6 +36,7 @@ function syncInstanceControls() {
   $('rename-instance').disabled = managementBusy || !loaded;
   $('delete-instance').disabled = managementBusy || !loaded || instanceList.length < 2;
   $('instance-fields').disabled = managementBusy || !loaded;
+  $('open-settings').disabled = managementBusy || !loaded;
 }
 async function refreshInstances() {
   const data = await api('/api/instances');
@@ -48,10 +52,13 @@ async function switchInstance(id, force = false) {
   if (!force && !allowDiscard()) {$('instance-select').value = selectedInstance; return false;}
   const epoch = ++instanceEpoch;
   selectedInstance = id; loaded = false; dirty = false;
+  message('panel-message','');
   ++panelRequest; ++historyRequest;
   historyCursor = 0; nextHistoryCursor = 0; historyID = ''; historyTotal = 0; displayedEvents = []; eventSignature = '';
   $('instance-select').value = id;
   $('instance-name').value = instanceList.find(item => item.id === id)?.name || id;
+  $('group-search').value = '';
+  $('open-settings').textContent = '探查配置 ↗';
   $('secret').value = ''; $('clear-secret').checked = false;
   resetWebhookFields();
   $('target-group').replaceChildren();
@@ -66,7 +73,7 @@ async function switchInstance(id, force = false) {
     if (epoch !== instanceEpoch) return false;
     applyConfig(cfg); await refreshPanel(); return true;
   } catch (error) {
-    if (epoch === instanceEpoch) {message('save-message',error.message,true); $('monitor-badge').textContent = '实例加载失败';}
+    if (epoch === instanceEpoch) {message('save-message',error.message,true); message('panel-message',error.message,true); $('monitor-badge').textContent = '实例加载失败';}
     return false;
   }
 }
@@ -125,6 +132,9 @@ function applyConfig(cfg) {
   $('secret').value = ''; $('secret').disabled = false; $('clear-secret').checked = false;
   $('secret-state').textContent = cfg.secret_set ? '已保存 · 不回显' : '未设置';
   $('failure-limit').textContent = ` / ${cfg.failure_threshold} 次`;
+  $('config-summary').textContent = `${cfg.group} · 每 ${cfg.interval_seconds} 秒探查`;
+  $('config-summary').title = $('config-summary').textContent;
+  $('open-settings').textContent = '探查配置 ↗';
   loaded = true; dirty = false; $('save-button').disabled = false; syncInstanceControls();
 }
 function resetWebhookFields(cfg = {}) {
@@ -148,10 +158,13 @@ function renderStatus(status) {
   const badge = $('monitor-badge'); badge.textContent = phaseNames[status.phase] || status.phase;
   badge.className = 'badge' + (status.running && status.phase !== 'error' ? ' active' : status.phase === 'error' ? ' error' : '');
   $('current-group').textContent = status.current || '—'; $('delay').textContent = status.delay_ms > 0 ? status.delay_ms : '—';
+  $('current-group').title = status.current || '';
   $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size;
+  $('phase-text').title = status.message || '';
   $('phase-text').textContent = status.message; $('last-check').textContent = status.last_check ? `最近探查 ${clock(status.last_check)}` : '尚未探查';
   const lastSite = $('last-site');
   lastSite.textContent = status.last_site || '尚未开始探查';
+  lastSite.title = status.last_site || '';
   if (/^https?:\/\//i.test(status.last_site || '')) lastSite.href = status.last_site;
   else lastSite.removeAttribute('href');
   $('activity-summary').textContent = status.last_switch ? `最近 1 小时记录 · 最近切换 ${clock(status.last_switch)}` : '仅保留最近 1 小时记录';
@@ -162,28 +175,51 @@ function renderStatus(status) {
   $('recovery-status').textContent = recovery.enabled
     ? recoveryProgress
     : '自动恢复未运行';
+  $('recovery-status').title = $('recovery-status').textContent;
   const results = status.results || [];
   const resultKey = JSON.stringify([results,status.current]);
-  if (resultKey !== resultSignature && results.length) {
+  if (resultKey !== resultSignature) {
     resultSignature = resultKey;
-    $('priority-list').replaceChildren(...results.map((result,index) => {
-      const tested = Boolean(result.checked_at);
-      const row = element('div',`priority-row${result.available ? ' available' : ''}${tested ? '' : ' untested'}`);
-      row.append(element('span','rank',String(index + 1).padStart(2,'0')),element('span','country',result.name));
-      if (result.name === status.current) row.append(element('span','selected-label','当前选择'));
-      const availability = element('span','availability',result.available ? `${result.delay_ms} ms` : tested ? '最近探查失败' : '尚未探查');
-      if (tested) {
-        const timestamp = element('time','result-time',`检测于 ${clock(result.checked_at)}`);
-        timestamp.dateTime = result.checked_at;
-        timestamp.title = new Date(result.checked_at).toLocaleString('zh-CN', {hour12:false});
-        availability.append(timestamp);
-      }
-      row.append(availability); return row;
-    }));
-  } else if (!results.length && resultSignature) {
-    resultSignature = ''; const empty = element('div','empty-state'); empty.append(element('span','','↗'),element('p','','等待分组探查'),element('small','','整组测试或优先级恢复探查后，展示各分组最近结果。')); $('priority-list').replaceChildren(empty);
+    groupResults = results;
+    currentGroup = status.current || '';
+    renderGroups();
   }
 }
+function renderGroups() {
+  const query = $('group-search').value.trim().toLocaleLowerCase();
+  const visible = groupResults.map((result,index) => ({result,index})).filter(({result}) => result.name.toLocaleLowerCase().includes(query));
+  $('group-summary').textContent = groupResults.length ? `${groupResults.filter(result => result.available).length} 可用 / ${groupResults.length} 个分组` : '等待探查';
+  $('locate-current').disabled = !groupResults.some(result => result.name === currentGroup);
+  const scrollTop = $('priority-list').scrollTop;
+  currentRow = null;
+  $('priority-list').replaceChildren(...(visible.length ? visible.map(({result,index}) => {
+    const tested = Boolean(result.checked_at);
+    const row = element('div',`priority-row${result.available ? ' available' : ''}${tested ? '' : ' untested'}${result.name === currentGroup ? ' selected' : ''}`);
+    row.append(element('span','rank',String(index + 1).padStart(2,'0')),element('span','country',result.name));
+    if (result.name === currentGroup) {row.append(element('span','selected-label','当前')); currentRow = row;}
+    const availability = element('span','availability',result.available ? `${result.delay_ms} ms` : tested ? '最近探查失败' : '尚未探查');
+    if (tested) {
+      const timestamp = element('time','result-time',`检测于 ${clock(result.checked_at)}`);
+      timestamp.dateTime = result.checked_at;
+      timestamp.title = new Date(result.checked_at).toLocaleString('zh-CN', {hour12:false});
+      availability.append(timestamp);
+    }
+    row.append(availability); return row;
+  }) : [element('div','empty-events',query ? '没有匹配的分组，请尝试其他名称。' : '等待分组探查，结果将在这里显示。')]));
+  $('priority-list').scrollTop = scrollTop;
+}
+$('group-search').addEventListener('input', () => {renderGroups(); $('priority-list').scrollTop = 0;});
+$('locate-current').addEventListener('click', () => {
+  $('group-search').value = ''; renderGroups();
+  if (currentRow) currentRow.scrollIntoView({block:'nearest'});
+});
+for (const name of ['settings','instances']) {
+  $('open-' + name).addEventListener('click', () => {
+    if (!$(name + '-dialog').open) $(name + '-dialog').showModal();
+  });
+  $('close-' + name).addEventListener('click', () => {$(name + '-dialog').close();});
+}
+
 function renderHistoryEvents() {
   const cutoff = Date.now() - 60 * 60 * 1000;
   displayedEvents = displayedEvents.filter(event => new Date(event.time).getTime() >= cutoff);
@@ -240,7 +276,7 @@ $('latest-events').addEventListener('click', async () => {
   catch (error) {message('history-error',error.message,true);}
 });
 $('settings-form').addEventListener('input', () => {
-  if (loaded) {dirty = true; message('save-message','有未保存的修改');}
+  if (loaded) {dirty = true; $('open-settings').textContent = '配置 · 未保存'; message('save-message','有未保存的修改');}
 });
 $('clear-secret').addEventListener('change', () => {
   $('secret').disabled = $('clear-secret').checked;
@@ -282,6 +318,6 @@ async function poll() {
 }
 async function initialize() {
   try {await refreshInstances(); await switchInstance(instanceList[0].id,true); await poll();}
-  catch (error) {message('save-message','无法加载配置，请刷新页面重试。',true);$('monitor-badge').textContent = '面板连接中断';$('monitor-badge').className = 'badge error';}
+  catch (error) {message('panel-message','无法加载配置，请刷新页面重试。',true);$('monitor-badge').textContent = '面板连接中断';$('monitor-badge').className = 'badge error';}
 }
 initialize();

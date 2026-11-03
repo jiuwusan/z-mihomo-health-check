@@ -14,6 +14,9 @@ class Element {
   removeAttribute(name) {delete this[name];}
   append(...nodes) {this.children.push(...nodes);}
   replaceChildren(...nodes) {this.children = nodes;}
+  showModal() {this.open=true;}
+  close() {this.open=false;}
+  scrollIntoView() {this.scrolled=true;}
 }
 
 test('a delayed pre-save status cannot replace newer status and history', async () => {
@@ -163,4 +166,47 @@ test('webhook fields load privately, serialize edits, and clear on instance swit
   assert.equal(get('dingtalk-webhook').value,'');
   assert.equal(get('feishu-webhook').value,'');
   assert.equal(get('clear-feishu-webhook').checked,false);
+});
+
+test('group search retains original priority and can locate current selection', () => {
+  const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  context.renderStatus({phase:'healthy',current:'日本',results:[{name:'美国',available:false},{name:'日本',available:true,delay_ms:90},{name:'新加坡',available:true,delay_ms:150}]});
+  assert.match(get('group-summary').textContent,/2.*3/);
+  get('group-search').value='日本';get('group-search').listeners.input();
+  assert.equal(get('priority-list').children.length,1);
+  assert.equal(get('priority-list').children[0].children[0].textContent,'02');
+  get('group-search').value='不存在';get('group-search').listeners.input();
+  assert.match(get('priority-list').children[0].textContent,/没有匹配/);
+  get('locate-current').listeners.click();
+  assert.equal(get('group-search').value,'');
+  assert.equal(get('priority-list').children.length,3);
+  assert.equal(get('priority-list').children[1].scrolled,true);
+  context.renderStatus({phase:'waiting',results:[]});
+  assert.equal(get('locate-current').disabled,true);
+});
+
+test('configuration dialog preserves an unsaved draft when closed and reopened', () => {
+  const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext('loaded=true',context);
+  get('open-settings').listeners.click();
+  assert.equal(get('settings-dialog').open,true);
+  get('api-url').value='http://draft:9090';get('settings-form').listeners.input();
+  get('close-settings').listeners.click();
+  assert.equal(get('settings-dialog').open,false);
+  get('open-settings').listeners.click();
+  assert.equal(get('api-url').value,'http://draft:9090');
+  assert.match(get('open-settings').textContent,/未保存/);
+});
+
+test('instance configuration load errors remain visible outside closed dialogs', async () => {
+  const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},confirm:()=>true,
+    fetch:url=>url==='/api/instances'?new Promise(()=>{}):Promise.resolve({ok:false,json:async()=>({error:'无法读取实例配置'})})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  await context.switchInstance('broken',true);
+  assert.match(get('panel-message').textContent,/无法读取实例配置/);
 });
