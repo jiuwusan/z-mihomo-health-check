@@ -40,16 +40,17 @@ type Status struct {
 	eventSequence uint64
 }
 type Controller struct {
-	mu       sync.Mutex
-	cycle    sync.Mutex
-	cfg      Config
-	rev      uint64
-	ctx      context.Context
-	cancel   context.CancelFunc
-	wake     chan struct{}
-	sites    []string
-	state    Status
-	recovery recoveryState
+	mu             sync.Mutex
+	cycle          sync.Mutex
+	cfg            Config
+	rev            uint64
+	ctx            context.Context
+	cancel         context.CancelFunc
+	wake           chan struct{}
+	sites          []string
+	state          Status
+	recovery       recoveryState
+	allUnavailable bool
 }
 
 func NewController(sites []string) *Controller {
@@ -76,6 +77,7 @@ func (c *Controller) configureLocked(cfg Config) {
 	// cannot bypass the initial wait. Progress is reset below with the public status.
 	if changedTarget {
 		c.recovery = recoveryState{}
+		c.allUnavailable = false
 	}
 	c.recovery.nextCheck = time.Now().Add(time.Duration(cfg.RecoveryIntervalSeconds) * time.Second)
 	if startRecovery || c.recovery.startedAt.IsZero() {
@@ -219,6 +221,7 @@ func (c *Controller) Check(parent context.Context) {
 	delay, err := client.Probe(ctx, site)
 	if err == nil {
 		c.update(rev, func(s *Status) {
+			c.allUnavailable = false
 			s.Failures = 0
 			s.Delay = delay
 			s.Phase = "healthy"
@@ -268,7 +271,16 @@ func (c *Controller) Check(parent context.Context) {
 		d, ok := delays[name]
 		results = append(results, GroupResult{Name: name, Delay: d, Available: ok && d > 0 && d <= 65535, CheckedAt: &checkedAt})
 	}
-	if !c.update(rev, func(s *Status) { s.Results = results; s.Current = group.Now }) {
+	if !c.update(rev, func(s *Status) {
+		s.Results = results
+		s.Current = group.Now
+		for _, result := range results {
+			if result.Available {
+				c.allUnavailable = false
+				break
+			}
+		}
+	}) {
 		return
 	}
 	for _, result := range results {
@@ -306,7 +318,7 @@ func (c *Controller) Check(parent context.Context) {
 				continue
 			}
 		}
-		c.update(rev, func(s *Status) {
+		if c.update(rev, func(s *Status) {
 			now := time.Now()
 			c.restartRecoveryWait(now)
 			c.resetRecovery("故障切换后重新等待恢复检查")
@@ -316,13 +328,27 @@ func (c *Controller) Check(parent context.Context) {
 			s.Failures = 0
 			s.Phase = "healthy"
 			addEvent(s, "success", "已按原始顺序切换到 "+result.Name)
-		})
+		}) {
+			c.notify(ctx, cfg, rev, "节点故障，切换到可用节点", group.Now, result.Name)
+		}
 		return
 	}
+	notifyUnavailable := false
 	c.update(rev, func(s *Status) {
 		s.Phase = "error"
 		addEvent(s, "error", "本轮没有可切换的国家分组，保留当前选择")
+		available := false
+		for _, result := range results {
+			available = available || result.Available
+		}
+		if len(results) > 0 && !available && !c.allUnavailable {
+			c.allUnavailable = true
+			notifyUnavailable = true
+		}
 	})
+	if notifyUnavailable {
+		c.notify(ctx, cfg, rev, "节点故障，所有节点均不可用", group.Now, group.Now)
+	}
 }
 func (c *Controller) Run(ctx context.Context) {
 	for {

@@ -39,6 +39,11 @@
             <div class="number-grid recovery-options"><div><label for="recovery-initial-delay">首次最低间隔 <span>秒</span></label><input id="recovery-initial-delay" type="number" min="0" max="86400" value="300" required></div><div><label for="recovery-interval">恢复探查间隔 <span>秒</span></label><input id="recovery-interval" type="number" min="1" max="86400" value="60" required></div><div><label for="recovery-threshold">连续成功 <span>次</span></label><input id="recovery-threshold" type="number" min="1" max="100" value="3" required></div></div>
             <p class="field-hint">启动探查或换组后先等待首次最低间隔，后续轮次使用恢复探查间隔。连续成功达标后复验并回切；需同时启用自动探查。</p>
             <div class="enable-row"><div><label for="persist-history">持久化历史记录</label><p>默认关闭。开启后每 5 分钟保存，重启可恢复近 1 小时记录。</p></div><input id="persist-history" type="checkbox" role="switch" aria-label="持久化历史记录"></div>
+            <div class="label-row"><label for="dingtalk-webhook">钉钉群机器人 Webhook（可选）</label><span id="dingtalk-webhook-state" class="quiet">未设置</span></div>
+            <input id="dingtalk-webhook" name="dingtalk_webhook" type="password" maxlength="4096" autocomplete="new-password" spellcheck="false" placeholder="粘贴 Webhook；留空保留已保存值"><label class="checkbox-row"><input id="clear-dingtalk-webhook" type="checkbox">清除钉钉 Webhook，停用通知</label>
+            <div class="label-row"><label for="feishu-webhook">飞书群机器人 Webhook（可选）</label><span id="feishu-webhook-state" class="quiet">未设置</span></div>
+            <input id="feishu-webhook" name="feishu_webhook" type="password" maxlength="4096" autocomplete="new-password" spellcheck="false" placeholder="粘贴 Webhook；留空保留已保存值"><label class="checkbox-row"><input id="clear-feishu-webhook" type="checkbox">清除飞书 Webhook，停用通知</label>
+            <p class="field-hint">配置后通知故障切换、恢复高优先级节点及全部节点不可用；同时配置则都发送。持续全部不可用只告警一次，恢复后重新计次。机器人关键词可设置为 z-mihomo-health-check；暂不支持加签。</p>
             <button id="save-button" class="primary-button" type="submit" disabled>保存配置 <span>→</span></button><p id="save-message" class="form-message" role="status" aria-live="polite"></p>
             </fieldset>
           </form>

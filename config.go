@@ -11,6 +11,8 @@ import (
 )
 
 type Config struct {
+	DingTalkWebhook             string `json:"dingtalk_webhook"`
+	FeishuWebhook               string `json:"feishu_webhook"`
 	APIURL                      string `json:"api_url"`
 	Secret                      string `json:"secret"`
 	Group                       string `json:"group"`
@@ -29,6 +31,15 @@ func DefaultConfig() Config {
 	return Config{APIURL: "http://mihomo:9090", Group: "🚀 节点选择", IntervalSeconds: 5, FailureThreshold: 1, TimeoutSeconds: 4, RecoveryInitialDelaySeconds: 300, RecoveryIntervalSeconds: 60, RecoverySuccessThreshold: 3}
 }
 func (c Config) Validate() error {
+	for _, hook := range []string{c.DingTalkWebhook, c.FeishuWebhook} {
+		if hook == "" {
+			continue
+		}
+		u, err := url.Parse(hook)
+		if err != nil || u.Hostname() == "" || (u.Scheme != "http" && u.Scheme != "https") || u.User != nil || u.Fragment != "" || len(hook) > 4096 || strings.IndexFunc(hook, unicode.IsControl) >= 0 {
+			return errors.New("机器人 Webhook 须为有效的 HTTP/HTTPS 地址，不得含账户、片段或控制字符，且不能超过 4096 字节")
+		}
+	}
 	u, err := url.Parse(c.APIURL)
 	if err != nil || u.Hostname() == "" || (u.Scheme != "http" && u.Scheme != "https") || u.User != nil || u.RawQuery != "" || u.Fragment != "" {
 		return errors.New("Mihomo API 地址须为不带账户、查询参数和片段的 HTTP/HTTPS 地址")

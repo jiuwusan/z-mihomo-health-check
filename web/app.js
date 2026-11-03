@@ -53,6 +53,7 @@ async function switchInstance(id, force = false) {
   $('instance-select').value = id;
   $('instance-name').value = instanceList.find(item => item.id === id)?.name || id;
   $('secret').value = ''; $('clear-secret').checked = false;
+  resetWebhookFields();
   $('target-group').replaceChildren();
   $('connect-button').disabled = false; $('connect-button').textContent = '测试连接并加载分组 ↗';
   $('save-button').textContent = '保存配置 →'; $('save-button').disabled = true;
@@ -98,6 +99,8 @@ function message(id, text, error = false) {
 }
 function payload() {
   return {api_url:$('api-url').value.trim(), secret:$('secret').value, clear_secret:$('clear-secret').checked,
+    dingtalk_webhook:$('dingtalk-webhook').value.trim(), feishu_webhook:$('feishu-webhook').value.trim(),
+    clear_dingtalk_webhook:$('clear-dingtalk-webhook').checked, clear_feishu_webhook:$('clear-feishu-webhook').checked,
     group:$('target-group').value, interval_seconds:Number($('interval').value),
     failure_threshold:Number($('threshold').value), timeout_seconds:Number($('timeout').value), enabled:$('enabled').checked,
     persist_history:$('persist-history').checked, recovery_enabled:$('recovery-enabled').checked,
@@ -110,6 +113,7 @@ function ensureGroup(name) {
   select.value = name;
 }
 function applyConfig(cfg) {
+  resetWebhookFields(cfg);
   $('api-url').value = cfg.api_url; ensureGroup(cfg.group);
   $('interval').value = cfg.interval_seconds; $('threshold').value = cfg.failure_threshold; $('timeout').value = cfg.timeout_seconds;
   $('enabled').checked = cfg.enabled;
@@ -122,6 +126,19 @@ function applyConfig(cfg) {
   $('secret-state').textContent = cfg.secret_set ? '已保存 · 不回显' : '未设置';
   $('failure-limit').textContent = ` / ${cfg.failure_threshold} 次`;
   loaded = true; dirty = false; $('save-button').disabled = false; syncInstanceControls();
+}
+function resetWebhookFields(cfg = {}) {
+  for (const channel of ['dingtalk','feishu']) {
+    $(channel + '-webhook').value = '';
+    $(channel + '-webhook').disabled = false;
+    $('clear-' + channel + '-webhook').checked = false;
+    $(channel + '-webhook-state').textContent = cfg[channel + '_webhook_set'] ? '已保存 · 不回显' : '未设置';
+  }
+}
+for (const channel of ['dingtalk','feishu']) {
+  $('clear-' + channel + '-webhook').addEventListener('change', () => {
+    $(channel + '-webhook').disabled = $('clear-' + channel + '-webhook').checked;
+  });
 }
 function element(tag, className, text) {
   const node = document.createElement(tag); if (className) node.className = className; if (text !== undefined) node.textContent = text; return node;

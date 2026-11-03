@@ -172,7 +172,7 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 			return
 		}
 	}
-	c.update(rev, func(s *Status) {
+	if c.update(rev, func(s *Status) {
 		now := time.Now()
 		c.restartRecoveryWait(now)
 		c.recovery.current = candidate
@@ -181,5 +181,7 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		s.LastSwitch = &now
 		s.Failures = 0
 		addEvent(s, "success", "已自动恢复到高优先级分组 "+candidate)
-	})
+	}) {
+		c.notify(ctx, cfg, rev, "恢复到高优先级节点", group.Now, candidate)
+	}
 }

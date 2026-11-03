@@ -143,3 +143,24 @@ test('late group, save and history responses cannot cross instance boundaries', 
     assert.equal(get('event-list').children[0].children[2].textContent,'event-b');
   });
 });
+
+test('webhook fields load privately, serialize edits, and clear on instance switch', async () => {
+  const nodes=new Map();
+  const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},confirm:()=>true,Option:class {constructor(text,value){this.textContent=text;this.value=value;}},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  context.applyConfig({api_url:'http://mihomo:9090',group:'test',dingtalk_webhook_set:true,feishu_webhook_set:false});
+  assert.equal(get('dingtalk-webhook-state').textContent,'已保存 · 不回显');
+  assert.equal(get('feishu-webhook-state').textContent,'未设置');
+  get('dingtalk-webhook').value='https://example.com/ding';
+  get('feishu-webhook').value='https://example.com/fei';
+  get('clear-feishu-webhook').checked=true;
+  const data=context.payload();
+  assert.equal(data.dingtalk_webhook,'https://example.com/ding');
+  assert.equal(data.feishu_webhook,'https://example.com/fei');
+  assert.equal(data.clear_feishu_webhook,true);
+  context.switchInstance('next',true);
+  assert.equal(get('dingtalk-webhook').value,'');
+  assert.equal(get('feishu-webhook').value,'');
+  assert.equal(get('clear-feishu-webhook').checked,false);
+});
