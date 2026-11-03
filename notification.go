@@ -19,7 +19,7 @@ const notificationTimeout = 3 * time.Second
 func (c *Controller) notify(ctx context.Context, cfg Config, rev uint64, reason, previous, current string) {
 	ctx, cancel := context.WithTimeout(ctx, notificationTimeout)
 	defer cancel()
-	message := fmt.Sprintf("z-mihomo-health-check\n%s\n目标分组：%s\n原节点：%s\n当前节点：%s\n时间：%s", reason, cfg.Group, previous, current, time.Now().Format(time.RFC3339))
+	message := fmt.Sprintf("Mihomo 状态变更\n场景：%s\n目标分组：%s\n原节点：%s\n当前节点：%s\n时间：%s", reason, cfg.Group, previous, current, time.Now().Format("2006-01-02 15:04:05"))
 	var wg sync.WaitGroup
 	for _, channel := range []struct {
 		name, url string
