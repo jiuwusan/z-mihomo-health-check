@@ -231,7 +231,7 @@ func (c *Controller) Check(parent context.Context) {
 			s.Failures = 0
 			s.Delay = delay
 			s.Phase = "healthy"
-			addEvent(s, "success", "当前出口探查成功")
+			addEvent(s, "success", "当前出口探查成功；站点："+site)
 		})
 		c.checkRecovery(ctx, cfg, rev, client, group)
 		return

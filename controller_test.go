@@ -137,6 +137,20 @@ func TestProbeFailureRecordsSiteSelectedGroupTimeoutAndAPICode(t *testing.T) {
 		})
 	}
 }
+func TestProbeSuccessRecordsTestedSite(t *testing.T) {
+	f, api := newFake(t)
+	f.probeStatus = 200
+	c := testController(t, testConfig(api.URL))
+	c.Check(context.Background())
+	status := c.Status()
+	if len(status.Events) != 1 || status.Events[0].Level != "success" {
+		t.Fatalf("expected successful probe event: %+v", status.Events)
+	}
+	if !strings.Contains(status.Events[0].Message, "https://test.example/") {
+		t.Fatalf("success event omitted tested site: %s", status.Events[0].Message)
+	}
+}
+
 func TestThresholdAndSuccessReset(t *testing.T) {
 	f, s := newFake(t)
 	cfg := testConfig(s.URL)
