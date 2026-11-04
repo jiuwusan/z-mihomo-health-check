@@ -76,7 +76,7 @@ async function switchInstance(id, force = false) {
   $('connect-button').disabled = false; $('connect-button').textContent = '测试连接并加载分组 ↗';
   $('save-button').textContent = '保存配置 →'; $('save-button').disabled = true;
   message('save-message',''); message('connection-message','连接后可选择 API 返回的 select 分组。'); message('history-error','');
-  renderStatus({phase:'waiting',message:'正在加载实例配置',pool_size:200,failures:0,results:[]});
+  renderStatus({phase:'waiting',message:'正在加载实例配置',pool_size:0,failures:0,results:[]});
   renderHistoryEvents(); $('older-events').disabled = true; $('latest-events').disabled = true;
   syncInstanceControls();
   try {
@@ -170,7 +170,7 @@ function renderStatus(status) {
   badge.className = 'badge' + (status.running && status.phase !== 'error' ? ' active' : status.phase === 'error' ? ' error' : '');
   $('current-group').textContent = status.current || '—'; $('delay').textContent = status.delay_ms > 0 ? status.delay_ms : '—';
   $('current-group').title = status.current || '';
-  $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size;
+  $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size || '—';
   $('phase-text').title = status.message || '';
   $('phase-text').textContent = status.message; $('last-check').textContent = status.last_check ? `最近探查 ${clock(status.last_check)}` : '尚未探查';
   const lastSite = $('last-site');
