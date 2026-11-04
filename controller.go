@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand/v2"
 	"sync"
 	"time"
 )
@@ -22,22 +21,24 @@ type GroupResult struct {
 	CheckedAt *time.Time `json:"checked_at,omitempty"`
 }
 type Status struct {
-	Running       bool           `json:"running"`
-	Phase         string         `json:"phase"`
-	Message       string         `json:"message"`
-	Current       string         `json:"current"`
-	Failures      int            `json:"failures"`
-	LastSite      string         `json:"last_site"`
-	LastCheck     *time.Time     `json:"last_check"`
-	LastSwitch    *time.Time     `json:"last_switch"`
-	Delay         int            `json:"delay_ms"`
-	PoolSize      int            `json:"pool_size"`
-	Results       []GroupResult  `json:"results"`
-	Events        []Event        `json:"events"`
-	EventCount    int            `json:"event_count"`
-	HistoryID     string         `json:"history_id"`
-	Recovery      RecoveryStatus `json:"recovery"`
-	eventSequence uint64
+	Running         bool           `json:"running"`
+	Phase           string         `json:"phase"`
+	Message         string         `json:"message"`
+	Current         string         `json:"current"`
+	Failures        int            `json:"failures"`
+	LastSite        string         `json:"last_site"`
+	LastCheck       *time.Time     `json:"last_check"`
+	LastSwitch      *time.Time     `json:"last_switch"`
+	Delay           int            `json:"delay_ms"`
+	PoolSize        int            `json:"pool_size"`
+	PoolTotal       int            `json:"pool_total"`
+	PoolQuarantined int            `json:"pool_quarantined"`
+	Results         []GroupResult  `json:"results"`
+	Events          []Event        `json:"events"`
+	EventCount      int            `json:"event_count"`
+	HistoryID       string         `json:"history_id"`
+	Recovery        RecoveryStatus `json:"recovery"`
+	eventSequence   uint64
 }
 type Controller struct {
 	mu             sync.Mutex
@@ -47,7 +48,7 @@ type Controller struct {
 	ctx            context.Context
 	cancel         context.CancelFunc
 	wake           chan struct{}
-	sites          []string
+	pool           *SitePool
 	state          Status
 	recovery       recoveryState
 	allUnavailable bool
@@ -55,7 +56,11 @@ type Controller struct {
 }
 
 func NewController(sites []string) *Controller {
-	c := &Controller{sites: append([]string(nil), sites...), wake: make(chan struct{}, 1), instanceName: "默认实例"}
+	pool, _ := OpenSitePool(sites, "")
+	return newControllerWithPool(pool)
+}
+func newControllerWithPool(pool *SitePool) *Controller {
+	c := &Controller{pool: pool, wake: make(chan struct{}, 1), instanceName: "默认实例"}
 	c.Configure(DefaultConfig())
 	return c
 }
@@ -100,7 +105,8 @@ func (c *Controller) configureLocked(cfg Config) {
 	if historyID == "" {
 		historyID = time.Now().UTC().Format(time.RFC3339Nano)
 	}
-	c.state = Status{Running: cfg.Enabled, Phase: phase, Message: msg, PoolSize: len(c.sites), Results: []GroupResult{}, Events: c.state.Events, EventCount: c.state.EventCount, HistoryID: historyID, eventSequence: c.state.eventSequence}
+	active, total := c.pool.Counts()
+	c.state = Status{Running: cfg.Enabled, Phase: phase, Message: msg, PoolSize: active, PoolTotal: total, PoolQuarantined: total - active, Results: []GroupResult{}, Events: c.state.Events, EventCount: c.state.EventCount, HistoryID: historyID, eventSequence: c.state.eventSequence}
 	select {
 	case c.wake <- struct{}{}:
 	default:
@@ -118,6 +124,8 @@ func (c *Controller) Status() Status {
 	defer c.mu.Unlock()
 	pruneEvents(&c.state, time.Now())
 	s := c.state
+	s.PoolSize, s.PoolTotal = c.pool.Counts()
+	s.PoolQuarantined = s.PoolTotal - s.PoolSize
 	s.Recovery.Enabled = c.cfg.Enabled && c.cfg.RecoveryEnabled
 	s.Recovery.Threshold = c.cfg.RecoverySuccessThreshold
 	if s.Recovery.Enabled {
@@ -195,7 +203,7 @@ func (c *Controller) Check(parent context.Context) {
 	c.mu.Lock()
 	cfg, rev, base := c.cfg, c.rev, c.ctx
 	c.mu.Unlock()
-	if !cfg.Enabled || len(c.sites) == 0 {
+	if !cfg.Enabled {
 		return
 	}
 	ctx, cancel := context.WithCancel(base)
@@ -205,8 +213,20 @@ func (c *Controller) Check(parent context.Context) {
 	if ctx.Err() != nil {
 		return
 	}
-	site := c.sites[rand.IntN(len(c.sites))]
 	client := NewMihomo(cfg)
+	c.retryQuarantinedSite(ctx, cfg, rev, client)
+	if ctx.Err() != nil {
+		return
+	}
+	choices := c.pool.Pick("", 1)
+	if len(choices) == 0 {
+		c.update(rev, func(s *Status) {
+			s.Phase = "waiting"
+			s.Message = "有效站点池为空，等待隔离站点低频复测恢复"
+		})
+		return
+	}
+	site := choices[0]
 	if !c.update(rev, func(s *Status) {
 		now := time.Now()
 		s.LastCheck = &now
@@ -225,6 +245,12 @@ func (c *Controller) Check(parent context.Context) {
 	c.update(rev, func(s *Status) { s.Current = group.Now })
 	c.observeRecoveryGroup(rev, group)
 	delay, err := client.Probe(ctx, site)
+	if err == nil || isNodeFailure(err) {
+		// Commit the observation now; only network rechecks wait for failover.
+		if token := c.recordSiteOutcome(ctx, rev, site, err == nil); token != 0 {
+			defer c.reviewSite(ctx, cfg, rev, site, token)
+		}
+	}
 	if err == nil {
 		c.update(rev, func(s *Status) {
 			c.allUnavailable = false

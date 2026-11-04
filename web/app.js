@@ -170,7 +170,8 @@ function renderStatus(status) {
   badge.className = 'badge' + (status.running && status.phase !== 'error' ? ' active' : status.phase === 'error' ? ' error' : '');
   $('current-group').textContent = status.current || '—'; $('delay').textContent = status.delay_ms > 0 ? status.delay_ms : '—';
   $('current-group').title = status.current || '';
-  $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size || '—';
+  $('failures').textContent = status.failures; $('pool-size').textContent = status.pool_size ?? '—';
+  $('pool-note').textContent = status.pool_total === undefined ? '每个周期随机抽取 1 个' : `总计 ${status.pool_total} · 隔离 ${status.pool_quarantined ?? 0}`;
   $('phase-text').title = status.message || '';
   $('phase-text').textContent = status.message; $('last-check').textContent = status.last_check ? `最近探查 ${clock(status.last_check)}` : '尚未探查';
   const lastSite = $('last-site');

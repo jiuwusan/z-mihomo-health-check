@@ -104,7 +104,7 @@ type InstanceManager struct {
 	mu              sync.RWMutex
 	edit            sync.Mutex
 	root            string
-	sites           []string
+	pool            *SitePool
 	items           map[string]*managedInstance
 	order           []InstanceInfo
 	started, closed bool
@@ -126,7 +126,11 @@ func instanceName(name string) (string, error) {
 }
 
 func NewInstanceManager(root string, sites []string) (*InstanceManager, error) {
-	m := &InstanceManager{root: root, sites: append([]string(nil), sites...), items: map[string]*managedInstance{}}
+	pool, err := OpenSitePool(sites, filepath.Join(root, "site-pool.json"))
+	if err != nil {
+		return nil, err
+	}
+	m := &InstanceManager{root: root, pool: pool, items: map[string]*managedInstance{}}
 	data, err := os.ReadFile(filepath.Join(root, "instances.json"))
 	if os.IsNotExist(err) {
 		_, err = m.Add("默认实例")
@@ -174,7 +178,7 @@ func (m *InstanceManager) open(info InstanceInfo) (*managedInstance, error) {
 	if err != nil {
 		return nil, errors.New("实例 " + id + " 配置加载失败：" + err.Error())
 	}
-	c := NewController(m.sites)
+	c := newControllerWithPool(m.pool)
 	c.SetInstanceName(info.Name)
 	c.Configure(cfg)
 	h, err := OpenHistoryStore(c, filepath.Join(m.directory(id), "history.json"))

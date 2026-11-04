@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand/v2"
 	"slices"
 	"time"
 )
@@ -107,7 +106,11 @@ func (c *Controller) checkRecovery(ctx context.Context, cfg Config, rev uint64, 
 		})
 		return
 	}
-	site := c.sites[rand.IntN(len(c.sites))]
+	choices := c.pool.Pick("", 1)
+	if len(choices) == 0 {
+		return
+	}
+	site := choices[0]
 	candidate := ""
 	for _, name := range group.All[:index] {
 		delay, err := client.ProbeGroup(ctx, name, site)

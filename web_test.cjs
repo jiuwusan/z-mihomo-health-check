@@ -23,6 +23,19 @@ class Element {
   scrollIntoView() {this.scrolled=true;}
 }
 
+test('global site isolation displays zero active sites and shared totals', () => {
+  const nodes = new Map();
+  const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  context.renderStatus({phase:'waiting',running:true,failures:0,pool_size:0,pool_total:470,pool_quarantined:470,results:[]});
+  assert.equal(String(get('pool-size').textContent),'0');
+  assert.match(get('pool-note').textContent,/总计 470.*隔离 470/);
+  context.renderStatus({phase:'healthy',running:true,failures:0,pool_size:469,pool_total:470,pool_quarantined:1,results:[]});
+  assert.equal(String(get('pool-size').textContent),'469');
+  assert.match(get('pool-note').textContent,/总计 470.*隔离 1/);
+});
+
 test('a delayed pre-save status cannot replace newer status and history', async () => {
   const nodes = new Map();
   const pending = [];
