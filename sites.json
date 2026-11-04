@@ -16,6 +16,14 @@
     "expectedStatus": "200-299"
   },
   {
+    "id": "site-521",
+    "name": "IBM · www.redhat.com",
+    "operator": "IBM",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.redhat.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
     "id": "site-509",
     "name": "Microsoft · raw.githubusercontent.com",
     "operator": "Microsoft",
@@ -32,27 +40,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-517",
-    "name": "Meta · www.facebook.com",
-    "operator": "Meta",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.facebook.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
     "id": "site-518",
     "name": "Cloudflare · developers.cloudflare.com",
     "operator": "Cloudflare",
     "category": "大厂静态与简单响应",
     "url": "https://developers.cloudflare.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-519",
-    "name": "AMD · www.amd.com",
-    "operator": "AMD",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.amd.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -64,11 +56,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-521",
-    "name": "IBM · www.redhat.com",
-    "operator": "IBM",
+    "id": "site-517",
+    "name": "Meta · www.facebook.com",
+    "operator": "Meta",
     "category": "大厂静态与简单响应",
-    "url": "https://www.redhat.com/robots.txt",
+    "url": "https://www.facebook.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -96,22 +88,6 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-525",
-    "name": "Stripe · stripe.com",
-    "operator": "Stripe",
-    "category": "大厂静态与简单响应",
-    "url": "https://stripe.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-526",
-    "name": "Shopify · help.shopify.com",
-    "operator": "Shopify",
-    "category": "大厂静态与简单响应",
-    "url": "https://help.shopify.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
     "id": "site-527",
     "name": "Booking Holdings · www.booking.com",
     "operator": "Booking Holdings",
@@ -120,11 +96,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-528",
-    "name": "eBay · www.ebay.com",
-    "operator": "eBay",
+    "id": "site-525",
+    "name": "Stripe · stripe.com",
+    "operator": "Stripe",
     "category": "大厂静态与简单响应",
-    "url": "https://www.ebay.com/robots.txt",
+    "url": "https://stripe.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -136,11 +112,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-530",
-    "name": "Nokia · www.nokia.com",
-    "operator": "Nokia",
+    "id": "site-526",
+    "name": "Shopify · help.shopify.com",
+    "operator": "Shopify",
     "category": "大厂静态与简单响应",
-    "url": "https://www.nokia.com/robots.txt",
+    "url": "https://help.shopify.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -152,43 +128,19 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-532",
-    "name": "Datadog · www.datadoghq.com",
-    "operator": "Datadog",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.datadoghq.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-533",
-    "name": "CrowdStrike · www.crowdstrike.com",
-    "operator": "CrowdStrike",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.crowdstrike.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-534",
-    "name": "Zscaler · www.zscaler.com",
-    "operator": "Zscaler",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.zscaler.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-535",
-    "name": "Okta · www.okta.com",
-    "operator": "Okta",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.okta.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
     "id": "site-536",
     "name": "Intuit · www.intuit.com",
     "operator": "Intuit",
     "category": "大厂静态与简单响应",
     "url": "https://www.intuit.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-532",
+    "name": "Datadog · www.datadoghq.com",
+    "operator": "Datadog",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.datadoghq.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -200,19 +152,35 @@
     "expectedStatus": "200-299"
   },
   {
+    "id": "site-534",
+    "name": "Zscaler · www.zscaler.com",
+    "operator": "Zscaler",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.zscaler.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-533",
+    "name": "CrowdStrike · www.crowdstrike.com",
+    "operator": "CrowdStrike",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.crowdstrike.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-535",
+    "name": "Okta · www.okta.com",
+    "operator": "Okta",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.okta.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
     "id": "site-538",
     "name": "Elastic · www.elastic.co",
     "operator": "Elastic",
     "category": "大厂静态与简单响应",
     "url": "https://www.elastic.co/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-539",
-    "name": "MongoDB · www.mongodb.com",
-    "operator": "MongoDB",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.mongodb.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -224,11 +192,19 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-541",
-    "name": "OVHcloud · www.ovhcloud.com",
-    "operator": "OVHcloud",
+    "id": "site-539",
+    "name": "MongoDB · www.mongodb.com",
+    "operator": "MongoDB",
     "category": "大厂静态与简单响应",
-    "url": "https://www.ovhcloud.com/robots.txt",
+    "url": "https://www.mongodb.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-544",
+    "name": "Gen Digital · www.avast.com",
+    "operator": "Gen Digital",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.avast.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -248,35 +224,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-544",
-    "name": "Gen Digital · www.avast.com",
-    "operator": "Gen Digital",
+    "id": "site-549",
+    "name": "NVIDIA · docs.nvidia.com",
+    "operator": "NVIDIA",
     "category": "大厂静态与简单响应",
-    "url": "https://www.avast.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-545",
-    "name": "ESET · www.eset.com",
-    "operator": "ESET",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.eset.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-546",
-    "name": "Kaspersky · www.kaspersky.com",
-    "operator": "Kaspersky",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.kaspersky.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-547",
-    "name": "Adobe · developer.adobe.com",
-    "operator": "Adobe",
-    "category": "大厂静态与简单响应",
-    "url": "https://developer.adobe.com/robots.txt",
+    "url": "https://docs.nvidia.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -288,51 +240,27 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-549",
-    "name": "NVIDIA · docs.nvidia.com",
-    "operator": "NVIDIA",
+    "id": "site-546",
+    "name": "Kaspersky · www.kaspersky.com",
+    "operator": "Kaspersky",
     "category": "大厂静态与简单响应",
-    "url": "https://docs.nvidia.com/robots.txt",
+    "url": "https://www.kaspersky.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-550",
-    "name": "Cisco · developer.cisco.com",
-    "operator": "Cisco",
+    "id": "site-545",
+    "name": "ESET · www.eset.com",
+    "operator": "ESET",
     "category": "大厂静态与简单响应",
-    "url": "https://developer.cisco.com/robots.txt",
+    "url": "https://www.eset.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-551",
-    "name": "Dell · www.delltechnologies.com",
-    "operator": "Dell",
+    "id": "site-547",
+    "name": "Adobe · developer.adobe.com",
+    "operator": "Adobe",
     "category": "大厂静态与简单响应",
-    "url": "https://www.delltechnologies.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-552",
-    "name": "PayPal · developer.paypal.com",
-    "operator": "PayPal",
-    "category": "大厂静态与简单响应",
-    "url": "https://developer.paypal.com/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-553",
-    "name": "Zoom · developers.zoom.us",
-    "operator": "Zoom",
-    "category": "大厂静态与简单响应",
-    "url": "https://developers.zoom.us/robots.txt",
-    "expectedStatus": "200-299"
-  },
-  {
-    "id": "site-554",
-    "name": "Google · www.google.com",
-    "operator": "Google",
-    "category": "大厂静态与简单响应",
-    "url": "https://www.google.com/generate_204",
+    "url": "https://developer.adobe.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -344,11 +272,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-556",
-    "name": "Microsoft · www.githubstatus.com",
-    "operator": "Microsoft",
+    "id": "site-553",
+    "name": "Zoom · developers.zoom.us",
+    "operator": "Zoom",
     "category": "大厂静态与简单响应",
-    "url": "https://www.githubstatus.com/robots.txt",
+    "url": "https://developers.zoom.us/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -360,6 +288,22 @@
     "expectedStatus": "200-299"
   },
   {
+    "id": "site-559",
+    "name": "Cloudflare · www.cloudflare.com",
+    "operator": "Cloudflare",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.cloudflare.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-556",
+    "name": "Microsoft · www.githubstatus.com",
+    "operator": "Microsoft",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.githubstatus.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
     "id": "site-558",
     "name": "Meta · www.whatsapp.com",
     "operator": "Meta",
@@ -368,11 +312,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-559",
-    "name": "Cloudflare · www.cloudflare.com",
-    "operator": "Cloudflare",
+    "id": "site-561",
+    "name": "IBM · www.ibm.com",
+    "operator": "IBM",
     "category": "大厂静态与简单响应",
-    "url": "https://www.cloudflare.com/robots.txt",
+    "url": "https://www.ibm.com/robots.txt",
     "expectedStatus": "200-299"
   },
   {
@@ -384,11 +328,11 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-561",
-    "name": "IBM · www.ibm.com",
-    "operator": "IBM",
+    "id": "site-554",
+    "name": "Google · www.google.com",
+    "operator": "Google",
     "category": "大厂静态与简单响应",
-    "url": "https://www.ibm.com/robots.txt",
+    "url": "https://www.google.com/generate_204",
     "expectedStatus": "200-299"
   },
   {
@@ -416,6 +360,14 @@
     "expectedStatus": "200-299"
   },
   {
+    "id": "site-566",
+    "name": "Docker 下载静态目录",
+    "operator": "Docker",
+    "category": "大厂静态与简单响应",
+    "url": "https://download.docker.com/linux/static/stable/x86_64/",
+    "expectedStatus": "200-299"
+  },
+  {
     "id": "site-565",
     "name": "Docker Hub robots",
     "operator": "Docker",
@@ -424,11 +376,3387 @@
     "expectedStatus": "200-299"
   },
   {
-    "id": "site-566",
-    "name": "Docker 下载静态目录",
-    "operator": "Docker",
-    "category": "大厂静态与简单响应",
-    "url": "https://download.docker.com/linux/static/stable/x86_64/",
+    "id": "site-567",
+    "name": "www.fastly.com robots",
+    "operator": "www.fastly.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.fastly.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-569",
+    "name": "www.netlify.com robots",
+    "operator": "www.netlify.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.netlify.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-570",
+    "name": "render.com robots",
+    "operator": "render.com",
+    "category": "官方 robots.txt",
+    "url": "https://render.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-571",
+    "name": "www.hetzner.com robots",
+    "operator": "www.hetzner.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.hetzner.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-572",
+    "name": "fly.io robots",
+    "operator": "fly.io",
+    "category": "官方 robots.txt",
+    "url": "https://fly.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-573",
+    "name": "tailscale.com robots",
+    "operator": "tailscale.com",
+    "category": "官方 robots.txt",
+    "url": "https://tailscale.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-574",
+    "name": "github.com robots",
+    "operator": "github.com",
+    "category": "官方 robots.txt",
+    "url": "https://github.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-575",
+    "name": "sourceforge.net robots",
+    "operator": "sourceforge.net",
+    "category": "官方 robots.txt",
+    "url": "https://sourceforge.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-576",
+    "name": "bitbucket.org robots",
+    "operator": "bitbucket.org",
+    "category": "官方 robots.txt",
+    "url": "https://bitbucket.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-577",
+    "name": "www.jetbrains.com robots",
+    "operator": "www.jetbrains.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.jetbrains.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-578",
+    "name": "codeberg.org robots",
+    "operator": "codeberg.org",
+    "category": "官方 robots.txt",
+    "url": "https://codeberg.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-579",
+    "name": "code.visualstudio.com robots",
+    "operator": "code.visualstudio.com",
+    "category": "官方 robots.txt",
+    "url": "https://code.visualstudio.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-580",
+    "name": "www.postman.com robots",
+    "operator": "www.postman.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.postman.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-581",
+    "name": "sentry.io robots",
+    "operator": "sentry.io",
+    "category": "官方 robots.txt",
+    "url": "https://sentry.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-582",
+    "name": "insomnia.rest robots",
+    "operator": "insomnia.rest",
+    "category": "官方 robots.txt",
+    "url": "https://insomnia.rest/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-583",
+    "name": "grafana.com robots",
+    "operator": "grafana.com",
+    "category": "官方 robots.txt",
+    "url": "https://grafana.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-584",
+    "name": "prometheus.io robots",
+    "operator": "prometheus.io",
+    "category": "官方 robots.txt",
+    "url": "https://prometheus.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-585",
+    "name": "www.microsoft.com robots",
+    "operator": "www.microsoft.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.microsoft.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-586",
+    "name": "opentelemetry.io robots",
+    "operator": "opentelemetry.io",
+    "category": "官方 robots.txt",
+    "url": "https://opentelemetry.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-587",
+    "name": "www.puppet.com robots",
+    "operator": "www.puppet.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.puppet.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-588",
+    "name": "www.python.org robots",
+    "operator": "www.python.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.python.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-589",
+    "name": "nodejs.org robots",
+    "operator": "nodejs.org",
+    "category": "官方 robots.txt",
+    "url": "https://nodejs.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-590",
+    "name": "go.dev robots",
+    "operator": "go.dev",
+    "category": "官方 robots.txt",
+    "url": "https://go.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-591",
+    "name": "www.ruby-lang.org robots",
+    "operator": "www.ruby-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.ruby-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-592",
+    "name": "www.php.net robots",
+    "operator": "www.php.net",
+    "category": "官方 robots.txt",
+    "url": "https://www.php.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-593",
+    "name": "www.perl.org robots",
+    "operator": "www.perl.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.perl.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-594",
+    "name": "www.haskell.org robots",
+    "operator": "www.haskell.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.haskell.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-595",
+    "name": "ocaml.org robots",
+    "operator": "ocaml.org",
+    "category": "官方 robots.txt",
+    "url": "https://ocaml.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-596",
+    "name": "elixir-lang.org robots",
+    "operator": "elixir-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://elixir-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-597",
+    "name": "react.dev robots",
+    "operator": "react.dev",
+    "category": "官方 robots.txt",
+    "url": "https://react.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-598",
+    "name": "kotlinlang.org robots",
+    "operator": "kotlinlang.org",
+    "category": "官方 robots.txt",
+    "url": "https://kotlinlang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-599",
+    "name": "www.swift.org robots",
+    "operator": "www.swift.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.swift.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-600",
+    "name": "vuejs.org robots",
+    "operator": "vuejs.org",
+    "category": "官方 robots.txt",
+    "url": "https://vuejs.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-601",
+    "name": "angular.dev robots",
+    "operator": "angular.dev",
+    "category": "官方 robots.txt",
+    "url": "https://angular.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-602",
+    "name": "svelte.dev robots",
+    "operator": "svelte.dev",
+    "category": "官方 robots.txt",
+    "url": "https://svelte.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-603",
+    "name": "astro.build robots",
+    "operator": "astro.build",
+    "category": "官方 robots.txt",
+    "url": "https://astro.build/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-604",
+    "name": "www.scala-lang.org robots",
+    "operator": "www.scala-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.scala-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-605",
+    "name": "webpack.js.org robots",
+    "operator": "webpack.js.org",
+    "category": "官方 robots.txt",
+    "url": "https://webpack.js.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-606",
+    "name": "eslint.org robots",
+    "operator": "eslint.org",
+    "category": "官方 robots.txt",
+    "url": "https://eslint.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-607",
+    "name": "fastapi.tiangolo.com robots",
+    "operator": "fastapi.tiangolo.com",
+    "category": "官方 robots.txt",
+    "url": "https://fastapi.tiangolo.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-608",
+    "name": "www.djangoproject.com robots",
+    "operator": "www.djangoproject.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.djangoproject.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-609",
+    "name": "rubyonrails.org robots",
+    "operator": "rubyonrails.org",
+    "category": "官方 robots.txt",
+    "url": "https://rubyonrails.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-610",
+    "name": "spring.io robots",
+    "operator": "spring.io",
+    "category": "官方 robots.txt",
+    "url": "https://spring.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-611",
+    "name": "flask.palletsprojects.com robots",
+    "operator": "flask.palletsprojects.com",
+    "category": "官方 robots.txt",
+    "url": "https://flask.palletsprojects.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-612",
+    "name": "fedoraproject.org robots",
+    "operator": "fedoraproject.org",
+    "category": "官方 robots.txt",
+    "url": "https://fedoraproject.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-613",
+    "name": "laravel.com robots",
+    "operator": "laravel.com",
+    "category": "官方 robots.txt",
+    "url": "https://laravel.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-614",
+    "name": "archlinux.org robots",
+    "operator": "archlinux.org",
+    "category": "官方 robots.txt",
+    "url": "https://archlinux.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-615",
+    "name": "www.freebsd.org robots",
+    "operator": "www.freebsd.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.freebsd.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-616",
+    "name": "nixos.org robots",
+    "operator": "nixos.org",
+    "category": "官方 robots.txt",
+    "url": "https://nixos.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-618",
+    "name": "www.netbsd.org robots",
+    "operator": "www.netbsd.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.netbsd.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-619",
+    "name": "www.gentoo.org robots",
+    "operator": "www.gentoo.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.gentoo.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-620",
+    "name": "www.w3.org robots",
+    "operator": "www.w3.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.w3.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-621",
+    "name": "kde.org robots",
+    "operator": "kde.org",
+    "category": "官方 robots.txt",
+    "url": "https://kde.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-622",
+    "name": "www.blender.org robots",
+    "operator": "www.blender.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.blender.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-623",
+    "name": "www.ietf.org robots",
+    "operator": "www.ietf.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.ietf.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-624",
+    "name": "xfce.org robots",
+    "operator": "xfce.org",
+    "category": "官方 robots.txt",
+    "url": "https://xfce.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-625",
+    "name": "www.rfc-editor.org robots",
+    "operator": "www.rfc-editor.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.rfc-editor.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-626",
+    "name": "www.iana.org robots",
+    "operator": "www.iana.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.iana.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-627",
+    "name": "www.apnic.net robots",
+    "operator": "www.apnic.net",
+    "category": "官方 robots.txt",
+    "url": "https://www.apnic.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-628",
+    "name": "www.arin.net robots",
+    "operator": "www.arin.net",
+    "category": "官方 robots.txt",
+    "url": "https://www.arin.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-629",
+    "name": "www.apache.org robots",
+    "operator": "www.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-630",
+    "name": "www.eff.org robots",
+    "operator": "www.eff.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.eff.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-631",
+    "name": "www.lacnic.net robots",
+    "operator": "www.lacnic.net",
+    "category": "官方 robots.txt",
+    "url": "https://www.lacnic.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-632",
+    "name": "www.linuxfoundation.org robots",
+    "operator": "www.linuxfoundation.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.linuxfoundation.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-633",
+    "name": "opensource.org robots",
+    "operator": "opensource.org",
+    "category": "官方 robots.txt",
+    "url": "https://opensource.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-635",
+    "name": "afrinic.net robots",
+    "operator": "afrinic.net",
+    "category": "官方 robots.txt",
+    "url": "https://afrinic.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-636",
+    "name": "wikimediafoundation.org robots",
+    "operator": "wikimediafoundation.org",
+    "category": "官方 robots.txt",
+    "url": "https://wikimediafoundation.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-637",
+    "name": "www.mit.edu robots",
+    "operator": "www.mit.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.mit.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-638",
+    "name": "www.yale.edu robots",
+    "operator": "www.yale.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.yale.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-639",
+    "name": "www.harvard.edu robots",
+    "operator": "www.harvard.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.harvard.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-640",
+    "name": "www.cornell.edu robots",
+    "operator": "www.cornell.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.cornell.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-641",
+    "name": "www.caltech.edu robots",
+    "operator": "www.caltech.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.caltech.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-642",
+    "name": "www.cmu.edu robots",
+    "operator": "www.cmu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.cmu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-644",
+    "name": "www.ed.ac.uk robots",
+    "operator": "www.ed.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.ed.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-645",
+    "name": "www.cam.ac.uk robots",
+    "operator": "www.cam.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.cam.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-646",
+    "name": "www.ubc.ca robots",
+    "operator": "www.ubc.ca",
+    "category": "官方 robots.txt",
+    "url": "https://www.ubc.ca/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-647",
+    "name": "www.mcgill.ca robots",
+    "operator": "www.mcgill.ca",
+    "category": "官方 robots.txt",
+    "url": "https://www.mcgill.ca/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-648",
+    "name": "www.tum.de robots",
+    "operator": "www.tum.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.tum.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-649",
+    "name": "www.nasa.gov robots",
+    "operator": "www.nasa.gov",
+    "category": "官方 robots.txt",
+    "url": "https://www.nasa.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-650",
+    "name": "www.sydney.edu.au robots",
+    "operator": "www.sydney.edu.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.sydney.edu.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-651",
+    "name": "www.esa.int robots",
+    "operator": "www.esa.int",
+    "category": "官方 robots.txt",
+    "url": "https://www.esa.int/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-652",
+    "name": "home.cern robots",
+    "operator": "home.cern",
+    "category": "官方 robots.txt",
+    "url": "https://home.cern/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-653",
+    "name": "www.nist.gov robots",
+    "operator": "www.nist.gov",
+    "category": "官方 robots.txt",
+    "url": "https://www.nist.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-654",
+    "name": "www.noaa.gov robots",
+    "operator": "www.noaa.gov",
+    "category": "官方 robots.txt",
+    "url": "https://www.noaa.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-655",
+    "name": "arxiv.org robots",
+    "operator": "arxiv.org",
+    "category": "官方 robots.txt",
+    "url": "https://arxiv.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-656",
+    "name": "www.nsf.gov robots",
+    "operator": "www.nsf.gov",
+    "category": "官方 robots.txt",
+    "url": "https://www.nsf.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-657",
+    "name": "www.crossref.org robots",
+    "operator": "www.crossref.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.crossref.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-658",
+    "name": "pubmed.ncbi.nlm.nih.gov robots",
+    "operator": "pubmed.ncbi.nlm.nih.gov",
+    "category": "官方 robots.txt",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-659",
+    "name": "orcid.org robots",
+    "operator": "orcid.org",
+    "category": "官方 robots.txt",
+    "url": "https://orcid.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-660",
+    "name": "elifesciences.org robots",
+    "operator": "elifesciences.org",
+    "category": "官方 robots.txt",
+    "url": "https://elifesciences.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-661",
+    "name": "www.nature.com robots",
+    "operator": "www.nature.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.nature.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-662",
+    "name": "plos.org robots",
+    "operator": "plos.org",
+    "category": "官方 robots.txt",
+    "url": "https://plos.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-663",
+    "name": "wellcome.org robots",
+    "operator": "wellcome.org",
+    "category": "官方 robots.txt",
+    "url": "https://wellcome.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-664",
+    "name": "www.rfi.fr robots",
+    "operator": "www.rfi.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.rfi.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-665",
+    "name": "www.npr.org robots",
+    "operator": "www.npr.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.npr.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-666",
+    "name": "www.pbs.org robots",
+    "operator": "www.pbs.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.pbs.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-667",
+    "name": "www.france24.com robots",
+    "operator": "www.france24.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.france24.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-668",
+    "name": "www.csiro.au robots",
+    "operator": "www.csiro.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.csiro.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-669",
+    "name": "www3.nhk.or.jp robots",
+    "operator": "www3.nhk.or.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www3.nhk.or.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-670",
+    "name": "www.abc.net.au robots",
+    "operator": "www.abc.net.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.abc.net.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-671",
+    "name": "www.aljazeera.com robots",
+    "operator": "www.aljazeera.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.aljazeera.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-672",
+    "name": "www.swissinfo.ch robots",
+    "operator": "www.swissinfo.ch",
+    "category": "官方 robots.txt",
+    "url": "https://www.swissinfo.ch/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-673",
+    "name": "theconversation.com robots",
+    "operator": "theconversation.com",
+    "category": "官方 robots.txt",
+    "url": "https://theconversation.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-674",
+    "name": "www.tate.org.uk robots",
+    "operator": "www.tate.org.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.tate.org.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-675",
+    "name": "www.rijksmuseum.nl robots",
+    "operator": "www.rijksmuseum.nl",
+    "category": "官方 robots.txt",
+    "url": "https://www.rijksmuseum.nl/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-676",
+    "name": "duckduckgo.com robots",
+    "operator": "duckduckgo.com",
+    "category": "官方 robots.txt",
+    "url": "https://duckduckgo.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-677",
+    "name": "www.louvre.fr robots",
+    "operator": "www.louvre.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.louvre.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-678",
+    "name": "proton.me robots",
+    "operator": "proton.me",
+    "category": "官方 robots.txt",
+    "url": "https://proton.me/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-679",
+    "name": "discord.com robots",
+    "operator": "discord.com",
+    "category": "官方 robots.txt",
+    "url": "https://discord.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-680",
+    "name": "www.loc.gov robots",
+    "operator": "www.loc.gov",
+    "category": "官方 robots.txt",
+    "url": "https://www.loc.gov/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-681",
+    "name": "www.notion.com robots",
+    "operator": "www.notion.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.notion.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-682",
+    "name": "www.zoom.com robots",
+    "operator": "www.zoom.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.zoom.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-683",
+    "name": "obsidian.md robots",
+    "operator": "obsidian.md",
+    "category": "官方 robots.txt",
+    "url": "https://obsidian.md/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-684",
+    "name": "bitwarden.com robots",
+    "operator": "bitwarden.com",
+    "category": "官方 robots.txt",
+    "url": "https://bitwarden.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-685",
+    "name": "about.readthedocs.com robots",
+    "operator": "about.readthedocs.com",
+    "category": "官方 robots.txt",
+    "url": "https://about.readthedocs.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-686",
+    "name": "www.sphinx-doc.org robots",
+    "operator": "www.sphinx-doc.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.sphinx-doc.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-687",
+    "name": "1password.com robots",
+    "operator": "1password.com",
+    "category": "官方 robots.txt",
+    "url": "https://1password.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-688",
+    "name": "docusaurus.io robots",
+    "operator": "docusaurus.io",
+    "category": "官方 robots.txt",
+    "url": "https://docusaurus.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-689",
+    "name": "www.11ty.dev robots",
+    "operator": "www.11ty.dev",
+    "category": "官方 robots.txt",
+    "url": "https://www.11ty.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-690",
+    "name": "quarto.org robots",
+    "operator": "quarto.org",
+    "category": "官方 robots.txt",
+    "url": "https://quarto.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-691",
+    "name": "jekyllrb.com robots",
+    "operator": "jekyllrb.com",
+    "category": "官方 robots.txt",
+    "url": "https://jekyllrb.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-692",
+    "name": "pandoc.org robots",
+    "operator": "pandoc.org",
+    "category": "官方 robots.txt",
+    "url": "https://pandoc.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-693",
+    "name": "typst.app robots",
+    "operator": "typst.app",
+    "category": "官方 robots.txt",
+    "url": "https://typst.app/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-694",
+    "name": "getpelican.com robots",
+    "operator": "getpelican.com",
+    "category": "官方 robots.txt",
+    "url": "https://getpelican.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-695",
+    "name": "www.mathjax.org robots",
+    "operator": "www.mathjax.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.mathjax.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-696",
+    "name": "numpy.org robots",
+    "operator": "numpy.org",
+    "category": "官方 robots.txt",
+    "url": "https://numpy.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-697",
+    "name": "www.latex-project.org robots",
+    "operator": "www.latex-project.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.latex-project.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-698",
+    "name": "curl.se robots",
+    "operator": "curl.se",
+    "category": "官方 robots.txt",
+    "url": "https://curl.se/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-699",
+    "name": "openssl-library.org robots",
+    "operator": "openssl-library.org",
+    "category": "官方 robots.txt",
+    "url": "https://openssl-library.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-700",
+    "name": "openvpn.net robots",
+    "operator": "openvpn.net",
+    "category": "官方 robots.txt",
+    "url": "https://openvpn.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-701",
+    "name": "nmap.org robots",
+    "operator": "nmap.org",
+    "category": "官方 robots.txt",
+    "url": "https://nmap.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-702",
+    "name": "www.wireshark.org robots",
+    "operator": "www.wireshark.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.wireshark.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-703",
+    "name": "www.envoyproxy.io robots",
+    "operator": "www.envoyproxy.io",
+    "category": "官方 robots.txt",
+    "url": "https://www.envoyproxy.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-704",
+    "name": "www.strongswan.org robots",
+    "operator": "www.strongswan.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.strongswan.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-705",
+    "name": "traefik.io robots",
+    "operator": "traefik.io",
+    "category": "官方 robots.txt",
+    "url": "https://traefik.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-706",
+    "name": "www.squid-cache.org robots",
+    "operator": "www.squid-cache.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.squid-cache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-707",
+    "name": "www.powerdns.com robots",
+    "operator": "www.powerdns.com",
+    "category": "官方 robots.txt",
+    "url": "https://www.powerdns.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-708",
+    "name": "www.isc.org robots",
+    "operator": "www.isc.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.isc.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-710",
+    "name": "www.nlnetlabs.nl robots",
+    "operator": "www.nlnetlabs.nl",
+    "category": "官方 robots.txt",
+    "url": "https://www.nlnetlabs.nl/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-711",
+    "name": "bunny.net robots",
+    "operator": "bunny.net",
+    "category": "官方 robots.txt",
+    "url": "https://bunny.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-712",
+    "name": "www.princeton.edu robots",
+    "operator": "www.princeton.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.princeton.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-713",
+    "name": "crates.io robots",
+    "operator": "crates.io",
+    "category": "官方 robots.txt",
+    "url": "https://crates.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-714",
+    "name": "cloudinary.com robots",
+    "operator": "cloudinary.com",
+    "category": "官方 robots.txt",
+    "url": "https://cloudinary.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-715",
+    "name": "rubygems.org robots",
+    "operator": "rubygems.org",
+    "category": "官方 robots.txt",
+    "url": "https://rubygems.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-716",
+    "name": "bun.sh robots",
+    "operator": "bun.sh",
+    "category": "官方 robots.txt",
+    "url": "https://bun.sh/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-717",
+    "name": "deno.com robots",
+    "operator": "deno.com",
+    "category": "官方 robots.txt",
+    "url": "https://deno.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-718",
+    "name": "www.upenn.edu robots",
+    "operator": "www.upenn.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.upenn.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-719",
+    "name": "packagist.org robots",
+    "operator": "packagist.org",
+    "category": "官方 robots.txt",
+    "url": "https://packagist.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-720",
+    "name": "mariadb.org robots",
+    "operator": "mariadb.org",
+    "category": "官方 robots.txt",
+    "url": "https://mariadb.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-721",
+    "name": "www.brown.edu robots",
+    "operator": "www.brown.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.brown.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-722",
+    "name": "duckdb.org robots",
+    "operator": "duckdb.org",
+    "category": "官方 robots.txt",
+    "url": "https://duckdb.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-723",
+    "name": "imagekit.io robots",
+    "operator": "imagekit.io",
+    "category": "官方 robots.txt",
+    "url": "https://imagekit.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-724",
+    "name": "clickhouse.com robots",
+    "operator": "clickhouse.com",
+    "category": "官方 robots.txt",
+    "url": "https://clickhouse.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-725",
+    "name": "roc-lang.org robots",
+    "operator": "roc-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://roc-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-726",
+    "name": "uploadcare.com robots",
+    "operator": "uploadcare.com",
+    "category": "官方 robots.txt",
+    "url": "https://uploadcare.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-727",
+    "name": "hex.pm robots",
+    "operator": "hex.pm",
+    "category": "官方 robots.txt",
+    "url": "https://hex.pm/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-728",
+    "name": "www.dartmouth.edu robots",
+    "operator": "www.dartmouth.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.dartmouth.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-729",
+    "name": "vlang.io robots",
+    "operator": "vlang.io",
+    "category": "官方 robots.txt",
+    "url": "https://vlang.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-730",
+    "name": "nim-lang.org robots",
+    "operator": "nim-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://nim-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-731",
+    "name": "www.jhu.edu robots",
+    "operator": "www.jhu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.jhu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-733",
+    "name": "pub.dev robots",
+    "operator": "pub.dev",
+    "category": "官方 robots.txt",
+    "url": "https://pub.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-734",
+    "name": "wasabi.com robots",
+    "operator": "wasabi.com",
+    "category": "官方 robots.txt",
+    "url": "https://wasabi.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-735",
+    "name": "central.sonatype.com robots",
+    "operator": "central.sonatype.com",
+    "category": "官方 robots.txt",
+    "url": "https://central.sonatype.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-736",
+    "name": "racket-lang.org robots",
+    "operator": "racket-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://racket-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-737",
+    "name": "vitess.io robots",
+    "operator": "vitess.io",
+    "category": "官方 robots.txt",
+    "url": "https://vitess.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-738",
+    "name": "clojure.org robots",
+    "operator": "clojure.org",
+    "category": "官方 robots.txt",
+    "url": "https://clojure.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-739",
+    "name": "tidbcloud.com robots",
+    "operator": "tidbcloud.com",
+    "category": "官方 robots.txt",
+    "url": "https://tidbcloud.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-740",
+    "name": "www.uchicago.edu robots",
+    "operator": "www.uchicago.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.uchicago.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-741",
+    "name": "www.rice.edu robots",
+    "operator": "www.rice.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.rice.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-742",
+    "name": "gradle.org robots",
+    "operator": "gradle.org",
+    "category": "官方 robots.txt",
+    "url": "https://gradle.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-743",
+    "name": "supabase.com robots",
+    "operator": "supabase.com",
+    "category": "官方 robots.txt",
+    "url": "https://supabase.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-744",
+    "name": "www.northwestern.edu robots",
+    "operator": "www.northwestern.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.northwestern.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-745",
+    "name": "ceph.io robots",
+    "operator": "ceph.io",
+    "category": "官方 robots.txt",
+    "url": "https://ceph.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-746",
+    "name": "planetscale.com robots",
+    "operator": "planetscale.com",
+    "category": "官方 robots.txt",
+    "url": "https://planetscale.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-747",
+    "name": "leiningen.org robots",
+    "operator": "leiningen.org",
+    "category": "官方 robots.txt",
+    "url": "https://leiningen.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-748",
+    "name": "dlang.org robots",
+    "operator": "dlang.org",
+    "category": "官方 robots.txt",
+    "url": "https://dlang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-749",
+    "name": "www.nd.edu robots",
+    "operator": "www.nd.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.nd.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-750",
+    "name": "turso.tech robots",
+    "operator": "turso.tech",
+    "category": "官方 robots.txt",
+    "url": "https://turso.tech/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-751",
+    "name": "www.emory.edu robots",
+    "operator": "www.emory.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.emory.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-752",
+    "name": "www.georgetown.edu robots",
+    "operator": "www.georgetown.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.georgetown.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-753",
+    "name": "pdm-project.org robots",
+    "operator": "pdm-project.org",
+    "category": "官方 robots.txt",
+    "url": "https://pdm-project.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-754",
+    "name": "www.tufts.edu robots",
+    "operator": "www.tufts.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.tufts.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-755",
+    "name": "fsharp.org robots",
+    "operator": "fsharp.org",
+    "category": "官方 robots.txt",
+    "url": "https://fsharp.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-756",
+    "name": "www.bu.edu robots",
+    "operator": "www.bu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.bu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-757",
+    "name": "restic.net robots",
+    "operator": "restic.net",
+    "category": "官方 robots.txt",
+    "url": "https://restic.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-758",
+    "name": "tox.wiki robots",
+    "operator": "tox.wiki",
+    "category": "官方 robots.txt",
+    "url": "https://tox.wiki/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-759",
+    "name": "rescript-lang.org robots",
+    "operator": "rescript-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://rescript-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-760",
+    "name": "redis.io robots",
+    "operator": "redis.io",
+    "category": "官方 robots.txt",
+    "url": "https://redis.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-761",
+    "name": "duplicati.com robots",
+    "operator": "duplicati.com",
+    "category": "官方 robots.txt",
+    "url": "https://duplicati.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-762",
+    "name": "nox.thea.codes robots",
+    "operator": "nox.thea.codes",
+    "category": "官方 robots.txt",
+    "url": "https://nox.thea.codes/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-763",
+    "name": "kopia.io robots",
+    "operator": "kopia.io",
+    "category": "官方 robots.txt",
+    "url": "https://kopia.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-764",
+    "name": "valkey.io robots",
+    "operator": "valkey.io",
+    "category": "官方 robots.txt",
+    "url": "https://valkey.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-765",
+    "name": "elm-lang.org robots",
+    "operator": "elm-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://elm-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-766",
+    "name": "www.rochester.edu robots",
+    "operator": "www.rochester.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.rochester.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-767",
+    "name": "haxe.org robots",
+    "operator": "haxe.org",
+    "category": "官方 robots.txt",
+    "url": "https://haxe.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-768",
+    "name": "www.usc.edu robots",
+    "operator": "www.usc.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.usc.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-769",
+    "name": "www.ucla.edu robots",
+    "operator": "www.ucla.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucla.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-770",
+    "name": "pnpm.io robots",
+    "operator": "pnpm.io",
+    "category": "官方 robots.txt",
+    "url": "https://pnpm.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-771",
+    "name": "memcached.org robots",
+    "operator": "memcached.org",
+    "category": "官方 robots.txt",
+    "url": "https://memcached.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-772",
+    "name": "cassandra.apache.org robots",
+    "operator": "cassandra.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://cassandra.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-773",
+    "name": "www.ucsb.edu robots",
+    "operator": "www.ucsb.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucsb.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-774",
+    "name": "www.ucsd.edu robots",
+    "operator": "www.ucsd.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucsd.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-775",
+    "name": "upcloud.com robots",
+    "operator": "upcloud.com",
+    "category": "官方 robots.txt",
+    "url": "https://upcloud.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-776",
+    "name": "ballerina.io robots",
+    "operator": "ballerina.io",
+    "category": "官方 robots.txt",
+    "url": "https://ballerina.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-777",
+    "name": "kamatera.com robots",
+    "operator": "kamatera.com",
+    "category": "官方 robots.txt",
+    "url": "https://kamatera.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-778",
+    "name": "www.ucdavis.edu robots",
+    "operator": "www.ucdavis.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucdavis.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-779",
+    "name": "nx.dev robots",
+    "operator": "nx.dev",
+    "category": "官方 robots.txt",
+    "url": "https://nx.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-780",
+    "name": "phoenixnap.com robots",
+    "operator": "phoenixnap.com",
+    "category": "官方 robots.txt",
+    "url": "https://phoenixnap.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-781",
+    "name": "www.ucr.edu robots",
+    "operator": "www.ucr.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucr.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-782",
+    "name": "fennel-lang.org robots",
+    "operator": "fennel-lang.org",
+    "category": "官方 robots.txt",
+    "url": "https://fennel-lang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-783",
+    "name": "victoriametrics.com robots",
+    "operator": "victoriametrics.com",
+    "category": "官方 robots.txt",
+    "url": "https://victoriametrics.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-784",
+    "name": "cherryservers.com robots",
+    "operator": "cherryservers.com",
+    "category": "官方 robots.txt",
+    "url": "https://cherryservers.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-785",
+    "name": "gruntjs.com robots",
+    "operator": "gruntjs.com",
+    "category": "官方 robots.txt",
+    "url": "https://gruntjs.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-786",
+    "name": "greptime.com robots",
+    "operator": "greptime.com",
+    "category": "官方 robots.txt",
+    "url": "https://greptime.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-787",
+    "name": "contabo.com robots",
+    "operator": "contabo.com",
+    "category": "官方 robots.txt",
+    "url": "https://contabo.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-788",
+    "name": "www.washington.edu robots",
+    "operator": "www.washington.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.washington.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-789",
+    "name": "factorcode.org robots",
+    "operator": "factorcode.org",
+    "category": "官方 robots.txt",
+    "url": "https://factorcode.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-790",
+    "name": "www.wisc.edu robots",
+    "operator": "www.wisc.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.wisc.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-791",
+    "name": "vyperlang.org robots",
+    "operator": "vyperlang.org",
+    "category": "官方 robots.txt",
+    "url": "https://vyperlang.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-792",
+    "name": "racknerd.com robots",
+    "operator": "racknerd.com",
+    "category": "官方 robots.txt",
+    "url": "https://racknerd.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-793",
+    "name": "typesense.org robots",
+    "operator": "typesense.org",
+    "category": "官方 robots.txt",
+    "url": "https://typesense.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-794",
+    "name": "biomejs.dev robots",
+    "operator": "biomejs.dev",
+    "category": "官方 robots.txt",
+    "url": "https://biomejs.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-795",
+    "name": "hosthatch.com robots",
+    "operator": "hosthatch.com",
+    "category": "官方 robots.txt",
+    "url": "https://hosthatch.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-796",
+    "name": "www.purdue.edu robots",
+    "operator": "www.purdue.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.purdue.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-797",
+    "name": "agda.readthedocs.io robots",
+    "operator": "agda.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://agda.readthedocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-798",
+    "name": "www.gatech.edu robots",
+    "operator": "www.gatech.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.gatech.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-799",
+    "name": "ramnode.com robots",
+    "operator": "ramnode.com",
+    "category": "官方 robots.txt",
+    "url": "https://ramnode.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-800",
+    "name": "vitest.dev robots",
+    "operator": "vitest.dev",
+    "category": "官方 robots.txt",
+    "url": "https://vitest.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-801",
+    "name": "www.utexas.edu robots",
+    "operator": "www.utexas.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.utexas.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-802",
+    "name": "vespa.ai robots",
+    "operator": "vespa.ai",
+    "category": "官方 robots.txt",
+    "url": "https://vespa.ai/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-803",
+    "name": "www.tamu.edu robots",
+    "operator": "www.tamu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.tamu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-804",
+    "name": "milvus.io robots",
+    "operator": "milvus.io",
+    "category": "官方 robots.txt",
+    "url": "https://milvus.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-805",
+    "name": "qdrant.tech robots",
+    "operator": "qdrant.tech",
+    "category": "官方 robots.txt",
+    "url": "https://qdrant.tech/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-806",
+    "name": "weaviate.io robots",
+    "operator": "weaviate.io",
+    "category": "官方 robots.txt",
+    "url": "https://weaviate.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-807",
+    "name": "www.virginia.edu robots",
+    "operator": "www.virginia.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.virginia.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-808",
+    "name": "testing-library.com robots",
+    "operator": "testing-library.com",
+    "category": "官方 robots.txt",
+    "url": "https://testing-library.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-809",
+    "name": "playwright.dev robots",
+    "operator": "playwright.dev",
+    "category": "官方 robots.txt",
+    "url": "https://playwright.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-810",
+    "name": "aplwiki.com robots",
+    "operator": "aplwiki.com",
+    "category": "官方 robots.txt",
+    "url": "https://aplwiki.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-811",
+    "name": "www.wm.edu robots",
+    "operator": "www.wm.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.wm.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-812",
+    "name": "gcore.com robots",
+    "operator": "gcore.com",
+    "category": "官方 robots.txt",
+    "url": "https://gcore.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-813",
+    "name": "www.psu.edu robots",
+    "operator": "www.psu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.psu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-814",
+    "name": "www.osu.edu robots",
+    "operator": "www.osu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.osu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-815",
+    "name": "faiss.ai robots",
+    "operator": "faiss.ai",
+    "category": "官方 robots.txt",
+    "url": "https://faiss.ai/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-816",
+    "name": "neo4j.com robots",
+    "operator": "neo4j.com",
+    "category": "官方 robots.txt",
+    "url": "https://neo4j.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-817",
+    "name": "webdriver.io robots",
+    "operator": "webdriver.io",
+    "category": "官方 robots.txt",
+    "url": "https://webdriver.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-819",
+    "name": "www.fsu.edu robots",
+    "operator": "www.fsu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.fsu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-820",
+    "name": "www.ufl.edu robots",
+    "operator": "www.ufl.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ufl.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-821",
+    "name": "memgraph.com robots",
+    "operator": "memgraph.com",
+    "category": "官方 robots.txt",
+    "url": "https://memgraph.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-822",
+    "name": "robotframework.org robots",
+    "operator": "robotframework.org",
+    "category": "官方 robots.txt",
+    "url": "https://robotframework.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-823",
+    "name": "www.asu.edu robots",
+    "operator": "www.asu.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.asu.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-824",
+    "name": "surrealdb.com robots",
+    "operator": "surrealdb.com",
+    "category": "官方 robots.txt",
+    "url": "https://surrealdb.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-825",
+    "name": "www.arizona.edu robots",
+    "operator": "www.arizona.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.arizona.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-826",
+    "name": "cmake.org robots",
+    "operator": "cmake.org",
+    "category": "官方 robots.txt",
+    "url": "https://cmake.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-827",
+    "name": "gauge.org robots",
+    "operator": "gauge.org",
+    "category": "官方 robots.txt",
+    "url": "https://gauge.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-828",
+    "name": "www.colorado.edu robots",
+    "operator": "www.colorado.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.colorado.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-829",
+    "name": "railway.com robots",
+    "operator": "railway.com",
+    "category": "官方 robots.txt",
+    "url": "https://railway.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-830",
+    "name": "www.utah.edu robots",
+    "operator": "www.utah.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.utah.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-831",
+    "name": "ninja-build.org robots",
+    "operator": "ninja-build.org",
+    "category": "官方 robots.txt",
+    "url": "https://ninja-build.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-832",
+    "name": "locust.io robots",
+    "operator": "locust.io",
+    "category": "官方 robots.txt",
+    "url": "https://locust.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-833",
+    "name": "www.iastate.edu robots",
+    "operator": "www.iastate.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.iastate.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-834",
+    "name": "bazel.build robots",
+    "operator": "bazel.build",
+    "category": "官方 robots.txt",
+    "url": "https://bazel.build/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-835",
+    "name": "northflank.com robots",
+    "operator": "northflank.com",
+    "category": "官方 robots.txt",
+    "url": "https://northflank.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-836",
+    "name": "gcc.gnu.org robots",
+    "operator": "gcc.gnu.org",
+    "category": "官方 robots.txt",
+    "url": "https://gcc.gnu.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-837",
+    "name": "zeabur.com robots",
+    "operator": "zeabur.com",
+    "category": "官方 robots.txt",
+    "url": "https://zeabur.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-838",
+    "name": "gatling.io robots",
+    "operator": "gatling.io",
+    "category": "官方 robots.txt",
+    "url": "https://gatling.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-840",
+    "name": "dbdiagram.io robots",
+    "operator": "dbdiagram.io",
+    "category": "官方 robots.txt",
+    "url": "https://dbdiagram.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-842",
+    "name": "www.rutgers.edu robots",
+    "operator": "www.rutgers.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.rutgers.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-843",
+    "name": "wiremock.org robots",
+    "operator": "wiremock.org",
+    "category": "官方 robots.txt",
+    "url": "https://wiremock.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-844",
+    "name": "auth0.com robots",
+    "operator": "auth0.com",
+    "category": "官方 robots.txt",
+    "url": "https://auth0.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-845",
+    "name": "mock-server.com robots",
+    "operator": "mock-server.com",
+    "category": "官方 robots.txt",
+    "url": "https://mock-server.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-846",
+    "name": "dbdocs.io robots",
+    "operator": "dbdocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://dbdocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-847",
+    "name": "hoppscotch.io robots",
+    "operator": "hoppscotch.io",
+    "category": "官方 robots.txt",
+    "url": "https://hoppscotch.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-848",
+    "name": "clerk.com robots",
+    "operator": "clerk.com",
+    "category": "官方 robots.txt",
+    "url": "https://clerk.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-849",
+    "name": "bell-sw.com robots",
+    "operator": "bell-sw.com",
+    "category": "官方 robots.txt",
+    "url": "https://bell-sw.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-850",
+    "name": "stytch.com robots",
+    "operator": "stytch.com",
+    "category": "官方 robots.txt",
+    "url": "https://stytch.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-851",
+    "name": "httpie.io robots",
+    "operator": "httpie.io",
+    "category": "官方 robots.txt",
+    "url": "https://httpie.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-852",
+    "name": "www.ucl.ac.uk robots",
+    "operator": "www.ucl.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.ucl.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-853",
+    "name": "adoptium.net robots",
+    "operator": "adoptium.net",
+    "category": "官方 robots.txt",
+    "url": "https://adoptium.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-854",
+    "name": "workos.com robots",
+    "operator": "workos.com",
+    "category": "官方 robots.txt",
+    "url": "https://workos.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-855",
+    "name": "azul.com robots",
+    "operator": "azul.com",
+    "category": "官方 robots.txt",
+    "url": "https://azul.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-857",
+    "name": "zitadel.com robots",
+    "operator": "zitadel.com",
+    "category": "官方 robots.txt",
+    "url": "https://zitadel.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-858",
+    "name": "atlasgo.io robots",
+    "operator": "atlasgo.io",
+    "category": "官方 robots.txt",
+    "url": "https://atlasgo.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-859",
+    "name": "swagger.io robots",
+    "operator": "swagger.io",
+    "category": "官方 robots.txt",
+    "url": "https://swagger.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-861",
+    "name": "goose.readthedocs.io robots",
+    "operator": "goose.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://goose.readthedocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-862",
+    "name": "www.manchester.ac.uk robots",
+    "operator": "www.manchester.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.manchester.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-863",
+    "name": "kafka.apache.org robots",
+    "operator": "kafka.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://kafka.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-864",
+    "name": "visualstudio.microsoft.com robots",
+    "operator": "visualstudio.microsoft.com",
+    "category": "官方 robots.txt",
+    "url": "https://visualstudio.microsoft.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-865",
+    "name": "www.bristol.ac.uk robots",
+    "operator": "www.bristol.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.bristol.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-866",
+    "name": "vscodium.com robots",
+    "operator": "vscodium.com",
+    "category": "官方 robots.txt",
+    "url": "https://vscodium.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-867",
+    "name": "pulsar.apache.org robots",
+    "operator": "pulsar.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://pulsar.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-868",
+    "name": "neovim.io robots",
+    "operator": "neovim.io",
+    "category": "官方 robots.txt",
+    "url": "https://neovim.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-869",
+    "name": "www.st-andrews.ac.uk robots",
+    "operator": "www.st-andrews.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.st-andrews.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-871",
+    "name": "fusionauth.io robots",
+    "operator": "fusionauth.io",
+    "category": "官方 robots.txt",
+    "url": "https://fusionauth.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-872",
+    "name": "the-guild.dev robots",
+    "operator": "the-guild.dev",
+    "category": "官方 robots.txt",
+    "url": "https://the-guild.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-873",
+    "name": "nats.io robots",
+    "operator": "nats.io",
+    "category": "官方 robots.txt",
+    "url": "https://nats.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-874",
+    "name": "helix-editor.com robots",
+    "operator": "helix-editor.com",
+    "category": "官方 robots.txt",
+    "url": "https://helix-editor.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-875",
+    "name": "hasura.io robots",
+    "operator": "hasura.io",
+    "category": "官方 robots.txt",
+    "url": "https://hasura.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-876",
+    "name": "zed.dev robots",
+    "operator": "zed.dev",
+    "category": "官方 robots.txt",
+    "url": "https://zed.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-877",
+    "name": "supertokens.com robots",
+    "operator": "supertokens.com",
+    "category": "官方 robots.txt",
+    "url": "https://supertokens.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-878",
+    "name": "logto.io robots",
+    "operator": "logto.io",
+    "category": "官方 robots.txt",
+    "url": "https://logto.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-880",
+    "name": "geany.org robots",
+    "operator": "geany.org",
+    "category": "官方 robots.txt",
+    "url": "https://geany.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-881",
+    "name": "typeorm.io robots",
+    "operator": "typeorm.io",
+    "category": "官方 robots.txt",
+    "url": "https://typeorm.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-882",
+    "name": "oauth.net robots",
+    "operator": "oauth.net",
+    "category": "官方 robots.txt",
+    "url": "https://oauth.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-883",
+    "name": "kate-editor.org robots",
+    "operator": "kate-editor.org",
+    "category": "官方 robots.txt",
+    "url": "https://kate-editor.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-884",
+    "name": "www.southampton.ac.uk robots",
+    "operator": "www.southampton.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.southampton.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-885",
+    "name": "sequelize.org robots",
+    "operator": "sequelize.org",
+    "category": "官方 robots.txt",
+    "url": "https://sequelize.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-886",
+    "name": "openid.net robots",
+    "operator": "openid.net",
+    "category": "官方 robots.txt",
+    "url": "https://openid.net/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-887",
+    "name": "vernemq.com robots",
+    "operator": "vernemq.com",
+    "category": "官方 robots.txt",
+    "url": "https://vernemq.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-888",
+    "name": "www.york.ac.uk robots",
+    "operator": "www.york.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.york.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-889",
+    "name": "knexjs.org robots",
+    "operator": "knexjs.org",
+    "category": "官方 robots.txt",
+    "url": "https://knexjs.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-890",
+    "name": "passkeys.dev robots",
+    "operator": "passkeys.dev",
+    "category": "官方 robots.txt",
+    "url": "https://passkeys.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-891",
+    "name": "www.lancaster.ac.uk robots",
+    "operator": "www.lancaster.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.lancaster.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-892",
+    "name": "textmate.org robots",
+    "operator": "textmate.org",
+    "category": "官方 robots.txt",
+    "url": "https://textmate.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-893",
+    "name": "www.exeter.ac.uk robots",
+    "operator": "www.exeter.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.exeter.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-894",
+    "name": "temporal.io robots",
+    "operator": "temporal.io",
+    "category": "官方 robots.txt",
+    "url": "https://temporal.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-895",
+    "name": "emacsredux.com robots",
+    "operator": "emacsredux.com",
+    "category": "官方 robots.txt",
+    "url": "https://emacsredux.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-896",
+    "name": "bun.uptrace.dev robots",
+    "operator": "bun.uptrace.dev",
+    "category": "官方 robots.txt",
+    "url": "https://bun.uptrace.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-897",
+    "name": "airbyte.com robots",
+    "operator": "airbyte.com",
+    "category": "官方 robots.txt",
+    "url": "https://airbyte.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-898",
+    "name": "www.bath.ac.uk robots",
+    "operator": "www.bath.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.bath.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-899",
+    "name": "meltano.com robots",
+    "operator": "meltano.com",
+    "category": "官方 robots.txt",
+    "url": "https://meltano.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-900",
+    "name": "solokeys.com robots",
+    "operator": "solokeys.com",
+    "category": "官方 robots.txt",
+    "url": "https://solokeys.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-901",
+    "name": "dagster.io robots",
+    "operator": "dagster.io",
+    "category": "官方 robots.txt",
+    "url": "https://dagster.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-902",
+    "name": "www.liverpool.ac.uk robots",
+    "operator": "www.liverpool.ac.uk",
+    "category": "官方 robots.txt",
+    "url": "https://www.liverpool.ac.uk/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-903",
+    "name": "www.unsw.edu.au robots",
+    "operator": "www.unsw.edu.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.unsw.edu.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-904",
+    "name": "kestra.io robots",
+    "operator": "kestra.io",
+    "category": "官方 robots.txt",
+    "url": "https://kestra.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-905",
+    "name": "openbao.org robots",
+    "operator": "openbao.org",
+    "category": "官方 robots.txt",
+    "url": "https://openbao.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-906",
+    "name": "martinfowler.com robots",
+    "operator": "martinfowler.com",
+    "category": "官方 robots.txt",
+    "url": "https://martinfowler.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-907",
+    "name": "infisical.com robots",
+    "operator": "infisical.com",
+    "category": "官方 robots.txt",
+    "url": "https://infisical.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-908",
+    "name": "refactoring.com robots",
+    "operator": "refactoring.com",
+    "category": "官方 robots.txt",
+    "url": "https://refactoring.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-909",
+    "name": "n8n.io robots",
+    "operator": "n8n.io",
+    "category": "官方 robots.txt",
+    "url": "https://n8n.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-910",
+    "name": "web.dev robots",
+    "operator": "web.dev",
+    "category": "官方 robots.txt",
+    "url": "https://web.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-911",
+    "name": "spark.apache.org robots",
+    "operator": "spark.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://spark.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-912",
+    "name": "www.anu.edu.au robots",
+    "operator": "www.anu.edu.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.anu.edu.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-913",
+    "name": "developer.chrome.com robots",
+    "operator": "developer.chrome.com",
+    "category": "官方 robots.txt",
+    "url": "https://developer.chrome.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-914",
+    "name": "developer.mozilla.org robots",
+    "operator": "developer.mozilla.org",
+    "category": "官方 robots.txt",
+    "url": "https://developer.mozilla.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-915",
+    "name": "beam.apache.org robots",
+    "operator": "beam.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://beam.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-916",
+    "name": "airflow.apache.org robots",
+    "operator": "airflow.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://airflow.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-917",
+    "name": "www.uwa.edu.au robots",
+    "operator": "www.uwa.edu.au",
+    "category": "官方 robots.txt",
+    "url": "https://www.uwa.edu.au/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-918",
+    "name": "psono.com robots",
+    "operator": "psono.com",
+    "category": "官方 robots.txt",
+    "url": "https://psono.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-919",
+    "name": "www.wgtn.ac.nz robots",
+    "operator": "www.wgtn.ac.nz",
+    "category": "官方 robots.txt",
+    "url": "https://www.wgtn.ac.nz/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-920",
+    "name": "kubernetes.io robots",
+    "operator": "kubernetes.io",
+    "category": "官方 robots.txt",
+    "url": "https://kubernetes.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-921",
+    "name": "hudi.apache.org robots",
+    "operator": "hudi.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://hudi.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-922",
+    "name": "delta.io robots",
+    "operator": "delta.io",
+    "category": "官方 robots.txt",
+    "url": "https://delta.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-923",
+    "name": "www.massey.ac.nz robots",
+    "operator": "www.massey.ac.nz",
+    "category": "官方 robots.txt",
+    "url": "https://www.massey.ac.nz/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-924",
+    "name": "www.waikato.ac.nz robots",
+    "operator": "www.waikato.ac.nz",
+    "category": "官方 robots.txt",
+    "url": "https://www.waikato.ac.nz/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-925",
+    "name": "html.spec.whatwg.org robots",
+    "operator": "html.spec.whatwg.org",
+    "category": "官方 robots.txt",
+    "url": "https://html.spec.whatwg.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-926",
+    "name": "whatwg.org robots",
+    "operator": "whatwg.org",
+    "category": "官方 robots.txt",
+    "url": "https://whatwg.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-927",
+    "name": "trino.io robots",
+    "operator": "trino.io",
+    "category": "官方 robots.txt",
+    "url": "https://trino.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-928",
+    "name": "www.ntu.edu.sg robots",
+    "operator": "www.ntu.edu.sg",
+    "category": "官方 robots.txt",
+    "url": "https://www.ntu.edu.sg/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-929",
+    "name": "v8.dev robots",
+    "operator": "v8.dev",
+    "category": "官方 robots.txt",
+    "url": "https://v8.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-930",
+    "name": "druid.apache.org robots",
+    "operator": "druid.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://druid.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-931",
+    "name": "portainer.io robots",
+    "operator": "portainer.io",
+    "category": "官方 robots.txt",
+    "url": "https://portainer.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-932",
+    "name": "servo.org robots",
+    "operator": "servo.org",
+    "category": "官方 robots.txt",
+    "url": "https://servo.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-933",
+    "name": "www.sutd.edu.sg robots",
+    "operator": "www.sutd.edu.sg",
+    "category": "官方 robots.txt",
+    "url": "https://www.sutd.edu.sg/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-934",
+    "name": "pinot.apache.org robots",
+    "operator": "pinot.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://pinot.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-935",
+    "name": "mdn.dev robots",
+    "operator": "mdn.dev",
+    "category": "官方 robots.txt",
+    "url": "https://mdn.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-936",
+    "name": "arrow.apache.org robots",
+    "operator": "arrow.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://arrow.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-937",
+    "name": "caprover.com robots",
+    "operator": "caprover.com",
+    "category": "官方 robots.txt",
+    "url": "https://caprover.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-938",
+    "name": "parquet.apache.org robots",
+    "operator": "parquet.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://parquet.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-939",
+    "name": "coolify.io robots",
+    "operator": "coolify.io",
+    "category": "官方 robots.txt",
+    "url": "https://coolify.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-940",
+    "name": "exercism.org robots",
+    "operator": "exercism.org",
+    "category": "官方 robots.txt",
+    "url": "https://exercism.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-941",
+    "name": "www.kyoto-u.ac.jp robots",
+    "operator": "www.kyoto-u.ac.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.kyoto-u.ac.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-942",
+    "name": "datafusion.apache.org robots",
+    "operator": "datafusion.apache.org",
+    "category": "官方 robots.txt",
+    "url": "https://datafusion.apache.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-943",
+    "name": "leetcode.com robots",
+    "operator": "leetcode.com",
+    "category": "官方 robots.txt",
+    "url": "https://leetcode.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-944",
+    "name": "umbrel.com robots",
+    "operator": "umbrel.com",
+    "category": "官方 robots.txt",
+    "url": "https://umbrel.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-945",
+    "name": "ibis-project.org robots",
+    "operator": "ibis-project.org",
+    "category": "官方 robots.txt",
+    "url": "https://ibis-project.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-946",
+    "name": "www.tohoku.ac.jp robots",
+    "operator": "www.tohoku.ac.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.tohoku.ac.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-947",
+    "name": "www.hokudai.ac.jp robots",
+    "operator": "www.hokudai.ac.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.hokudai.ac.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-948",
+    "name": "proxmox.com robots",
+    "operator": "proxmox.com",
+    "category": "官方 robots.txt",
+    "url": "https://proxmox.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-949",
+    "name": "pandas.pydata.org robots",
+    "operator": "pandas.pydata.org",
+    "category": "官方 robots.txt",
+    "url": "https://pandas.pydata.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-950",
+    "name": "www.aist.go.jp robots",
+    "operator": "www.aist.go.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.aist.go.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-951",
+    "name": "dev.to robots",
+    "operator": "dev.to",
+    "category": "官方 robots.txt",
+    "url": "https://dev.to/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-952",
+    "name": "hashnode.com robots",
+    "operator": "hashnode.com",
+    "category": "官方 robots.txt",
+    "url": "https://hashnode.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-953",
+    "name": "www.jaxa.jp robots",
+    "operator": "www.jaxa.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.jaxa.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-954",
+    "name": "medium.com robots",
+    "operator": "medium.com",
+    "category": "官方 robots.txt",
+    "url": "https://medium.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-955",
+    "name": "www.nims.go.jp robots",
+    "operator": "www.nims.go.jp",
+    "category": "官方 robots.txt",
+    "url": "https://www.nims.go.jp/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-956",
+    "name": "www.sorbonne-universite.fr robots",
+    "operator": "www.sorbonne-universite.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.sorbonne-universite.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-958",
+    "name": "jax.readthedocs.io robots",
+    "operator": "jax.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://jax.readthedocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-959",
+    "name": "huggingface.co robots",
+    "operator": "huggingface.co",
+    "category": "官方 robots.txt",
+    "url": "https://huggingface.co/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-960",
+    "name": "www.universite-paris-saclay.fr robots",
+    "operator": "www.universite-paris-saclay.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.universite-paris-saclay.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-961",
+    "name": "www.ens.psl.eu robots",
+    "operator": "www.ens.psl.eu",
+    "category": "官方 robots.txt",
+    "url": "https://www.ens.psl.eu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-962",
+    "name": "lobste.rs robots",
+    "operator": "lobste.rs",
+    "category": "官方 robots.txt",
+    "url": "https://lobste.rs/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-963",
+    "name": "www.inria.fr robots",
+    "operator": "www.inria.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.inria.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-964",
+    "name": "www.polytechnique.edu robots",
+    "operator": "www.polytechnique.edu",
+    "category": "官方 robots.txt",
+    "url": "https://www.polytechnique.edu/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-965",
+    "name": "wandb.ai robots",
+    "operator": "wandb.ai",
+    "category": "官方 robots.txt",
+    "url": "https://wandb.ai/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-966",
+    "name": "buildah.io robots",
+    "operator": "buildah.io",
+    "category": "官方 robots.txt",
+    "url": "https://buildah.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-967",
+    "name": "mlflow.org robots",
+    "operator": "mlflow.org",
+    "category": "官方 robots.txt",
+    "url": "https://mlflow.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-968",
+    "name": "www.cnrs.fr robots",
+    "operator": "www.cnrs.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.cnrs.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-969",
+    "name": "buildkit.org robots",
+    "operator": "buildkit.org",
+    "category": "官方 robots.txt",
+    "url": "https://buildkit.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-970",
+    "name": "www.pasteur.fr robots",
+    "operator": "www.pasteur.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.pasteur.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-971",
+    "name": "www.inserm.fr robots",
+    "operator": "www.inserm.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.inserm.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-973",
+    "name": "www.inrae.fr robots",
+    "operator": "www.inrae.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.inrae.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-974",
+    "name": "earthly.dev robots",
+    "operator": "earthly.dev",
+    "category": "官方 robots.txt",
+    "url": "https://earthly.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-975",
+    "name": "dagger.io robots",
+    "operator": "dagger.io",
+    "category": "官方 robots.txt",
+    "url": "https://dagger.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-976",
+    "name": "realpython.com robots",
+    "operator": "realpython.com",
+    "category": "官方 robots.txt",
+    "url": "https://realpython.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-977",
+    "name": "depot.dev robots",
+    "operator": "depot.dev",
+    "category": "官方 robots.txt",
+    "url": "https://depot.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-978",
+    "name": "testdriven.io robots",
+    "operator": "testdriven.io",
+    "category": "官方 robots.txt",
+    "url": "https://testdriven.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-979",
+    "name": "www.fraunhofer.de robots",
+    "operator": "www.fraunhofer.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.fraunhofer.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-980",
+    "name": "www.cea.fr robots",
+    "operator": "www.cea.fr",
+    "category": "官方 robots.txt",
+    "url": "https://www.cea.fr/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-981",
+    "name": "greatexpectations.io robots",
+    "operator": "greatexpectations.io",
+    "category": "官方 robots.txt",
+    "url": "https://greatexpectations.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-982",
+    "name": "dvc.org robots",
+    "operator": "dvc.org",
+    "category": "官方 robots.txt",
+    "url": "https://dvc.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-983",
+    "name": "deepchecks.com robots",
+    "operator": "deepchecks.com",
+    "category": "官方 robots.txt",
+    "url": "https://deepchecks.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-984",
+    "name": "helmfile.readthedocs.io robots",
+    "operator": "helmfile.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://helmfile.readthedocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-985",
+    "name": "www.daad.de robots",
+    "operator": "www.daad.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.daad.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-986",
+    "name": "lakefs.io robots",
+    "operator": "lakefs.io",
+    "category": "官方 robots.txt",
+    "url": "https://lakefs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-987",
+    "name": "www.dfg.de robots",
+    "operator": "www.dfg.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.dfg.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-988",
+    "name": "webglfundamentals.org robots",
+    "operator": "webglfundamentals.org",
+    "category": "官方 robots.txt",
+    "url": "https://webglfundamentals.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-989",
+    "name": "fluxcd.io robots",
+    "operator": "fluxcd.io",
+    "category": "官方 robots.txt",
+    "url": "https://fluxcd.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-990",
+    "name": "www.desy.de robots",
+    "operator": "www.desy.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.desy.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-991",
+    "name": "babylonjs.com robots",
+    "operator": "babylonjs.com",
+    "category": "官方 robots.txt",
+    "url": "https://babylonjs.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-992",
+    "name": "argo-cd.readthedocs.io robots",
+    "operator": "argo-cd.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://argo-cd.readthedocs.io/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-993",
+    "name": "godotengine.org robots",
+    "operator": "godotengine.org",
+    "category": "官方 robots.txt",
+    "url": "https://godotengine.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-994",
+    "name": "www.gsi.de robots",
+    "operator": "www.gsi.de",
+    "category": "官方 robots.txt",
+    "url": "https://www.gsi.de/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-995",
+    "name": "clear.ml robots",
+    "operator": "clear.ml",
+    "category": "官方 robots.txt",
+    "url": "https://clear.ml/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-996",
+    "name": "tekton.dev robots",
+    "operator": "tekton.dev",
+    "category": "官方 robots.txt",
+    "url": "https://tekton.dev/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-998",
+    "name": "www.embl.org robots",
+    "operator": "www.embl.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.embl.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-999",
+    "name": "www.embo.org robots",
+    "operator": "www.embo.org",
+    "category": "官方 robots.txt",
+    "url": "https://www.embo.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1000",
+    "name": "love2d.org robots",
+    "operator": "love2d.org",
+    "category": "官方 robots.txt",
+    "url": "https://love2d.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1001",
+    "name": "concourse-ci.org robots",
+    "operator": "concourse-ci.org",
+    "category": "官方 robots.txt",
+    "url": "https://concourse-ci.org/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1002",
+    "name": "www.europeanspallationsource.se robots",
+    "operator": "www.europeanspallationsource.se",
+    "category": "官方 robots.txt",
+    "url": "https://www.europeanspallationsource.se/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1003",
+    "name": "xgboost.ai robots",
+    "operator": "xgboost.ai",
+    "category": "官方 robots.txt",
+    "url": "https://xgboost.ai/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1004",
+    "name": "buildkite.com robots",
+    "operator": "buildkite.com",
+    "category": "官方 robots.txt",
+    "url": "https://buildkite.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-1005",
+    "name": "lightgbm.readthedocs.io robots",
+    "operator": "lightgbm.readthedocs.io",
+    "category": "官方 robots.txt",
+    "url": "https://lightgbm.readthedocs.io/robots.txt",
     "expectedStatus": "200-299"
   }
 ]

@@ -73,7 +73,7 @@ docker compose logs -f --tail=100 z-mihomo-health-check
 ## 2. 探查和切换语义
 
 - 通过 Clash API 的 `Authorization: Bearer <secret>` 认证，由 Mihomo 发起真实代理探查；Go 控制器不会绕过代理直接访问站点。
-- 每个调度周期只从嵌入的 54 个大厂精选端点中随机抽取一个，对目标 select 分组当前出口执行 `/proxies/{group}/delay`，预期状态为 `200-299`。
+- 每个调度周期只从嵌入的 470 个三家美国出口交集端点中随机抽取一个，对目标 select 分组当前出口执行 `/proxies/{group}/delay`，预期状态为 `200-299`。
 - 成功清零失败计数；出口测试返回失败/超时并达到配置阈值后，立即调用 `/group/{group}/delay`，本轮使用相同的随机 URL。
 - 整组测试结束后重新读取主分组 `all`，按该数组顺序查找本轮成功的首个成员，绝不按 delay 数值或 JSON map 顺序选择。缺项、0、负数、超出 uint16 范围均不视为可用。
 - 首个可用分组已经在使用时不重复 PUT；切换请求失败后重新确认当前选择，再按原始顺序尝试后续可用项。全部失败则保留当前选择。
