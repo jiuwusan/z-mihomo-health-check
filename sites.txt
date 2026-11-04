@@ -48,3 +48,7 @@ https://www.cloudflare.com/robots.txt
 https://www.sap.com/robots.txt
 https://www.ibm.com/robots.txt
 https://slack.com/robots.txt
+https://www.docker.com/robots.txt
+https://docs.docker.com/robots.txt
+https://hub.docker.com/robots.txt
+https://download.docker.com/linux/static/stable/x86_64/

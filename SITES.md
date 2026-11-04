@@ -1,4 +1,4 @@
-# 知名大厂精选探查站点池（50 个）
+# 知名大厂精选探查站点池（54 个）
 
 更新日期：2026-11-04（Asia/Shanghai）。仅纳入大型科技、互联网、云软件或网络安全公司的官方服务域名；移除此前 Debian、Mozilla、PyPI、W3C、IETF、curl、jsDelivr、UNPKG 等非本次大厂范围的端点。
 
@@ -6,23 +6,25 @@
 
 - 优先 Google、Cloudflare、Apple 的专用连通性检测端点，其他候选使用官方 robots.txt 等简单资源，避免业务首页、登录和动态搜索入口。
 - 先从工作机发起 HTTPS HEAD，不跟随重定向，须直接返回 2xx；该结构检查与 Mihomo 使用不同流量路径，不能代表被测出口的最终 HTTP 状态。
-- 通过指定 Mihomo 服务逐个测试，每个合格端点 5 轮，轮间等待 10 秒，timeout=4000、expected=200-299。每轮必须 API HTTP 200、delay>0 且 delay≤2000 ms，5 轮全部通过才可入选。
-- 分两批完成，共检查 132 个候选，72 个通过；在合格项中按厂商分散选取 50 个，覆盖 41 个服务方分组，同一服务方最多 2 个地址。服务方分组用于控制集中度，不是经过法律核验的独立公司数量；不同公司也可能共用 CDN。
+- 通过指定 Mihomo 服务逐个测试，每个合格端点 5 轮；原 50 个端点轮间等待 10 秒，Docker 新增端点先连续测试 3 次，再补测 2 轮（补测轮间等待 10 秒），timeout=4000、expected=200-299。每轮必须 API HTTP 200、delay>0 且 delay≤2000 ms，5 轮全部通过才可入选。
+- 分两批完成，共检查 132 个候选，72 个通过；在合格项中按厂商分散选取 50 个，覆盖 41 个服务方分组，原有服务方最多 2 个地址；按用户要求追加 Docker 的 4 个端点。服务方分组用于控制集中度，不是经过法律核验的独立公司数量；不同公司也可能共用 CDN。
 - 50 个地址共 250 次 Mihomo 测试成功，最大记录延迟 1481 ms。两批读取到的目标分组均为 🚀 节点选择，选择均为 🇺🇸 E-IX ANYTLS 美国；每轮前后校验选择一致，没有发送切换请求。分组内部实际节点可能由 Mihomo 自动决定。
 
 大厂身份不等于探查服务的 SLA。这里的“精选”是基于端点结构和短时间测试的筛选，尚未完成跨天、多出口或多地区验证，不承诺长期可用率，也不保证请求落点一定在境外。
 
 ## 文件与运行规则
 
-- [sites.txt](./sites.txt)：运行时嵌入的 50 行 HTTPS URL。
+- [sites.txt](./sites.txt)：运行时嵌入的 54 行 HTTPS URL。
 - [sites.json](./sites.json)：对应编号、名称、服务方、类型和 expectedStatus。
 - [probe-results.json](./probe-results.json)：全部候选的结构检查、五轮记录和最终 selected 标记，不含连接凭据。
 
 已有 URL 保留编号，新 URL 从 site-516 起，移除编号不复用。GNU、FSF、CBC 不在当前池。
 
-默认每 5 秒均匀随机抽取一个站点，每站长期平均约 250 秒（4 分 10 秒）被选中一次，不保证最短重访间隔。整组测试、恢复检查和订阅自身探查会增加请求量；此次不修改实例的超时、间隔、阈值等运行配置。
+默认每 5 秒均匀随机抽取一个站点，每站长期平均约 270 秒（4 分 30 秒）被选中一次，不保证最短重访间隔。整组测试、恢复检查和订阅自身探查会增加请求量；此次不修改实例的超时、间隔、阈值等运行配置。
 
 Mihomo delay API 的 HTTP 状态和正延迟不等于目标网站的 HTTP 状态，因此同时采用单独的 HEAD 结构筛选；没有从指定出口额外读取目标响应正文或响应状态。
+
+Docker 补充验证：8 个候选中 4 个符合条件，追加后共 54 个端点、42 个服务方分组、270 次入选探查成功。Docker 的 4 个端点均通过 5 次 4 秒限时探查，最大延迟 493 ms；Registry 的 401 及其他 404 地址未加入。原 50 个端点的筛选统计已保留，新增记录已并入探测快照。
 
 ## 当前清单
 
@@ -78,6 +80,10 @@ Mihomo delay API 的 HTTP 状态和正延迟不等于目标网站的 HTTP 状态
 | site-560 | SAP | SAP · www.sap.com | [https://www.sap.com/robots.txt](https://www.sap.com/robots.txt) | 200 | 909 ms |
 | site-561 | IBM | IBM · www.ibm.com | [https://www.ibm.com/robots.txt](https://www.ibm.com/robots.txt) | 200 | 221 ms |
 | site-562 | Salesforce | Salesforce · slack.com | [https://slack.com/robots.txt](https://slack.com/robots.txt) | 200 | 588 ms |
+| site-563 | Docker | Docker 官网 robots | [https://www.docker.com/robots.txt](https://www.docker.com/robots.txt) | 200 | 493 ms |
+| site-564 | Docker | Docker 文档 robots | [https://docs.docker.com/robots.txt](https://docs.docker.com/robots.txt) | 200 | 182 ms |
+| site-565 | Docker | Docker Hub robots | [https://hub.docker.com/robots.txt](https://hub.docker.com/robots.txt) | 200 | 220 ms |
+| site-566 | Docker | Docker 下载静态目录 | [https://download.docker.com/linux/static/stable/x86_64/](https://download.docker.com/linux/static/stable/x86_64/) | 200 | 139 ms |
 
 ## 参考
 

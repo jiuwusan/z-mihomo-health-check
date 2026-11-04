@@ -398,5 +398,37 @@
     "category": "大厂静态与简单响应",
     "url": "https://slack.com/robots.txt",
     "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-563",
+    "name": "Docker 官网 robots",
+    "operator": "Docker",
+    "category": "大厂静态与简单响应",
+    "url": "https://www.docker.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-564",
+    "name": "Docker 文档 robots",
+    "operator": "Docker",
+    "category": "大厂静态与简单响应",
+    "url": "https://docs.docker.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-565",
+    "name": "Docker Hub robots",
+    "operator": "Docker",
+    "category": "大厂静态与简单响应",
+    "url": "https://hub.docker.com/robots.txt",
+    "expectedStatus": "200-299"
+  },
+  {
+    "id": "site-566",
+    "name": "Docker 下载静态目录",
+    "operator": "Docker",
+    "category": "大厂静态与简单响应",
+    "url": "https://download.docker.com/linux/static/stable/x86_64/",
+    "expectedStatus": "200-299"
   }
 ]

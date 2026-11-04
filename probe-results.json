@@ -2,7 +2,7 @@
   "checkedDate": "2026-11-04",
   "timezone": "Asia/Shanghai",
   "startedAt": "2026-11-04T06:52:51.575Z",
-  "finishedAt": "2026-11-04T07:01:11.438Z",
+  "finishedAt": "2026-11-04T07:19:23.847Z",
   "api": "https://cloud.jiuwusan.cn:36443/mihomo",
   "group": "🚀 节点选择",
   "selection": "🇺🇸 E-IX ANYTLS 美国",
@@ -10,18 +10,21 @@
   "expected": "200-299",
   "roundCount": 5,
   "maxDelayMs": 2000,
-  "roundPauseSeconds": 10,
+  "roundPauseSeconds": null,
   "probeConcurrency": 1,
   "structuralCheckConcurrency": 4,
   "scope": "Curated official large technology/company service domains. Five short-window rounds per accepted endpoint through one observed Mihomo selection; separate workstation HEAD/no-redirect structure screening. Not a long-term uptime guarantee or proof of destination response status through Mihomo.",
   "summary": {
-    "candidates": 132,
-    "eligible": 72,
-    "selected": 50,
-    "operators": 41,
-    "maxPerOperator": 2,
-    "selectedSuccessfulProbes": 250,
-    "maximumSelectedDelayMs": 1481
+    "candidates": 140,
+    "eligible": 76,
+    "selected": 54,
+    "operators": 42,
+    "maxPerOperator": 4,
+    "selectedSuccessfulProbes": 270,
+    "maximumSelectedDelayMs": 1481,
+    "operatorLimitExceptions": {
+      "Docker": 4
+    }
   },
   "results": [
     {
@@ -5399,6 +5402,431 @@
       "maxDelayMs": 141,
       "selected": true,
       "id": "site-553"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker 官网 robots",
+      "url": "https://www.docker.com/robots.txt",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 200,
+        "noRedirect": true,
+        "checkedAt": "2026-11-04T07:17:24.211Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 493,
+          "requestMs": 844,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 139,
+          "requestMs": 515,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 137,
+          "requestMs": 496,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 4,
+          "checkedAt": "2026-11-04T07:19:09.213Z",
+          "apiStatus": 200,
+          "delayMs": 139,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 5,
+          "checkedAt": "2026-11-04T07:19:22.061Z",
+          "apiStatus": 200,
+          "delayMs": 134,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": true,
+      "selected": true,
+      "id": "site-563",
+      "maxDelayMs": 493,
+      "batchStartedAt": "2026-11-04T07:17:24.211Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker 文档 robots",
+      "url": "https://docs.docker.com/robots.txt",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 200,
+        "noRedirect": true,
+        "checkedAt": "2026-11-04T07:17:26.415Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 162,
+          "requestMs": 520,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 157,
+          "requestMs": 521,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 182,
+          "requestMs": 560,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 4,
+          "checkedAt": "2026-11-04T07:19:09.745Z",
+          "apiStatus": 200,
+          "delayMs": 181,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 5,
+          "checkedAt": "2026-11-04T07:19:22.745Z",
+          "apiStatus": 200,
+          "delayMs": 175,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": true,
+      "selected": true,
+      "id": "site-564",
+      "maxDelayMs": 182,
+      "batchStartedAt": "2026-11-04T07:17:26.415Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker Hub robots",
+      "url": "https://hub.docker.com/robots.txt",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 200,
+        "noRedirect": true,
+        "checkedAt": "2026-11-04T07:17:30.436Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 214,
+          "requestMs": 616,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 212,
+          "requestMs": 828,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 220,
+          "requestMs": 663,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 4,
+          "checkedAt": "2026-11-04T07:19:10.828Z",
+          "apiStatus": 200,
+          "delayMs": 205,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 5,
+          "checkedAt": "2026-11-04T07:19:23.332Z",
+          "apiStatus": 200,
+          "delayMs": 209,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": true,
+      "selected": true,
+      "id": "site-565",
+      "maxDelayMs": 220,
+      "batchStartedAt": "2026-11-04T07:17:30.436Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker Hub ping",
+      "url": "https://hub.docker.com/v2/",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 404,
+        "noRedirect": false,
+        "checkedAt": "2026-11-04T07:17:34.125Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 1275,
+          "requestMs": 2080,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 207,
+          "requestMs": 725,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 211,
+          "requestMs": 698,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": false,
+      "selected": false,
+      "id": null,
+      "maxDelayMs": 1275,
+      "batchStartedAt": "2026-11-04T07:17:34.125Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker Registry",
+      "url": "https://registry-1.docker.io/v2/",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 401,
+        "noRedirect": false,
+        "checkedAt": "2026-11-04T07:17:39.192Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 196,
+          "requestMs": 708,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 194,
+          "requestMs": 802,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 193,
+          "requestMs": 676,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": false,
+      "selected": false,
+      "id": null,
+      "maxDelayMs": 196,
+      "batchStartedAt": "2026-11-04T07:17:39.192Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker 下载静态目录",
+      "url": "https://download.docker.com/linux/static/stable/x86_64/",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 200,
+        "noRedirect": true,
+        "checkedAt": "2026-11-04T07:17:42.269Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 134,
+          "requestMs": 618,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 138,
+          "requestMs": 757,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 135,
+          "requestMs": 584,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 4,
+          "checkedAt": "2026-11-04T07:19:11.264Z",
+          "apiStatus": 200,
+          "delayMs": 132,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 5,
+          "checkedAt": "2026-11-04T07:19:23.784Z",
+          "apiStatus": 200,
+          "delayMs": 139,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": true,
+      "selected": true,
+      "id": "site-566",
+      "maxDelayMs": 139,
+      "batchStartedAt": "2026-11-04T07:17:42.269Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker 下载 robots",
+      "url": "https://download.docker.com/robots.txt",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 404,
+        "noRedirect": false,
+        "checkedAt": "2026-11-04T07:17:44.541Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 231,
+          "requestMs": 762,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 226,
+          "requestMs": 629,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 225,
+          "requestMs": 803,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": false,
+      "selected": false,
+      "id": null,
+      "maxDelayMs": 231,
+      "batchStartedAt": "2026-11-04T07:17:44.541Z"
+    },
+    {
+      "operator": "Docker",
+      "name": "Docker 状态页 robots",
+      "url": "https://www.dockerstatus.com/robots.txt",
+      "category": "大厂静态与简单响应",
+      "workstationHead": {
+        "status": 404,
+        "noRedirect": false,
+        "checkedAt": "2026-11-04T07:17:47.253Z"
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "apiStatus": 200,
+          "delayMs": 375,
+          "requestMs": 1100,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 2,
+          "apiStatus": 200,
+          "delayMs": 369,
+          "requestMs": 1383,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        },
+        {
+          "round": 3,
+          "apiStatus": 200,
+          "delayMs": 582,
+          "requestMs": 1219,
+          "checkedAt": null,
+          "available": true,
+          "pass": true
+        }
+      ],
+      "accepted": false,
+      "selected": false,
+      "id": null,
+      "maxDelayMs": 582,
+      "batchStartedAt": "2026-11-04T07:17:47.253Z"
     }
-  ]
+  ],
+  "roundSpacingDescription": "Original 50 endpoints: 10 seconds between rounds. Docker additions: first 3 consecutive probes, then 2 supplementary rounds with 10 seconds between them."
 }
