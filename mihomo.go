@@ -38,6 +38,9 @@ func NewMihomo(c Config) *Mihomo {
 	return &Mihomo{c, &http.Client{Transport: apiTransport, Timeout: time.Duration(c.TimeoutSeconds+2) * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}
 }
 func (m *Mihomo) request(ctx context.Context, method, path string, q url.Values, body any, out any) error {
+	return m.requestLimited(ctx, method, path, q, body, out, 1024*1024)
+}
+func (m *Mihomo) requestLimited(ctx context.Context, method, path string, q url.Values, body any, out any, limit int64) error {
 	endpoint := strings.TrimRight(m.cfg.APIURL, "/") + path
 	if len(q) > 0 {
 		endpoint += "?" + q.Encode()
@@ -77,8 +80,8 @@ func (m *Mihomo) request(ctx context.Context, method, path string, q url.Values,
 		return &APIError{Code: resp.StatusCode, Message: msg}
 	}
 	if out != nil {
-		data, err := io.ReadAll(io.LimitReader(resp.Body, 1024*1024+1))
-		if err != nil || len(data) > 1024*1024 || json.Unmarshal(data, out) != nil {
+		data, err := io.ReadAll(io.LimitReader(resp.Body, limit+1))
+		if err != nil || int64(len(data)) > limit || json.Unmarshal(data, out) != nil {
 			return errors.New("Mihomo API 返回了无效或过大的 JSON")
 		}
 	}

@@ -23,6 +23,74 @@ class Element {
   scrollIntoView() {this.scrolled=true;}
 }
 
+test('node metadata syncs on instance load and manual refresh without recurring with polls', async () => {
+  const nodes=new Map(),requests=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const snapshot={phase:'stopped',running:false,current:'US',failures:0,events:[],event_count:0,history_id:'h',node_info_synced_at:new Date().toISOString(),results:[{name:'US',node:'US01',source:'mihomo',status_known:true,available:true,delay_ms:0},{name:'Unknown',source:'mihomo',available:false}]};
+  const cfg={api_url:'http://mihomo:9090',group:'group',interval_seconds:5,failure_threshold:1,timeout_seconds:4};
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},Option:class{constructor(text,value){this.textContent=text;this.value=value;}},fetch(url){
+    if(url==='/api/instances')return new Promise(()=>{});requests.push(url);return Promise.resolve({ok:true,json:async()=>url.endsWith('/config')?cfg:snapshot});
+  }});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("instanceList=[{id:'a',name:'A'}]",context);
+  await context.switchInstance('a',true);
+  assert.equal(requests.filter(u=>u.endsWith('/node-info')).length,1);
+  await context.refreshPanel();await context.refreshPanel();
+  assert.equal(requests.filter(u=>u.endsWith('/node-info')).length,1);
+  await get('refresh-nodes').listeners.click();
+  assert.equal(requests.filter(u=>u.endsWith('/node-info')).length,2);
+  assert.equal(get('refresh-nodes').disabled,false);
+  assert.match(get('node-sync-message').textContent,/同步/);
+  const first=get('priority-list').children[0],unknown=get('priority-list').children[1];
+  assert.equal(first.children[1].children[0].textContent,'US01');
+  assert.match(first.children.at(-1).textContent,/可用/);
+  assert.doesNotMatch(first.children.at(-1).textContent,/0 ms/);
+  assert.equal(unknown.children.at(-1).textContent,'-');
+});
+
+test('switching instances aborts old node metadata and ignores its late response', async () => {
+  const nodes=new Map();let resolveOld,oldSignal;const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const cfg={api_url:'http://mihomo:9090',group:'group',interval_seconds:5,failure_threshold:1,timeout_seconds:4};
+  const snapshot=current=>({phase:'stopped',current,results:[{name:current,node:current+'01',source:'mihomo',status_known:true,available:true}],events:[],event_count:0,history_id:current});
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},Option:class{constructor(text,value){this.textContent=text;this.value=value;}},fetch(url,options){
+    if(url==='/api/instances')return new Promise(()=>{});
+    if(url==='/api/instances/a/node-info'){oldSignal=options.signal;return new Promise(resolve=>resolveOld=resolve);}
+    return Promise.resolve({ok:true,json:async()=>url.endsWith('/config')?cfg:snapshot(url.includes('/b/')?'B':'A')});
+  }});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("instanceList=[{id:'a',name:'A'},{id:'b',name:'B'}]",context);
+  await context.switchInstance('a',true);await context.switchInstance('b',true);
+  assert.equal(oldSignal.aborted,true);
+  resolveOld({ok:true,json:async()=>snapshot('OLD')});await Promise.resolve();await Promise.resolve();
+  assert.equal(get('current-group').textContent,'B');
+  assert.equal(get('refresh-nodes').disabled,false);
+});
+
+test('late node metadata cannot roll back an already rendered newer status', async () => {
+  const nodes=new Map(),pending=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch(url){if(url==='/api/instances')return new Promise(()=>{});return new Promise(resolve=>pending.push(resolve));}});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("selectedInstance='a';loaded=true",context);
+  const sync=context.refreshNodeInfo(),poll=context.refreshPanel();
+  const response=(version,current,delay)=>({ok:true,json:async()=>({state_version:version,phase:'healthy',current,delay_ms:delay,events:[],event_count:0,history_id:'h',results:[{name:current,available:true,delay_ms:delay,checked_at:new Date().toISOString()}]})});
+  pending[1](response(3,'JP',222));await poll;
+  pending[0](response(2,'US',111));await sync;
+  assert.equal(get('current-group').textContent,'JP');assert.equal(get('delay').textContent,222);
+});
+
+test('a server restart accepts its new status epoch and rejects metadata from the old process', async () => {
+  const nodes=new Map();let resolveSync;const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:url=>url==='/api/instances'?new Promise(()=>{}):new Promise(resolve=>resolveSync=resolve)});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("selectedInstance='a';loaded=true",context);
+  const status=(epoch,version,current)=>({state_epoch:epoch,state_version:version,phase:'healthy',current,results:[],events:[]});
+  context.renderStatus(status('old',50,'US'));
+  const sync=context.refreshNodeInfo();
+  context.renderStatus(status('new',1,'JP'));
+  resolveSync({ok:true,json:async()=>status('old',51,'US')});await sync;
+  assert.equal(get('current-group').textContent,'JP');
+  context.renderStatus(status('new',2,'SG'));assert.equal(get('current-group').textContent,'SG');
+});
+
 test('failure filter persists both states and restores before the first status request', async () => {
   const saved=new Map();
   const storage={getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)};
@@ -381,7 +449,7 @@ test('configuration loaded while hidden waits until visible to request status', 
   await h.context.switchInstance('b',true);
   assert.deepEqual(h.requests.map(request=>request.url),['/api/instances/b/config']);assert.equal(h.timers.size,0);
   h.context.document.hidden=false;h.listeners.visibilitychange();await settle();
-  assert.equal(h.requests[1].url,'/api/instances/b/status');assert.equal(h.timers.size,1);
+  assert.equal(h.requests[1].url,'/api/instances/b/node-info');assert.equal(h.requests[2].url,'/api/instances/b/status');assert.equal(h.timers.size,1);
 });
 
 test('switching during configuration load cancels that request without surfacing an error', async () => {

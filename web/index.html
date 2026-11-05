@@ -26,8 +26,9 @@
       <div class="workspace">
         <section class="panel priority" aria-labelledby="priority-title">
           <div class="panel-heading"><div class="section-title"><span class="section-number">01</span><div><h2 id="priority-title">国家分组优先级</h2><p>按主分组原始顺序选择，不按延迟排序。</p></div></div><span id="group-summary" class="quiet">等待探查</span></div>
-          <div class="group-tools"><label class="search-label" for="group-search">筛选分组</label><input id="group-search" type="search" placeholder="搜索国家或分组名称" autocomplete="off"><button id="locate-current" class="secondary-button" type="button" disabled>定位当前</button></div>
-          <div id="priority-list" class="priority-list" tabindex="0" aria-label="国家分组列表"><div class="empty-state"><span>↗</span><p>等待分组探查</p><small>整组测试或恢复探查后，展示各分组最近结果。</small></div></div>
+          <div class="group-tools"><label class="search-label" for="group-search">筛选分组</label><input id="group-search" type="search" placeholder="搜索国家或分组名称" autocomplete="off"><button id="locate-current" class="secondary-button" type="button" disabled>定位当前</button><button id="refresh-nodes" class="secondary-button" type="button" disabled>刷新</button></div>
+          <p id="node-sync-message" class="form-message node-sync-message" role="status"></p>
+          <div id="priority-list" class="priority-list" tabindex="0" aria-label="国家分组列表"><div class="empty-state"><span>↗</span><p>等待同步节点信息</p><small>读取 Mihomo 已有节点状态，不额外发起测速。</small></div></div>
           <div class="recovery-status"><span>优先级恢复</span><p id="recovery-status" role="status">自动恢复未运行</p></div>
         </section>
         <section class="panel activity" aria-labelledby="activity-title">

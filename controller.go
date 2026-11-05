@@ -15,30 +15,36 @@ type Event struct {
 	Message string    `json:"message"`
 }
 type GroupResult struct {
-	Name      string     `json:"name"`
-	Delay     int        `json:"delay_ms"`
-	Available bool       `json:"available"`
-	CheckedAt *time.Time `json:"checked_at,omitempty"`
+	Name        string     `json:"name"`
+	Delay       int        `json:"delay_ms"`
+	Available   bool       `json:"available"`
+	CheckedAt   *time.Time `json:"checked_at,omitempty"`
+	Node        string     `json:"node,omitempty"`
+	Source      string     `json:"source,omitempty"`
+	StatusKnown bool       `json:"status_known,omitempty"`
 }
 type Status struct {
-	Running         bool           `json:"running"`
-	Phase           string         `json:"phase"`
-	Message         string         `json:"message"`
-	Current         string         `json:"current"`
-	Failures        int            `json:"failures"`
-	LastSite        string         `json:"last_site"`
-	LastCheck       *time.Time     `json:"last_check"`
-	LastSwitch      *time.Time     `json:"last_switch"`
-	Delay           int            `json:"delay_ms"`
-	PoolSize        int            `json:"pool_size"`
-	PoolTotal       int            `json:"pool_total"`
-	PoolQuarantined int            `json:"pool_quarantined"`
-	Results         []GroupResult  `json:"results"`
-	Events          []Event        `json:"events"`
-	EventCount      int            `json:"event_count"`
-	HistoryID       string         `json:"history_id"`
-	Recovery        RecoveryStatus `json:"recovery"`
-	eventSequence   uint64
+	StateVersion     uint64         `json:"state_version"`
+	StateEpoch       string         `json:"state_epoch"`
+	Running          bool           `json:"running"`
+	Phase            string         `json:"phase"`
+	Message          string         `json:"message"`
+	Current          string         `json:"current"`
+	Failures         int            `json:"failures"`
+	LastSite         string         `json:"last_site"`
+	LastCheck        *time.Time     `json:"last_check"`
+	LastSwitch       *time.Time     `json:"last_switch"`
+	Delay            int            `json:"delay_ms"`
+	PoolSize         int            `json:"pool_size"`
+	PoolTotal        int            `json:"pool_total"`
+	PoolQuarantined  int            `json:"pool_quarantined"`
+	Results          []GroupResult  `json:"results"`
+	Events           []Event        `json:"events"`
+	EventCount       int            `json:"event_count"`
+	HistoryID        string         `json:"history_id"`
+	Recovery         RecoveryStatus `json:"recovery"`
+	NodeInfoSyncedAt *time.Time     `json:"node_info_synced_at,omitempty"`
+	eventSequence    uint64
 }
 type Controller struct {
 	mu             sync.Mutex
@@ -53,6 +59,9 @@ type Controller struct {
 	recovery       recoveryState
 	allUnavailable bool
 	instanceName   string
+	stateVersion   uint64
+	currentVersion uint64
+	stateEpoch     string
 }
 
 func NewController(sites []string) *Controller {
@@ -60,7 +69,7 @@ func NewController(sites []string) *Controller {
 	return newControllerWithPool(pool)
 }
 func newControllerWithPool(pool *SitePool) *Controller {
-	c := &Controller{pool: pool, wake: make(chan struct{}, 1), instanceName: "默认实例"}
+	c := &Controller{pool: pool, wake: make(chan struct{}, 1), instanceName: "默认实例", stateEpoch: time.Now().UTC().Format(time.RFC3339Nano)}
 	c.Configure(DefaultConfig())
 	return c
 }
@@ -84,6 +93,8 @@ func (c *Controller) configureLocked(cfg Config) {
 	startRecovery := changedTarget || (!c.cfg.Enabled && cfg.Enabled) || (!c.cfg.RecoveryEnabled && cfg.RecoveryEnabled)
 	c.cfg = cfg
 	c.rev++
+	c.stateVersion++
+	c.currentVersion++
 	// Keep the observed baseline across saves so an unobserved manual switch
 	// cannot bypass the initial wait. Progress is reset below with the public status.
 	if changedTarget {
@@ -127,6 +138,7 @@ func (c *Controller) filteredStatus(failuresOnly bool) Status {
 	defer c.mu.Unlock()
 	pruneEvents(&c.state, time.Now())
 	s := c.state
+	s.StateVersion, s.StateEpoch = c.stateVersion, c.stateEpoch
 	s.PoolSize, s.PoolTotal = c.pool.Counts()
 	s.PoolQuarantined = s.PoolTotal - s.PoolSize
 	s.Recovery.Enabled = c.cfg.Enabled && c.cfg.RecoveryEnabled
@@ -149,7 +161,12 @@ func (c *Controller) update(rev uint64, fn func(*Status)) bool {
 	if c.rev != rev || c.ctx.Err() != nil {
 		return false
 	}
+	previousCurrent := c.state.Current
 	fn(&c.state)
+	c.stateVersion++
+	if c.state.Current != previousCurrent {
+		c.currentVersion++
+	}
 	return true
 }
 func addEvent(s *Status, level, message string) {
@@ -191,7 +208,7 @@ func (c *Controller) recordGroupProbe(rev uint64, order []string, name string, d
 				result = GroupResult{Name: member}
 			}
 			if member == name {
-				result = GroupResult{Name: name, Delay: delay, Available: err == nil, CheckedAt: &now}
+				result = GroupResult{Name: name, Delay: delay, Available: err == nil, CheckedAt: &now, Node: result.Node}
 			}
 			results = append(results, result)
 		}
@@ -308,6 +325,13 @@ func (c *Controller) Check(parent context.Context) {
 		results = append(results, GroupResult{Name: name, Delay: d, Available: ok && d > 0 && d <= 65535, CheckedAt: &checkedAt})
 	}
 	if !c.update(rev, func(s *Status) {
+		nodes := map[string]string{}
+		for _, r := range s.Results {
+			nodes[r.Name] = r.Node
+		}
+		for i := range results {
+			results[i].Node = nodes[results[i].Name]
+		}
 		s.Results = results
 		s.Current = group.Now
 		for _, result := range results {

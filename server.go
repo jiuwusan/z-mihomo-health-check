@@ -107,6 +107,7 @@ func NewServer(c *Controller, filename string) http.Handler {
 	mux.HandleFunc("GET /api/config", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, publicConfig(c.Config())) })
 	mux.HandleFunc("PUT /api/config", s.configure)
 	mux.HandleFunc("GET /api/status", s.status)
+	mux.HandleFunc("GET /api/node-info", s.nodeInfo)
 	mux.HandleFunc("GET /api/events", s.events)
 	mux.HandleFunc("POST /api/groups", s.groups)
 	mux.Handle("/", panelAssets())
@@ -149,6 +150,14 @@ func panelMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func (s *server) nodeInfo(w http.ResponseWriter, r *http.Request) {
+	status, err := s.controller.SyncNodeInfo(r.Context())
+	if err != nil {
+		writeError(w, 502, err)
+		return
+	}
+	writeJSON(w, 200, status)
+}
 func failureFilter(r *http.Request) (bool, error) {
 	value := r.URL.Query().Get("failures_only")
 	if value == "" {

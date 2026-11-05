@@ -27,6 +27,10 @@ let instanceRequests = new AbortController();
 let pollTimer = null;
 let pollTask = null;
 let pollDelay = 2000;
+let nodeInfoTask = null;
+let nodeInfoPending = false;
+let lastStatusVersion = -1;
+let lastStatusEpoch = '';
 const phaseNames = {stopped:'探查已停用',waiting:'等待探查',checking:'正在探查',healthy:'出口正常',warning:'探查失败',testing:'整组测试中',switching:'正在切换',error:'需要关注'};
 async function api(path, options = {}) {
   const response = await fetch(path, {...options, headers:{'Content-Type':'application/json',...options.headers}, signal:options.signal || AbortSignal.timeout(6000)});
@@ -48,6 +52,7 @@ function syncInstanceControls() {
   $('delete-instance').disabled = managementBusy || !loaded || instanceList.length < 2;
   $('instance-fields').disabled = managementBusy || !loaded;
   $('open-settings').disabled = managementBusy || !loaded;
+  $('refresh-nodes').disabled = managementBusy || !loaded || Boolean(nodeInfoTask);
 }
 async function refreshInstances() {
   const data = await api('/api/instances');
@@ -63,6 +68,12 @@ async function switchInstance(id, force = false) {
   if (!force && !allowDiscard()) {$('instance-select').value = selectedInstance; return false;}
   const epoch = ++instanceEpoch;
   pausePolling();
+  if (nodeInfoTask) nodeInfoTask.controller.abort();
+  nodeInfoTask = null;
+  nodeInfoPending = false;
+  lastStatusVersion = -1; lastStatusEpoch = '';
+  $('refresh-nodes').textContent = '刷新';
+  message('node-sync-message','');
   pollDelay = 2000;
   instanceRequests.abort();
   instanceRequests = new AbortController();
@@ -86,7 +97,7 @@ async function switchInstance(id, force = false) {
   try {
     const cfg = await instanceAPI('/api/config', {}, id);
     if (epoch !== instanceEpoch) return false;
-    applyConfig(cfg); await poll(); return true;
+    applyConfig(cfg); void refreshNodeInfo(); await poll(); return true;
   } catch (error) {
     if (epoch === instanceEpoch) {message('save-message',error.message,true); message('panel-message',error.message,true); $('monitor-badge').textContent = '实例加载失败';}
     return false;
@@ -170,6 +181,11 @@ function element(tag, className, text) {
 }
 function clock(value) {return value ? new Date(value).toLocaleTimeString('zh-CN',{hour12:false}) : '—';}
 function renderStatus(status) {
+  if (status.state_epoch && status.state_epoch !== lastStatusEpoch) {lastStatusEpoch = status.state_epoch; lastStatusVersion = -1;}
+  if (typeof status.state_version === 'number') {
+    if (status.state_version < lastStatusVersion) return false;
+    lastStatusVersion = status.state_version;
+  }
   const badge = $('monitor-badge'); badge.textContent = phaseNames[status.phase] || status.phase;
   badge.className = 'badge' + (status.running && status.phase !== 'error' ? ' active' : status.phase === 'error' ? ' error' : '');
   $('current-group').textContent = status.current || '—'; $('delay').textContent = status.delay_ms > 0 ? status.delay_ms : '—';
@@ -204,26 +220,60 @@ function renderStatus(status) {
 function renderGroups() {
   const query = $('group-search').value.trim().toLocaleLowerCase();
   const visible = groupResults.map((result,index) => ({result,index})).filter(({result}) => result.name.toLocaleLowerCase().includes(query));
-  $('group-summary').textContent = groupResults.length ? `${groupResults.filter(result => result.available).length} 可用 / ${groupResults.length} 个分组` : '等待探查';
+  $('group-summary').textContent = groupResults.length ? `${groupResults.filter(result => result.available).length} 可用 / ${groupResults.length} 个分组` : '等待同步';
   $('locate-current').disabled = !groupResults.some(result => result.name === currentGroup);
   const scrollTop = $('priority-list').scrollTop;
   currentRow = null;
   $('priority-list').replaceChildren(...(visible.length ? visible.map(({result,index}) => {
+    const cached = result.source === 'mihomo';
     const tested = Boolean(result.checked_at);
-    const row = element('div',`priority-row${result.available ? ' available' : ''}${tested ? '' : ' untested'}${result.name === currentGroup ? ' selected' : ''}`);
-    row.append(element('span','rank',String(index + 1).padStart(2,'0')),element('span','country',result.name));
+    const known = cached ? Boolean(result.status_known) : tested || result.available;
+    const row = element('div',`priority-row${result.available ? ' available' : ''}${known ? '' : ' untested'}${result.name === currentGroup ? ' selected' : ''}`);
+    const country = element('span','country',result.name);
+    if (result.node) country.append(element('small','node-name',result.node));
+    row.append(element('span','rank',String(index + 1).padStart(2,'0')),country);
     if (result.name === currentGroup) {row.append(element('span','selected-label','当前')); currentRow = row;}
-    const availability = element('span','availability',result.available ? `${result.delay_ms} ms` : tested ? '最近探查失败' : '尚未探查');
+    let label = '尚未探查';
+    if (cached) {
+      if (!known) label = '-';
+      else if (!result.available) label = '不可用 · 缓存';
+      else label = result.delay_ms > 0 ? `${result.delay_ms} ms · 缓存` : '可用 · 缓存';
+    } else if (result.available) label = `${result.delay_ms} ms`;
+    else if (tested) label = '最近探查失败';
+    const availability = element('span','availability',label);
     if (tested) {
-      const timestamp = element('time','result-time',`检测于 ${clock(result.checked_at)}`);
+      const timestamp = element('time','result-time',`${cached ? '记录于' : '检测于'} ${clock(result.checked_at)}`);
       timestamp.dateTime = result.checked_at;
       timestamp.title = new Date(result.checked_at).toLocaleString('zh-CN', {hour12:false});
       availability.append(timestamp);
     }
     row.append(availability); return row;
-  }) : [element('div','empty-events',query ? '没有匹配的分组，请尝试其他名称。' : '等待分组探查，结果将在这里显示。')]));
+  }) : [element('div','empty-events',query ? '没有匹配的分组，请尝试其他名称。' : '等待同步节点信息。')]));
   $('priority-list').scrollTop = scrollTop;
 }
+async function refreshNodeInfo() {
+  if (!loaded || !selectedInstance) return;
+  if (document.hidden) {nodeInfoPending = true; return;}
+  nodeInfoPending = false;
+  if (nodeInfoTask) nodeInfoTask.controller.abort();
+  const task = {controller:new AbortController(),epoch:instanceEpoch};
+  nodeInfoTask = task; syncInstanceControls();
+  $('refresh-nodes').textContent = '正在刷新…'; message('node-sync-message','正在读取节点信息，不发起测速…');
+  try {
+    const status = await instanceAPI('/api/node-info',{signal:task.controller.signal});
+    if (nodeInfoTask !== task || task.epoch !== instanceEpoch || task.controller.signal.aborted) return;
+    if (!Array.isArray(status.results) || typeof status.current !== 'string') throw new Error('节点信息响应无效');
+    // Invalidate status/history requests that may have captured pre-sync data.
+    ++panelRequest; ++historyRequest;
+    if (!status.state_epoch || !lastStatusEpoch || status.state_epoch === lastStatusEpoch) renderStatus(status);
+    message('node-sync-message',`节点信息已同步${status.node_info_synced_at ? ' · ' + clock(status.node_info_synced_at) : ''}，未发起测速。`);
+  } catch (error) {
+    if (nodeInfoTask === task && task.epoch === instanceEpoch && !task.controller.signal.aborted) message('node-sync-message',`节点信息同步失败：${error.message}`,true);
+  } finally {
+    if (nodeInfoTask === task) {nodeInfoTask = null; $('refresh-nodes').textContent = '刷新'; syncInstanceControls();}
+  }
+}
+$('refresh-nodes').addEventListener('click',refreshNodeInfo);
 $('group-search').addEventListener('input', () => {renderGroups(); $('priority-list').scrollTop = 0;});
 $('locate-current').addEventListener('click', () => {
   $('group-search').value = ''; renderGroups();
@@ -276,7 +326,8 @@ async function refreshPanel(signal) {
   try {
     const status = await instanceAPI('/api/status' + (onlyFailures ? '?failures_only=true' : ''), {signal}, id);
     if (signal?.aborted || epoch !== instanceEpoch || request !== panelRequest) return;
-    renderStatus(status); await refreshHistory(status, signal, onlyFailures);
+    if (renderStatus(status) === false) return;
+    await refreshHistory(status, signal, onlyFailures);
   } catch (error) {
     if (epoch === instanceEpoch && request === panelRequest) throw error;
   }
@@ -333,6 +384,7 @@ $('settings-form').addEventListener('submit', async event => {
     const cfg = await instanceAPI('/api/config',{method:'PUT',body:JSON.stringify(payload())},id);
     if (epoch !== instanceEpoch) return;
     applyConfig(cfg);
+    void refreshNodeInfo();
     message('save-message',cfg.enabled ? '配置已保存，后台自动探查已启用。' : '配置已保存，后台自动探查已停用。');
     await refreshPanel();
   } catch (error) {if (epoch === instanceEpoch) message('save-message',error.message,true);}
@@ -372,7 +424,7 @@ async function poll() {
 }
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) pausePolling();
-  else void poll();
+  else {if (nodeInfoPending) void refreshNodeInfo(); void poll();}
 });
 async function initialize() {
   try {await refreshInstances(); await switchInstance(instanceList[0].id,true);}
