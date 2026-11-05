@@ -29,20 +29,40 @@ func pruneEvents(s *Status, now time.Time) {
 }
 
 func (c *Controller) Events(before uint64, limit int) EventPage {
+	return c.filteredEvents(before, limit, false)
+}
+
+func (c *Controller) filteredEvents(before uint64, limit int, failuresOnly bool) EventPage {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	pruneEvents(&c.state, time.Now())
+	return historyPage(&c.state, before, limit, failuresOnly)
+}
+
+func historyPage(s *Status, before uint64, limit int, failuresOnly bool) EventPage {
 	if limit < 1 || limit > eventPageSize {
 		limit = eventPageSize
 	}
-	page := EventPage{Events: []Event{}, Total: len(c.state.Events), RetentionSeconds: int(eventRetention / time.Second), HistoryID: c.state.HistoryID}
-	for _, event := range c.state.Events {
+	page := EventPage{Events: []Event{}, RetentionSeconds: int(eventRetention / time.Second), HistoryID: s.HistoryID}
+	if !failuresOnly {
+		page.Total = len(s.Events)
+	}
+	for _, event := range s.Events {
+		if failuresOnly {
+			if event.Level != "warning" && event.Level != "error" {
+				continue
+			}
+			page.Total++
+		}
 		if before != 0 && event.ID >= before {
 			continue
 		}
 		if len(page.Events) == limit {
 			page.HasMore = true
-			break
+			if !failuresOnly {
+				break
+			}
+			continue
 		}
 		page.Events = append(page.Events, event)
 		page.NextBefore = event.ID

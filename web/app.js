@@ -15,6 +15,7 @@ let currentRow = null;
 let historyCursor = 0;
 let nextHistoryCursor = 0;
 let historyID = '';
+let failuresOnly = false;
 let historyRequest = 0;
 let historyTotal = 0;
 let displayedEvents = [];
@@ -235,27 +236,28 @@ for (const name of ['settings','instances']) {
 function renderHistoryEvents() {
   const cutoff = Date.now() - 60 * 60 * 1000;
   displayedEvents = displayedEvents.filter(event => new Date(event.time).getTime() >= cutoff);
-  const events = displayedEvents; const signature = JSON.stringify(events);
+  const events = failuresOnly ? displayedEvents.filter(event => event.level === 'warning' || event.level === 'error') : displayedEvents;
+  const signature = JSON.stringify([failuresOnly,events]);
   if (signature !== eventSignature) {
     eventSignature = signature;
     $('event-list').replaceChildren(...(events.length ? events.map(event => {
       const row = element('div',`event-row ${event.level}`);
       row.append(element('time','event-time',clock(event.time)),element('span','event-dot'),element('span','event-message',event.message));return row;
-    }) : [element('div','empty-events',historyCursor ? '当前页记录已过期，请返回最新。' : '最近 1 小时暂无记录。')]));
+    }) : [element('div','empty-events',historyCursor ? '当前页记录已过期，请返回最新。' : failuresOnly ? '最近 1 小时暂无失败记录。' : '最近 1 小时暂无记录。')]));
   }
-  $('history-summary').textContent = `最近 1 小时 · ${historyTotal} 条 · 本页 ${events.length} 条`;
+  $('history-summary').textContent = `最近 1 小时${failuresOnly ? ' · 仅失败' : ''} · ${historyTotal} 条 · 本页 ${events.length} 条`;
 }
-async function refreshHistory(status, signal) {
+async function refreshHistory(status, signal, onlyFailures = failuresOnly) {
   if (historyID !== status.history_id) {historyID = status.history_id; historyCursor = 0;}
   const request = ++historyRequest;
   const epoch = instanceEpoch; const id = selectedInstance;
   const cursor = historyCursor;
-  const page = cursor ? await instanceAPI(`/api/events?before=${cursor}`, {signal}, id) : {
+  const page = cursor ? await instanceAPI(`/api/events?before=${cursor}${onlyFailures ? '&failures_only=true' : ''}`, {signal}, id) : {
     events:status.events || [], total:status.event_count || 0, history_id:status.history_id,
     has_more:(status.event_count || 0) > (status.events || []).length,
     next_before:(status.events || []).at(-1)?.id || 0
   };
-  if (signal?.aborted || epoch !== instanceEpoch || request !== historyRequest || cursor !== historyCursor) return;
+  if (signal?.aborted || epoch !== instanceEpoch || request !== historyRequest || cursor !== historyCursor || onlyFailures !== failuresOnly) return;
   if (page.history_id !== historyID) {historyCursor = 0; return;}
   displayedEvents = page.events; historyTotal = page.total; nextHistoryCursor = page.next_before;
   $('older-events').disabled = !page.has_more;
@@ -266,15 +268,25 @@ async function refreshHistory(status, signal) {
 async function refreshPanel(signal) {
   const request = ++panelRequest;
   const epoch = instanceEpoch; const id = selectedInstance;
+  const onlyFailures = failuresOnly;
   ++historyRequest;
   try {
-    const status = await instanceAPI('/api/status', {signal}, id);
+    const status = await instanceAPI('/api/status' + (onlyFailures ? '?failures_only=true' : ''), {signal}, id);
     if (signal?.aborted || epoch !== instanceEpoch || request !== panelRequest) return;
-    renderStatus(status); await refreshHistory(status, signal);
+    renderStatus(status); await refreshHistory(status, signal, onlyFailures);
   } catch (error) {
     if (epoch === instanceEpoch && request === panelRequest) throw error;
   }
 }
+$('failures-only').addEventListener('change', async () => {
+  failuresOnly = $('failures-only').checked;
+  historyCursor = 0; nextHistoryCursor = 0; ++historyRequest; ++panelRequest;
+  displayedEvents = []; historyTotal = 0; eventSignature = '';
+  renderHistoryEvents(); $('older-events').disabled = true; $('latest-events').disabled = true;
+  if (!selectedInstance) return;
+  try {await refreshPanel(); $('event-list').scrollTop = 0;}
+  catch (error) {message('history-error',error.message,true);}
+});
 $('older-events').addEventListener('click', async () => {
   if (!nextHistoryCursor) return;
   historyCursor = nextHistoryCursor;

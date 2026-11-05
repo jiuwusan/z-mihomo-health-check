@@ -106,7 +106,7 @@ func NewServer(c *Controller, filename string) http.Handler {
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, map[string]string{"status": "ok"}) })
 	mux.HandleFunc("GET /api/config", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, publicConfig(c.Config())) })
 	mux.HandleFunc("PUT /api/config", s.configure)
-	mux.HandleFunc("GET /api/status", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, c.Status()) })
+	mux.HandleFunc("GET /api/status", s.status)
 	mux.HandleFunc("GET /api/events", s.events)
 	mux.HandleFunc("POST /api/groups", s.groups)
 	mux.Handle("/", panelAssets())
@@ -149,7 +149,31 @@ func panelMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func failureFilter(r *http.Request) (bool, error) {
+	value := r.URL.Query().Get("failures_only")
+	if value == "" {
+		return false, nil
+	}
+	filter, err := strconv.ParseBool(value)
+	if err != nil {
+		return false, errors.New("失败筛选参数须为布尔值")
+	}
+	return filter, nil
+}
+func (s *server) status(w http.ResponseWriter, r *http.Request) {
+	filter, err := failureFilter(r)
+	if err != nil {
+		writeError(w, 400, err)
+		return
+	}
+	writeJSON(w, 200, s.controller.filteredStatus(filter))
+}
 func (s *server) events(w http.ResponseWriter, r *http.Request) {
+	filter, err := failureFilter(r)
+	if err != nil {
+		writeError(w, 400, err)
+		return
+	}
 	limit := eventPageSize
 	if value := r.URL.Query().Get("limit"); value != "" {
 		n, err := strconv.Atoi(value)
@@ -168,7 +192,7 @@ func (s *server) events(w http.ResponseWriter, r *http.Request) {
 		}
 		before = n
 	}
-	writeJSON(w, 200, s.controller.Events(before, limit))
+	writeJSON(w, 200, s.controller.filteredEvents(before, limit, filter))
 }
 func (s *server) configure(w http.ResponseWriter, r *http.Request) {
 	s.save.Lock()

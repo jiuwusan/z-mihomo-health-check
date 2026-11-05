@@ -23,6 +23,48 @@ class Element {
   scrollIntoView() {this.scrolled=true;}
 }
 
+test('failure filter requests matching latest and older pages and restores all events', async () => {
+  const nodes=new Map(),requests=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const recent=new Date().toISOString();
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},
+    fetch(url){
+      if(url==='/api/instances')return new Promise(()=>{});
+      requests.push(url);
+      const filtered=url.includes('failures_only=true');
+      const body=url.includes('/status')?{phase:'healthy',failures:0,results:[],history_id:'h',event_count:filtered?101:200,events:[{id:150,time:recent,level:filtered?'warning':'success',message:filtered?'failure':'healthy'}]}:{history_id:'h',total:101,has_more:false,next_before:1,events:[{id:1,time:recent,level:'error',message:'older failure'}]};
+      return Promise.resolve({ok:true,json:async()=>body});
+    }});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("selectedInstance='default'",context);
+  await context.refreshPanel();
+  get('failures-only').checked=true;await get('failures-only').listeners.change();
+  assert.equal(requests.at(-1),'/api/instances/default/status?failures_only=true');
+  assert.match(get('history-summary').textContent,/仅失败.*101 条/);
+  await get('older-events').listeners.click();
+  assert.equal(requests.at(-1),'/api/instances/default/events?before=150&failures_only=true');
+  assert.equal(get('event-list').children[0].children[2].textContent,'older failure');
+  get('failures-only').checked=false;await get('failures-only').listeners.change();
+  assert.equal(requests.at(-1),'/api/instances/default/status');
+  assert.equal(get('event-list').children[0].children[2].textContent,'healthy');
+});
+
+test('a late unfiltered response cannot overwrite failure-only history', async () => {
+  const nodes=new Map(),pending=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},
+    fetch(url){if(url==='/api/instances')return new Promise(()=>{});return new Promise(resolve=>pending.push({url,resolve}));}});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext("selectedInstance='default'",context);
+  const old=context.refreshPanel();get('failures-only').checked=true;const filtered=get('failures-only').listeners.change();
+  const response=(level,message)=>({ok:true,json:async()=>({phase:'healthy',failures:0,results:[],history_id:'h',event_count:1,events:[{id:1,time:new Date().toISOString(),level,message}]})});
+  pending[1].resolve(response('error','failure'));await filtered;
+  pending[0].resolve(response('success','old success'));await old;
+  assert.equal(get('event-list').children[0].children[2].textContent,'failure');
+  assert.match(get('history-summary').textContent,/仅失败/);
+  get('failures-only').checked=false;const all=get('failures-only').listeners.change();
+  pending[2].resolve(response('success','new success'));await all;
+  assert.equal(get('event-list').children[0].children[2].textContent,'new success');
+});
+
 test('global site isolation displays zero active sites and shared totals', () => {
   const nodes = new Map();
   const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};

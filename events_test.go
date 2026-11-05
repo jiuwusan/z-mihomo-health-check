@@ -9,6 +9,56 @@ import (
 	"time"
 )
 
+func TestFailureFilterAppliesBeforePagingAndStatusKeepsMetrics(t *testing.T) {
+	c := NewController(nil)
+	defer c.Stop()
+	c.mu.Lock()
+	addEvent(&c.state, "error", "old API failure")
+	addEvent(&c.state, "warning", "old probe failure")
+	for i := 0; i < 150; i++ {
+		addEvent(&c.state, "success", "healthy")
+	}
+	c.state.Failures = 7
+	c.mu.Unlock()
+	h := NewServer(c, filepath.Join(t.TempDir(), "config.json"))
+	status := httptest.NewRecorder()
+	h.ServeHTTP(status, httptest.NewRequest("GET", "/api/status?failures_only=true", nil))
+	var s Status
+	if err := json.Unmarshal(status.Body.Bytes(), &s); err != nil {
+		t.Fatal(err)
+	}
+	if status.Code != 200 || s.EventCount != 2 || len(s.Events) != 2 || s.Failures != 7 {
+		t.Fatalf("wrong filtered status: %+v", s)
+	}
+	first := httptest.NewRecorder()
+	h.ServeHTTP(first, httptest.NewRequest("GET", "/api/events?failures_only=true&limit=1", nil))
+	var p EventPage
+	if err := json.Unmarshal(first.Body.Bytes(), &p); err != nil {
+		t.Fatal(err)
+	}
+	if first.Code != 200 || p.Total != 2 || len(p.Events) != 1 || !p.HasMore || p.Events[0].Level != "warning" {
+		t.Fatal(p)
+	}
+	second := httptest.NewRecorder()
+	h.ServeHTTP(second, httptest.NewRequest("GET", fmt.Sprintf("/api/events?failures_only=true&limit=1&before=%d", p.NextBefore), nil))
+	if err := json.Unmarshal(second.Body.Bytes(), &p); err != nil {
+		t.Fatal(err)
+	}
+	if p.Total != 2 || p.HasMore || len(p.Events) != 1 || p.Events[0].Level != "error" {
+		t.Fatal(p)
+	}
+	if all := c.Status(); all.EventCount != 152 || len(all.Events) != 100 {
+		t.Fatal("filter mutated history", all.EventCount, len(all.Events))
+	}
+	for _, route := range []string{"/api/status", "/api/events"} {
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, httptest.NewRequest("GET", route+"?failures_only=invalid", nil))
+		if w.Code != 400 {
+			t.Fatal("invalid filter accepted", route, w.Code)
+		}
+	}
+}
+
 func TestHistoryRetainsMoreThan100RecentEventsAndPagesWithoutDuplicates(t *testing.T) {
 	c := NewController(nil)
 	defer c.Stop()

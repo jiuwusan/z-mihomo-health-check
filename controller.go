@@ -120,6 +120,9 @@ func (c *Controller) Stop() {
 	c.configureLocked(cfg)
 }
 func (c *Controller) Status() Status {
+	return c.filteredStatus(false)
+}
+func (c *Controller) filteredStatus(failuresOnly bool) Status {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	pruneEvents(&c.state, time.Now())
@@ -135,7 +138,8 @@ func (c *Controller) Status() Status {
 		}
 	}
 	s.Results = append([]GroupResult{}, s.Results...)
-	s.Events = append([]Event{}, s.Events[:min(len(s.Events), eventPageSize)]...)
+	page := historyPage(&c.state, 0, eventPageSize, failuresOnly)
+	s.Events, s.EventCount = page.Events, page.Total
 	return s
 }
 func (c *Controller) Config() Config { c.mu.Lock(); defer c.mu.Unlock(); return c.cfg }
