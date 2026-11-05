@@ -1,6 +1,7 @@
 'use strict';
 
 const $ = id => document.getElementById(id);
+const failureFilterStorageKey = 'mihomo-health.failures-only';
 let loaded = false;
 let selectedInstance = '';
 let instanceList = [];
@@ -16,6 +17,8 @@ let historyCursor = 0;
 let nextHistoryCursor = 0;
 let historyID = '';
 let failuresOnly = false;
+try {failuresOnly = localStorage.getItem(failureFilterStorageKey) === 'true';} catch {}
+$('failures-only').checked = failuresOnly;
 let historyRequest = 0;
 let historyTotal = 0;
 let displayedEvents = [];
@@ -280,6 +283,7 @@ async function refreshPanel(signal) {
 }
 $('failures-only').addEventListener('change', async () => {
   failuresOnly = $('failures-only').checked;
+  try {localStorage.setItem(failureFilterStorageKey,String(failuresOnly));} catch {}
   historyCursor = 0; nextHistoryCursor = 0; ++historyRequest; ++panelRequest;
   displayedEvents = []; historyTotal = 0; eventSignature = '';
   renderHistoryEvents(); $('older-events').disabled = true; $('latest-events').disabled = true;

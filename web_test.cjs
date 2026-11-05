@@ -10,7 +10,7 @@ function appContext(options) {
 
 // Minimal DOM surface; the real app.js renders the response into these nodes.
 class Element {
-  constructor() {this.children = []; this.textContent = ''; this.value=''; this.listeners={}; this.classList = {toggle() {}};}
+  constructor() {this.children = []; this.textContent = ''; this.value=''; this.checked=false; this.listeners={}; this.classList = {toggle() {}};}
   addEventListener(name,fn) {this.listeners[name]=fn;}
   get options() {return this.children;}
   add(node) {this.children.push(node);}
@@ -22,6 +22,36 @@ class Element {
   close() {this.open=false;}
   scrollIntoView() {this.scrolled=true;}
 }
+
+test('failure filter persists both states and restores before the first status request', async () => {
+  const saved=new Map();
+  const storage={getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)};
+  const start=()=>{
+    const nodes=new Map(),requests=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+    const context=appContext({localStorage:storage,document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},
+      fetch(url){if(url==='/api/instances')return new Promise(()=>{});requests.push(url);return Promise.resolve({ok:true,json:async()=>({phase:'healthy',results:[],events:[],event_count:0,history_id:'h'})});}});
+    vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+    vm.runInContext("selectedInstance='default'",context);
+    return {context,get,requests};
+  };
+  const first=start();assert.equal(first.get('failures-only').checked,false);
+  first.get('failures-only').checked=true;await first.get('failures-only').listeners.change();
+  const enabled=start();assert.equal(enabled.get('failures-only').checked,true);
+  await enabled.context.refreshPanel();assert.equal(enabled.requests[0],'/api/instances/default/status?failures_only=true');
+  enabled.get('failures-only').checked=false;await enabled.get('failures-only').listeners.change();
+  const disabled=start();assert.equal(disabled.get('failures-only').checked,false);
+  await disabled.context.refreshPanel();assert.equal(disabled.requests[0],'/api/instances/default/status');
+});
+
+test('blocked browser storage does not prevent failure filtering', async () => {
+  const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
+  const context=appContext({localStorage:{getItem(){throw new Error('blocked');},setItem(){throw new Error('blocked');}},
+    document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  assert.equal(get('failures-only').checked,false);
+  get('failures-only').checked=true;await get('failures-only').listeners.change();
+  assert.match(get('history-summary').textContent,/仅失败/);
+});
 
 test('failure filter requests matching latest and older pages and restores all events', async () => {
   const nodes=new Map(),requests=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
