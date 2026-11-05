@@ -301,6 +301,9 @@ func (c *Controller) Check(parent context.Context) {
 	if !trigger {
 		return
 	}
+	if c.recoverCurrentFallback(ctx, rev, client, group, site) {
+		return
+	}
 	if !c.update(rev, func(s *Status) {
 		s.Phase = "testing"
 		addEvent(s, "info", "达到失败阈值，正在执行整组 delay 测试")
@@ -312,12 +315,16 @@ func (c *Controller) Check(parent context.Context) {
 		c.fail(rev, err)
 		return
 	}
-	// Re-read the active order after testing, in case the subscription was reloaded.
-	group, err = client.Group(ctx)
+	// Do not apply old probe results over a manual selection or reloaded order.
+	latestGroup, err := client.Group(ctx)
 	if err != nil {
 		c.fail(rev, err)
 		return
 	}
+	if c.failureSelectionChanged(rev, group, latestGroup) {
+		return
+	}
+	group = latestGroup
 	results := make([]GroupResult, 0, len(group.All))
 	checkedAt := time.Now()
 	for _, name := range group.All {

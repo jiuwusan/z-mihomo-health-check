@@ -39,6 +39,9 @@ func (c *Controller) recordSiteOutcome(ctx context.Context, rev uint64, site str
 func (c *Controller) reviewSite(ctx context.Context, cfg Config, rev uint64, site string, token uint64) {
 	client := NewMihomo(cfg)
 	current := func() bool { return ctx.Err() == nil && c.pool.ReviewCurrent(site, token) }
+	if !current() {
+		return
+	}
 	controls := c.pool.Pick(site, 2)
 	c.siteUpdate(ctx, rev, func(s *Status) {
 		addEvent(s, "info", "站点连续失败达到 20 次，开始复核；站点："+site)

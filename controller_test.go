@@ -58,6 +58,8 @@ func newFake(t *testing.T) (*fakeMihomo, *httptest.Server) {
 			}
 			f.current = body.Name
 			w.WriteHeader(204)
+		case strings.HasPrefix(r.URL.Path, "/proxies/") && !strings.HasSuffix(r.URL.Path, "/delay") && r.URL.Path != "/proxies/🚀 节点选择":
+			json.NewEncoder(w).Encode(map[string]any{"type": "Shadowsocks"})
 		case strings.HasSuffix(r.URL.Path, "/delay"):
 			f.probes++
 			if f.block != nil {
