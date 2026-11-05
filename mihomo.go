@@ -20,6 +20,7 @@ type ProxyGroup struct {
 	All            []string `json:"all"`
 	TestURL        string   `json:"testUrl,omitempty"`
 	ExpectedStatus string   `json:"expectedStatus,omitempty"`
+	Fixed          string   `json:"fixed,omitempty"`
 }
 type APIError struct {
 	Code    int
@@ -128,10 +129,15 @@ func (m *Mihomo) Probe(ctx context.Context, site string) (int, error) {
 	return m.ProbeGroup(ctx, m.cfg.Group, site)
 }
 func (m *Mihomo) ProbeGroup(ctx context.Context, name, site string) (int, error) {
+	return m.ProbeGroupExpected(ctx, name, site, "200-299")
+}
+func (m *Mihomo) ProbeGroupExpected(ctx context.Context, name, site, expected string) (int, error) {
 	var data struct {
 		Delay *int `json:"delay"`
 	}
-	err := m.request(ctx, "GET", "/proxies/"+url.PathEscape(name)+"/delay", m.query(site), nil, &data)
+	q := m.query(site)
+	q.Set("expected", expected)
+	err := m.request(ctx, "GET", "/proxies/"+url.PathEscape(name)+"/delay", q, nil, &data)
 	if err != nil {
 		var apiErr *APIError
 		if errors.As(err, &apiErr) && (apiErr.Code == 503 || apiErr.Code == 504) {
@@ -159,5 +165,8 @@ func (m *Mihomo) GroupDelays(ctx context.Context, name, site, expected string) (
 	return data, err
 }
 func (m *Mihomo) Select(ctx context.Context, name string) error {
-	return m.request(ctx, "PUT", "/proxies/"+url.PathEscape(m.cfg.Group), nil, map[string]string{"name": name}, nil)
+	return m.SelectGroup(ctx, m.cfg.Group, name)
+}
+func (m *Mihomo) SelectGroup(ctx context.Context, group, name string) error {
+	return m.request(ctx, "PUT", "/proxies/"+url.PathEscape(group), nil, map[string]string{"name": name}, nil)
 }

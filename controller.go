@@ -301,7 +301,8 @@ func (c *Controller) Check(parent context.Context) {
 	if !trigger {
 		return
 	}
-	if c.recoverCurrentFallback(ctx, rev, client, group, site) {
+	var innerGuard ProxyGroup
+	if c.recoverCurrentGroup(ctx, rev, client, group, site, &innerGuard) {
 		return
 	}
 	if !c.update(rev, func(s *Status) {
@@ -323,6 +324,11 @@ func (c *Controller) Check(parent context.Context) {
 	}
 	if c.failureSelectionChanged(rev, group, latestGroup) {
 		return
+	}
+	if innerGuard.Type != "" {
+		if _, ok := c.checkedInnerGroup(ctx, rev, client, group, innerGuard); !ok {
+			return
+		}
 	}
 	group = latestGroup
 	results := make([]GroupResult, 0, len(group.All))
@@ -367,6 +373,11 @@ func (c *Controller) Check(parent context.Context) {
 		}
 		if !c.update(rev, func(s *Status) { s.Phase = "switching"; s.Message = "正在按原始顺序选择国家分组" }) {
 			return
+		}
+		if innerGuard.Type != "" {
+			if _, ok := c.checkedInnerGroup(ctx, rev, client, group, innerGuard); !ok {
+				return
+			}
 		}
 		err = client.Select(ctx, result.Name)
 		// A lost HTTP response may still mean the switch was applied.

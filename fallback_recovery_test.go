@@ -13,6 +13,7 @@ import (
 
 type fallbackAPI struct {
 	failedSite, verifySite                    string
+	probeTimeout, recheckTimeout              string
 	order                                     []string
 	manualMain                                bool
 	mu                                        sync.Mutex
@@ -43,6 +44,7 @@ func fallbackServer(t *testing.T) (*fallbackAPI, *httptest.Server) {
 		case "/proxies/🚀 节点选择":
 			json.NewEncoder(w).Encode(map[string]any{"type": "Selector", "all": f.order, "now": f.current})
 		case "/proxies/🚀 节点选择/delay":
+			f.probeTimeout = r.URL.Query().Get("timeout")
 			f.trace = append(f.trace, "probe")
 			f.failedSite = r.URL.Query().Get("url")
 			w.WriteHeader(504)
@@ -54,7 +56,7 @@ func fallbackServer(t *testing.T) (*fallbackAPI, *httptest.Server) {
 			json.NewEncoder(w).Encode(map[string]any{"type": f.kind, "all": []string{"A1", "A2"}, "now": "A1", "testUrl": f.healthURL, "expectedStatus": f.expected})
 		case "/group/A/delay":
 			f.trace = append(f.trace, "inner")
-			if r.URL.Query().Get("url") != f.healthURL || r.URL.Query().Get("expected") != f.expected || r.URL.Query().Get("timeout") != "4000" {
+			if r.URL.Query().Get("url") != f.healthURL || r.URL.Query().Get("expected") != f.expected || r.URL.Query().Get("timeout") != "5000" {
 				t.Errorf("health query differs: %v", r.URL.Query())
 			}
 			if f.block != nil {
@@ -77,6 +79,7 @@ func fallbackServer(t *testing.T) (*fallbackAPI, *httptest.Server) {
 			}
 			json.NewEncoder(w).Encode(map[string]int{"A2": 100})
 		case "/proxies/A/delay":
+			f.recheckTimeout = r.URL.Query().Get("timeout")
 			f.trace = append(f.trace, "verify")
 			f.verifySite = r.URL.Query().Get("url")
 			if f.verifySite == "" || f.verifySite == f.failedSite || r.URL.Query().Get("expected") != "200-299" {
@@ -186,7 +189,7 @@ func TestFallbackSelfRecoveryContinuesMainOnlyAfterFailedRecheck(t *testing.T) {
 }
 
 func TestFallbackSelfRecoverySkipsUnsupportedOrMissingURL(t *testing.T) {
-	for _, kind := range []string{"Selector", "missing_url"} {
+	for _, kind := range []string{"LoadBalance", "missing_url"} {
 		t.Run(kind, func(t *testing.T) {
 			f, api := fallbackServer(t)
 			if kind == "missing_url" {

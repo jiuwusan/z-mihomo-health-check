@@ -8,9 +8,11 @@ import (
 	"time"
 )
 
+const countryHealthTimeoutSeconds = 5
+
 // Returns true when this cycle recovered, was cancelled, or must not continue
 // with the old selection. False resumes the existing main-group failover.
-func (c *Controller) recoverCurrentFallback(ctx context.Context, rev uint64, client *Mihomo, group ProxyGroup, site string) bool {
+func (c *Controller) recoverCurrentGroup(ctx context.Context, rev uint64, client *Mihomo, group ProxyGroup, site string, guard *ProxyGroup) bool {
 	if ctx.Err() != nil {
 		return true
 	}
@@ -19,38 +21,79 @@ func (c *Controller) recoverCurrentFallback(ctx context.Context, rev uint64, cli
 		c.fail(rev, err)
 		return true
 	}
-	if info.Type != "Fallback" {
+	if info.Type != "Fallback" && info.Type != "Selector" && info.Type != "URLTest" {
 		return false
 	}
-	healthURL, parseErr := url.Parse(info.TestURL)
-	if parseErr != nil || healthURL.Host == "" || (healthURL.Scheme != "http" && healthURL.Scheme != "https") || len(info.All) == 0 {
+	// Keep this baseline through the subsequent main-group delay and selection.
+	*guard = info
+	if info.Type != "Selector" && info.Fixed != "" {
 		c.update(rev, func(s *Status) {
-			addEvent(s, "warning", "当前 fallback 缺少有效健康检查地址或成员，继续主分组探查："+group.Now)
+			addEvent(s, "info", "当前自动分组存在手动固定，不解除固定，继续主分组流程："+info.Name)
 		})
 		return false
 	}
-	if !c.sameFallbackSelection(ctx, rev, client, group) {
+	healthSite, expected := info.TestURL, info.ExpectedStatus
+	if info.Type == "Selector" {
+		if expected == "" {
+			expected = "200-299"
+		}
+		if healthSite == "" {
+			choices := c.pool.Pick(site, 1)
+			if len(choices) == 0 {
+				return false
+			}
+			healthSite = choices[0]
+		}
+	}
+	healthURL, parseErr := url.Parse(healthSite)
+	if parseErr != nil || healthURL.Host == "" || (healthURL.Scheme != "http" && healthURL.Scheme != "https") || len(info.All) == 0 {
+		c.update(rev, func(s *Status) {
+			addEvent(s, "warning", "当前分组缺少有效健康检查地址或成员，继续主分组探查："+group.Now)
+		})
+		return false
+	}
+	if _, ok := c.checkedInnerGroup(ctx, rev, client, group, info); !ok {
 		return true
 	}
 	if !c.update(rev, func(s *Status) {
 		s.Phase = "testing"
-		addEvent(s, "info", "达到失败阈值，先按当前 fallback 健康检查配置探查子节点："+group.Now)
+		addEvent(s, "info", "达到失败阈值，先按当前分组健康检查配置探查直接成员："+group.Now)
 	}) {
 		return true
 	}
-	_, err = client.GroupDelays(ctx, group.Now, info.TestURL, info.ExpectedStatus)
+	healthConfig := client.cfg
+	healthConfig.TimeoutSeconds = countryHealthTimeoutSeconds
+	healthClient := NewMihomo(healthConfig)
+	if info.Type == "Fallback" {
+		_, err = healthClient.GroupDelays(ctx, group.Now, healthSite, expected)
+	} else {
+		var delays map[string]int
+		delays, err = healthClient.MemberDelays(ctx, info.All, healthSite, expected)
+		if err == nil {
+			if info.Type == "Selector" {
+				var proceed bool
+				info, proceed = c.repairSelector(ctx, rev, client, group, info, delays)
+				*guard = info
+				if !proceed {
+					return true
+				}
+			} else if !c.awaitURLTestChoice(ctx, rev, client, group, info, delays) {
+				return true
+			}
+		}
+	}
 	if err != nil {
 		if ctx.Err() != nil {
 			return true
 		}
 		var apiErr *APIError
 		// Mihomo reports 504 when all direct members time out. Still recheck A.
-		if !errors.As(err, &apiErr) || apiErr.Code != 504 {
+		if info.Type != "Fallback" || !errors.As(err, &apiErr) || apiErr.Code != 504 {
 			c.fail(rev, err)
 			return true
 		}
 	}
-	if !c.sameFallbackSelection(ctx, rev, client, group) {
+	if _, ok := c.checkedInnerGroup(ctx, rev, client, group, info); !ok {
 		return true
 	}
 	choices := c.pool.Pick(site, 1)
@@ -69,13 +112,13 @@ func (c *Controller) recoverCurrentFallback(ctx context.Context, rev uint64, cli
 		c.fail(rev, err)
 		return true
 	}
-	if !c.sameFallbackSelection(ctx, rev, client, group) {
+	if _, ok := c.checkedInnerGroup(ctx, rev, client, group, info); !ok {
 		return true
 	}
 	c.recordGroupProbe(rev, group.All, group.Now, delay, err)
 	if err != nil {
 		c.update(rev, func(s *Status) {
-			addEvent(s, "warning", "当前 fallback 出口复验仍失败，继续主分组探查："+group.Now+"；站点："+recheckSite)
+			addEvent(s, "warning", "当前分组出口复验仍失败，继续主分组探查："+group.Now+"；站点："+recheckSite)
 		})
 		return false
 	}
@@ -87,7 +130,7 @@ func (c *Controller) recoverCurrentFallback(ctx context.Context, rev uint64, cli
 		now := time.Now()
 		s.LastSite = recheckSite
 		s.LastCheck = &now
-		addEvent(s, "success", "当前 fallback 子节点探查后出口复验成功，保留分组："+group.Now+"；站点："+recheckSite)
+		addEvent(s, "success", "当前分组直接成员探查后出口复验成功，保留分组："+group.Now+"；站点："+recheckSite)
 	}) {
 		c.recordSiteOutcome(ctx, rev, recheckSite, true)
 	}
