@@ -79,6 +79,11 @@ func fallbackServer(t *testing.T) (*fallbackAPI, *httptest.Server) {
 			}
 			json.NewEncoder(w).Encode(map[string]int{"A2": 100})
 		case "/proxies/A/delay":
+			// These tests exercise the recovery flow after baseline confirmation.
+			if site := r.URL.Query().Get("url"); site == f.healthURL || site == "http://www.gstatic.com/generate_204" {
+				w.WriteHeader(503)
+				return
+			}
 			f.recheckTimeout = r.URL.Query().Get("timeout")
 			f.trace = append(f.trace, "verify")
 			f.verifySite = r.URL.Query().Get("url")

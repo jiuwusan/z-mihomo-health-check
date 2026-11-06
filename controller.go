@@ -301,6 +301,9 @@ func (c *Controller) Check(parent context.Context) {
 	if !trigger {
 		return
 	}
+	if c.recheckBaselineExit(ctx, rev, client, group) {
+		return
+	}
 	var innerGuard ProxyGroup
 	if c.recoverCurrentGroup(ctx, rev, client, group, site, &innerGuard) {
 		return

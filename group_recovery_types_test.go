@@ -68,6 +68,11 @@ func typedGroupServer(t *testing.T, kind string) (*typedGroupAPI, *httptest.Serv
 			json.NewEncoder(w).Encode(map[string]any{"type": f.kind, "now": f.selected, "fixed": f.fixed, "all": []string{"A1", "A2", "A3"}, "testUrl": f.healthURL, "expectedStatus": f.expected})
 			return
 		case "/proxies/A/delay":
+			// Keep baseline failures distinct from the random recheck after repair.
+			if site := r.URL.Query().Get("url"); site == f.healthURL || site == "http://www.gstatic.com/generate_204" {
+				w.WriteHeader(503)
+				return
+			}
 			f.recheckTimeout = r.URL.Query().Get("timeout")
 			f.recheck = r.URL.Query().Get("url")
 			if f.recheck == f.original || f.recheck == "" {
