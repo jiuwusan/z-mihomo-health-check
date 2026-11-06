@@ -223,3 +223,11 @@ docker compose up -d
 `latest` 镜像已通过 GitHub Actions 成功发布，支持 `linux/amd64`、`linux/arm64`。后续版本的构建与推送结果以 GitHub Actions 运行记录为准。Dockerfile 用于 CI 构建，部署 Compose 不包含 `build` 配置。
 
 许可证：[Apache-2.0](./LICENSE)，沿用原笔记仓库的许可证。
+
+## 架构与开发规范
+
+职责与包依赖见 [项目架构](docs/architecture.md)，开发、测试、安全、部署/备份和交付要求见 [开发规范](docs/development.md)。统一质量检查：
+
+```sh
+go run ./tools/check
+```

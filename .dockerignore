@@ -2,7 +2,7 @@
 !go.mod
 !*.go
 !sites.txt
-!web/
-!web/**
+!internal/
+!internal/**
 !Dockerfile
 !LICENSE

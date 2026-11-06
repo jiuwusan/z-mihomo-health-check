@@ -46,9 +46,13 @@ jobs:
         with:
           node-version: 22
 
+      - name: Architecture, formatting and development standards
+        env:
+          GOMAXPROCS: '4'
+        run: go run ./tools/check
       - name: Check Web panel
         run: |
-          node --check web/app.js
+          node --check internal/httpapi/web/app.js
           node --test web_test.cjs
 
   publish:

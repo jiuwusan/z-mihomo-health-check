@@ -14,6 +14,9 @@ import (
 	"syscall"
 	"time"
 	_ "time/tzdata"
+
+	"z-mihomo-health-check/internal/app"
+	"z-mihomo-health-check/internal/httpapi"
 )
 
 //go:embed sites.txt
@@ -60,14 +63,14 @@ func main() {
 	if len(sites) == 0 {
 		log.Fatal("站点池为空")
 	}
-	manager, err := NewInstanceManager(dataDir, sites)
+	manager, err := app.NewInstanceManager(dataDir, sites)
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 	manager.Start()
-	srv := &http.Server{Addr: address, Handler: NewInstancesServer(manager), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 * 1024}
+	srv := &http.Server{Addr: address, Handler: httpapi.NewInstancesServer(manager), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 * 1024}
 	shutdownDone := make(chan struct{})
 	go func() {
 		defer close(shutdownDone)

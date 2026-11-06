@@ -30,7 +30,7 @@ test('node metadata syncs on instance load and manual refresh without recurring 
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},Option:class{constructor(text,value){this.textContent=text;this.value=value;}},fetch(url){
     if(url==='/api/instances')return new Promise(()=>{});requests.push(url);return Promise.resolve({ok:true,json:async()=>url.endsWith('/config')?cfg:snapshot});
   }});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("instanceList=[{id:'a',name:'A'}]",context);
   await context.switchInstance('a',true);
   assert.equal(requests.filter(u=>u.endsWith('/node-info')).length,1);
@@ -56,7 +56,7 @@ test('switching instances aborts old node metadata and ignores its late response
     if(url==='/api/instances/a/node-info'){oldSignal=options.signal;return new Promise(resolve=>resolveOld=resolve);}
     return Promise.resolve({ok:true,json:async()=>url.endsWith('/config')?cfg:snapshot(url.includes('/b/')?'B':'A')});
   }});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("instanceList=[{id:'a',name:'A'},{id:'b',name:'B'}]",context);
   await context.switchInstance('a',true);await context.switchInstance('b',true);
   assert.equal(oldSignal.aborted,true);
@@ -68,7 +68,7 @@ test('switching instances aborts old node metadata and ignores its late response
 test('late node metadata cannot roll back an already rendered newer status', async () => {
   const nodes=new Map(),pending=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch(url){if(url==='/api/instances')return new Promise(()=>{});return new Promise(resolve=>pending.push(resolve));}});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("selectedInstance='a';loaded=true",context);
   const sync=context.refreshNodeInfo(),poll=context.refreshPanel();
   const response=(version,current,delay)=>({ok:true,json:async()=>({state_version:version,phase:'healthy',current,delay_ms:delay,events:[],event_count:0,history_id:'h',results:[{name:current,available:true,delay_ms:delay,checked_at:new Date().toISOString()}]})});
@@ -80,7 +80,7 @@ test('late node metadata cannot roll back an already rendered newer status', asy
 test('a server restart accepts its new status epoch and rejects metadata from the old process', async () => {
   const nodes=new Map();let resolveSync;const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:url=>url==='/api/instances'?new Promise(()=>{}):new Promise(resolve=>resolveSync=resolve)});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("selectedInstance='a';loaded=true",context);
   const status=(epoch,version,current)=>({state_epoch:epoch,state_version:version,phase:'healthy',current,results:[],events:[]});
   context.renderStatus(status('old',50,'US'));
@@ -98,7 +98,7 @@ test('failure filter persists both states and restores before the first status r
     const nodes=new Map(),requests=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
     const context=appContext({localStorage:storage,document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},
       fetch(url){if(url==='/api/instances')return new Promise(()=>{});requests.push(url);return Promise.resolve({ok:true,json:async()=>({phase:'healthy',results:[],events:[],event_count:0,history_id:'h'})});}});
-    vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+    vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
     vm.runInContext("selectedInstance='default'",context);
     return {context,get,requests};
   };
@@ -115,7 +115,7 @@ test('blocked browser storage does not prevent failure filtering', async () => {
   const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({localStorage:{getItem(){throw new Error('blocked');},setItem(){throw new Error('blocked');}},
     document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   assert.equal(get('failures-only').checked,false);
   get('failures-only').checked=true;await get('failures-only').listeners.change();
   assert.match(get('history-summary').textContent,/仅失败/);
@@ -132,7 +132,7 @@ test('failure filter requests matching latest and older pages and restores all e
       const body=url.includes('/status')?{phase:'healthy',failures:0,results:[],history_id:'h',event_count:filtered?101:200,events:[{id:150,time:recent,level:filtered?'warning':'success',message:filtered?'failure':'healthy'}]}:{history_id:'h',total:101,has_more:false,next_before:1,events:[{id:1,time:recent,level:'error',message:'older failure'}]};
       return Promise.resolve({ok:true,json:async()=>body});
     }});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("selectedInstance='default'",context);
   await context.refreshPanel();
   get('failures-only').checked=true;await get('failures-only').listeners.change();
@@ -150,7 +150,7 @@ test('a late unfiltered response cannot overwrite failure-only history', async (
   const nodes=new Map(),pending=[];const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},
     fetch(url){if(url==='/api/instances')return new Promise(()=>{});return new Promise(resolve=>pending.push({url,resolve}));}});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("selectedInstance='default'",context);
   const old=context.refreshPanel();get('failures-only').checked=true;const filtered=get('failures-only').listeners.change();
   const response=(level,message)=>({ok:true,json:async()=>({phase:'healthy',failures:0,results:[],history_id:'h',event_count:1,events:[{id:1,time:new Date().toISOString(),level,message}]})});
@@ -167,7 +167,7 @@ test('global site isolation displays zero active sites and shared totals', () =>
   const nodes = new Map();
   const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   context.renderStatus({phase:'waiting',running:true,failures:0,pool_size:0,pool_total:470,pool_quarantined:470,results:[]});
   assert.equal(String(get('pool-size').textContent),'0');
   assert.match(get('pool-note').textContent,/总计 470.*隔离 470/);
@@ -192,7 +192,7 @@ test('a delayed pre-save status cannot replace newer status and history', async 
       return new Promise(resolve => pending.push(resolve));
     }
   });
-  vm.runInContext(fs.readFileSync(path.join(__dirname, 'web/app.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, 'internal/httpapi/web/app.js'), 'utf8'), context);
   vm.runInContext("selectedInstance='default'",context);
   const beforeSave = context.refreshPanel();
   const afterSave = context.refreshPanel();
@@ -220,7 +220,7 @@ test('a late configuration from another instance cannot overwrite the selected i
       if(url.endsWith('/status'))return Promise.resolve({ok:true,json:async()=>({phase:'stopped',events:[],results:[],history_id:url})});
       return new Promise(resolve=>pending.set(url,resolve));
     }});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("instanceList=[{id:'a',name:'A'},{id:'b',name:'B'}]",context);
   const first=context.switchInstance('a',true);
   const second=context.switchInstance('b',true);
@@ -237,7 +237,7 @@ test('recovery controls serialize configuration and display progress', () => {
   const get = id => {if (!nodes.has(id)) nodes.set(id, new Element()); return nodes.get(id);};
   const context = appContext({document:{getElementById:get, createElement:() => new Element()},
     AbortSignal, Date, setTimeout() {}, fetch:() => new Promise(() => {})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   for (const [id,value] of Object.entries({'api-url':'http://mihomo:9090',secret:'','target-group':'🚀 节点选择',interval:'5',threshold:'1',timeout:'4','recovery-interval':'60','recovery-threshold':'3'})) get(id).value=value;
   get('recovery-enabled').checked=true;
   get('recovery-initial-delay').value='300';
@@ -259,7 +259,7 @@ test('recovery controls serialize configuration and display progress', () => {
 test('the latest probe URL is visible and only HTTP links are clickable', () => {
   const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   context.renderStatus({phase:'warning',results:[],last_site:'https://www.example.com/probe'});
   assert.equal(get('last-site').textContent,'https://www.example.com/probe');
   assert.equal(get('last-site').href,'https://www.example.com/probe');
@@ -285,7 +285,7 @@ test('late group, save and history responses cannot cross instance boundaries', 
         if(url.endsWith('/status'))return Promise.resolve({ok:true,json:async()=>({phase:'stopped',current:id,results:[],history_id:`history-${id}`,event_count:1,events:[{id:1,time:new Date().toISOString(),message:`event-${id}`} ]})});
         throw Error('unexpected '+url);
       }});
-    vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+    vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
     vm.runInContext("instanceList=[{id:'a',name:'A'},{id:'b',name:'B'}]",context);
     await context.switchInstance('a',true);
     let pending;
@@ -308,7 +308,7 @@ test('webhook fields load privately, serialize edits, and clear on instance swit
   const nodes=new Map();
   const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},confirm:()=>true,Option:class {constructor(text,value){this.textContent=text;this.value=value;}},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   context.applyConfig({api_url:'http://mihomo:9090',group:'test',dingtalk_webhook_set:true,feishu_webhook_set:false});
   assert.equal(get('dingtalk-webhook-state').textContent,'已保存 · 不回显');
   assert.equal(get('feishu-webhook-state').textContent,'未设置');
@@ -328,7 +328,7 @@ test('webhook fields load privately, serialize edits, and clear on instance swit
 test('group search retains original priority and can locate current selection', () => {
   const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   context.renderStatus({phase:'healthy',current:'日本',results:[{name:'美国',available:false},{name:'日本',available:true,delay_ms:90},{name:'新加坡',available:true,delay_ms:150}]});
   assert.match(get('group-summary').textContent,/2.*3/);
   get('group-search').value='日本';get('group-search').listeners.input();
@@ -347,7 +347,7 @@ test('group search retains original priority and can locate current selection', 
 test('configuration dialog preserves an unsaved draft when closed and reopened', () => {
   const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},fetch:()=>new Promise(()=>{})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext('loaded=true',context);
   get('open-settings').listeners.click();
   assert.equal(get('settings-dialog').open,true);
@@ -363,7 +363,7 @@ test('instance configuration load errors remain visible outside closed dialogs',
   const nodes=new Map();const get=id=>{if(!nodes.has(id))nodes.set(id,new Element());return nodes.get(id);};
   const context=appContext({document:{getElementById:get,createElement:()=>new Element()},AbortSignal,Date,setTimeout(){},confirm:()=>true,
     fetch:url=>url==='/api/instances'?new Promise(()=>{}):Promise.resolve({ok:false,json:async()=>({error:'无法读取实例配置'})})});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   await context.switchInstance('broken',true);
   assert.match(get('panel-message').textContent,/无法读取实例配置/);
 });
@@ -378,7 +378,7 @@ function pollingHarness() {
     Option:class {constructor(text,value){this.textContent=text;this.value=value;}},confirm:()=>true,
     setTimeout(fn,ms){const id=++timerID;timers.set(id,{fn,ms});return id;},clearTimeout(id){timers.delete(id);},
     fetch(url,options){if(url==='/api/instances')return new Promise(()=>{});requests.push({url,options});return handle(url,options);}});
-  vm.runInContext(fs.readFileSync(path.join(__dirname,'web/app.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'internal/httpapi/web/app.js'),'utf8'),context);
   vm.runInContext("selectedInstance='a';loaded=true",context);
   return {context,get,timers,requests,listeners,setHandle(fn){handle=fn;},async tick(){assert.equal(timers.size,1);const [id,timer]=[...timers][0];timers.delete(id);await timer.fn();}};
 }

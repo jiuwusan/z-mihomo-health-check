@@ -4,7 +4,7 @@ ARG TARGETARCH
 WORKDIR /src
 RUN apk add --no-cache ca-certificates
 COPY go.mod *.go sites.txt ./
-COPY web ./web
+COPY internal ./internal
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -trimpath -ldflags="-s -w" -o /out/mihomo-health . \
     && mkdir -p /out/data && chown 65532:65532 /out/data
 

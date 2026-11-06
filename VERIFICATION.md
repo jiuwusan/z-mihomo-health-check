@@ -48,7 +48,7 @@
 - `go test -count=3 ./...`：35 个测试连续运行三轮通过。
 - `go test -cover ./...`：通过，语句覆盖率 77.4%。
 - `go vet ./...`：通过。
-- `node --check web/app.js`：通过。
+- `node --check internal/httpapi/web/app.js`：通过。
 - `node --test web_test.cjs`：通过，验证旧状态响应不会覆盖较新的状态和历史。
 - Linux amd64 与 arm64：`CGO_ENABLED=0 go build -trimpath` 均构建通过。
 - `docker-compose.yml` 通过 YAML 解析与官方 Compose JSON Schema（draft 2020-12）校验。
