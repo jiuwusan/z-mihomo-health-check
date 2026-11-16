@@ -49,5 +49,5 @@ func main() {
 	run("go", "vet", "-p", "2", "./...")
 	run("go", "test", "-p", "2", "-timeout", "120s", "./...")
 	run("go", "build", "-p", "2", "./...")
-	run("node", "--test", "web_test.cjs")
+	run("node", "--test", "web_test.cjs", "install_test.cjs")
 }

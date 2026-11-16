@@ -136,6 +136,9 @@ func panelAssets() http.Handler {
 			http.NotFound(w, r)
 			return
 		}
+		if r.URL.Path == "/manifest.webmanifest" {
+			w.Header().Set("Content-Type", "application/manifest+json")
+		}
 		files.ServeHTTP(w, r)
 	})
 }

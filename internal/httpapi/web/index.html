@@ -5,13 +5,18 @@
   <title>Mihomo Health · 出口健康控制台</title>
   <meta name="color-scheme" content="light"><meta name="theme-color" content="#f4f7f5">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mihomo Health">
+  <link rel="stylesheet" href="./install.css"><script src="./install.js" defer></script>
   <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
 </head>
 <body>
   <div class="shell">
     <header class="topbar">
       <a class="brand" href="/"><span class="brand-icon">m<span>•</span></span><span>mihomo<span class="brand-light"> / health</span></span></a>
-      <div class="toolbar"><div class="instance-picker"><label for="instance-select">当前实例</label><select id="instance-select" disabled><option>正在加载实例</option></select></div><button id="open-instances" class="secondary-button" type="button" aria-haspopup="dialog">管理实例</button><button id="open-settings" class="primary-button" type="button" aria-haspopup="dialog" disabled>探查配置 ↗</button></div>
+      <div class="toolbar"><div class="instance-picker"><label for="instance-select">当前实例</label><select id="instance-select" disabled><option>正在加载实例</option></select></div><button id="install-button" class="install-button" type="button" aria-haspopup="dialog" hidden>添加到桌面</button><button id="open-instances" class="secondary-button" type="button" aria-haspopup="dialog">管理实例</button><button id="open-settings" class="primary-button" type="button" aria-haspopup="dialog" disabled>探查配置 ↗</button></div>
     </header>
     <main>
       <div class="page-heading"><div><p class="eyebrow">NETWORK OPERATIONS</p><h1>出口健康控制台</h1></div><div class="heading-status"><span id="config-summary" class="quiet">正在加载配置</span><div id="monitor-badge" class="badge">正在连接面板</div></div></div>
@@ -71,6 +76,10 @@
   <dialog id="instances-dialog" class="modal instances-modal" aria-labelledby="instances-title">
     <div class="modal-header"><div><h2 id="instances-title">实例管理</h2><p>每个实例独立探查与记录</p></div><button id="close-instances" class="secondary-button" type="button" aria-label="关闭实例管理">关闭 ×</button></div>
     <div class="modal-body"><div class="instance-heading"><h3>当前实例</h3><span id="instance-count" class="quiet">正在加载</span></div><label for="instance-name">实例名称</label><input id="instance-name" maxlength="80" placeholder="例如：家里、办公室" autocomplete="off"><p class="field-hint">新增时使用此名称；重命名和删除操作作用于顶部选中的实例。</p><div class="instance-actions"><button id="add-instance" class="secondary-button" type="button" disabled>新增实例</button><button id="rename-instance" class="secondary-button" type="button" disabled>重命名</button><button id="delete-instance" class="secondary-button danger-button" type="button" disabled>删除实例</button></div><p id="instance-message" class="form-message" role="status"></p></div>
+  </dialog>
+  <dialog id="install-dialog" aria-labelledby="install-title" aria-describedby="install-description">
+    <div class="install-heading"><h2 id="install-title">添加到桌面</h2><button id="close-install" type="button" aria-label="关闭添加到桌面指引">关闭 ×</button></div>
+    <p id="install-description"></p><ol id="install-steps"></ol>
   </dialog>
 </body>
 </html>
