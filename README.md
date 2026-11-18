@@ -18,6 +18,8 @@ docker compose up -d
 
 安装资源包含独立 manifest 和原 favicon 导出的 180/192/512 PNG，不注册 Service Worker、不缓存 API 或凭据、不支持离线业务。安装与打开快捷方式不改变后台任务；服务仍需正常运行、登录会话仍受原有认证规则约束。新增安装资源使用相对地址；原有业务 API 与资源路径保持原状，不代表业务整体支持反向代理子目录。
 
+页面使用通用 `mobile-web-app-capable` 标签，通过 manifest 的 `display: standalone` 声明独立应用模式；iOS 主屏幕图标继续由 `apple-touch-icon` 提供。
+
 离线安装交互回归：`node --test install_test.cjs`，已纳入 `go run ./tools/check`。测试模拟安装事件与浏览器环境，不访问业务服务。浏览器验收应使用本机静态资源及假 API，避免启动真实探查、任务或通知。
 
 默认 [docker-compose.yml](./docker-compose.yml) 只启动健康检查服务，加入已有 `wk` 网络，连接现有 Mihomo。打开 [http://127.0.0.1:8080](http://127.0.0.1:8080)，填写后端可访问的 API 地址（例如 `http://mihomo:9090`）、Secret、目标分组，测试连接后启用并保存。首次安装默认停用。
